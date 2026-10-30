@@ -1,0 +1,675 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>VLU_Freelance_Marketplace_UI — Figma Prototype Player</title>
+  <script src="https://www.gstatic.com/antigravity/web/dev/tailwindcss.min.js"></script>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+    body { font-family: 'Inter', system-ui, sans-serif; user-select: none; }
+    
+    /* Figma hotspot blue flash */
+    .hotspot-flash {
+      position: absolute;
+      background-color: rgba(14, 165, 233, 0.35);
+      border: 1.5px solid #0284c7;
+      border-radius: 6px;
+      pointer-events: none;
+      animation: figmaFlash 0.5s ease-out forwards;
+    }
+    @keyframes figmaFlash {
+      0% { opacity: 0; transform: scale(0.98); }
+      30% { opacity: 1; transform: scale(1); }
+      100% { opacity: 0; }
+    }
+
+    /* Screen transition */
+    .figma-fade { animation: figmaFade 0.25s ease-in-out forwards; }
+    @keyframes figmaFade {
+      from { opacity: 0.7; transform: translateY(4px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+  </style>
+</head>
+<body class="bg-[#1e1e1e] text-gray-200 min-h-screen flex flex-col overflow-x-hidden">
+
+  <!-- =================================================================== -->
+  <!-- FIGMA PROTOTYPE TOOLBAR (EXACT REPLICA OF figma.com/proto) -->
+  <!-- =================================================================== -->
+  <header class="h-12 bg-[#2c2c2c] border-b border-[#383838] px-4 flex items-center justify-between text-xs text-gray-300 z-50 shrink-0">
+    <!-- Left: Figma logo & Flow Selector -->
+    <div class="flex items-center space-x-3">
+      <!-- Figma Color Icon -->
+      <div class="flex items-center space-x-1.5 cursor-pointer hover:opacity-80 transition" onclick="restartPrototype()">
+        <svg width="18" height="26" viewBox="0 0 38 57" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M19 28.5C19 23.2533 23.2533 19 28.5 19C33.7467 19 38 23.2533 38 28.5C38 33.7467 33.7467 38 28.5 38C23.2533 38 19 33.7467 19 28.5Z" fill="#1ABCFE"/>
+          <path d="M0 47.5C0 42.2533 4.25329 38 9.5 38H19V47.5C19 52.7467 14.7467 57 9.5 57C4.25329 57 0 52.7467 0 47.5Z" fill="#0ACF83"/>
+          <path d="M19 0V19H28.5C33.7467 19 38 14.7467 38 9.5C38 4.25329 33.7467 0 28.5 0H19Z" fill="#FF7262"/>
+          <path d="M0 9.5C0 14.7467 4.25329 19 9.5 19H19V0H9.5C4.25329 0 0 4.25329 0 9.5Z" fill="#F24E1E"/>
+          <path d="M0 28.5C0 33.7467 4.25329 38 9.5 38H19V19H9.5C4.25329 19 0 23.2533 0 28.5Z" fill="#A259FF"/>
+        </svg>
+        <span class="font-semibold text-white tracking-wide">VLU_Freelance_Marketplace_UI</span>
+      </div>
+
+      <span class="text-gray-500">/</span>
+
+      <!-- Flow starting point pill -->
+      <div class="flex items-center space-x-1.5 bg-[#383838] hover:bg-[#444] px-2.5 py-1 rounded-md cursor-pointer transition">
+        <span class="text-sky-400 font-bold">▶</span>
+        <span class="font-medium text-white" id="current-flow-name">Flow 1 (Chính)</span>
+        <span class="text-gray-400 text-[10px]">▼</span>
+      </div>
+    </div>
+
+    <!-- Center: Navigation controls -->
+    <div class="hidden md:flex items-center space-x-2">
+      <button onclick="prevScreen()" class="p-1 rounded hover:bg-[#383838] transition text-gray-400 hover:text-white" title="Màn trước (←)">
+        ◀
+      </button>
+      <span class="text-gray-400 font-mono text-[11px]" id="screen-counter">1 / 5</span>
+      <button onclick="nextScreen()" class="p-1 rounded hover:bg-[#383838] transition text-gray-400 hover:text-white" title="Màn tiếp (→)">
+        ▶
+      </button>
+      <button onclick="restartPrototype()" class="px-2 py-0.5 rounded bg-[#383838] hover:bg-[#484848] text-gray-300 hover:text-white transition flex items-center space-x-1 text-[11px]" title="Khởi động lại (Phím R)">
+        <span>🔄</span><span>Restart (R)</span>
+      </button>
+    </div>
+
+    <!-- Right: Options & Share -->
+    <div class="flex items-center space-x-3">
+      <div class="hidden sm:flex items-center space-x-1 text-gray-400 hover:text-white cursor-pointer px-2 py-1 rounded hover:bg-[#383838] transition">
+        <span>100%</span>
+        <span class="text-[9px]">▼</span>
+      </div>
+      <button onclick="toggleHotspots()" class="hidden sm:inline-block px-2 py-1 rounded bg-[#383838] text-[11px] font-medium hover:bg-[#484848] transition text-sky-300">
+        💡 Hiện điểm bấm
+      </button>
+      <button onclick="openShareInfo()" class="bg-[#0c8ce9] hover:bg-blue-600 text-white font-semibold px-3 py-1 rounded-md transition shadow-sm">
+        Share prototype
+      </button>
+    </div>
+  </header>
+
+  <!-- =================================================================== -->
+  <!-- MAIN STAGE / VIEWPORT (CENTERED FRAME 1440x900) -->
+  <!-- =================================================================== -->
+  <main class="flex-1 flex items-center justify-center p-3 md:p-6 bg-[#1e1e1e] overflow-auto" id="stage-container" onclick="triggerCanvasClick(event)">
+
+    <!-- The 1440x900 Design Frame (Simulating Figma Canvas Artboard) -->
+    <div id="artboard" class="w-full max-w-[1280px] bg-white rounded-xl shadow-2xl border border-gray-700/50 overflow-hidden relative text-gray-800 figma-fade" style="min-height: 800px;">
+
+      <!-- =============================================================== -->
+      <!-- SCREEN 01: TRANG CHỦ & BỘ LỌC TÌM KIẾM (HOME) -->
+      <!-- =============================================================== -->
+      <div id="screen-1" class="screen-view">
+        <!-- Header Navbar -->
+        <div class="bg-[#003366] text-white px-8 h-16 flex items-center justify-between">
+          <div class="flex items-center space-x-6">
+            <div class="flex items-center space-x-2 text-lg font-bold">
+              <span>🎓</span><span>VLU FREELANCE</span>
+            </div>
+            <div class="flex items-center space-x-2 text-sm font-medium">
+              <span class="px-3 py-1.5 rounded-md bg-blue-900 font-bold">Việc làm mới</span>
+              <button onclick="navigateTo(3)" class="px-3 py-1.5 rounded-md text-blue-100 hover:bg-blue-800/60 transition cursor-pointer">Dành cho NTD</button>
+              <button onclick="navigateTo(4)" class="px-3 py-1.5 rounded-md text-blue-100 hover:bg-blue-800/60 transition cursor-pointer">Cẩm nang sinh viên</button>
+              <button onclick="navigateTo(5)" class="px-3 py-1.5 rounded-md text-blue-100 hover:bg-blue-800/60 transition cursor-pointer flex items-center space-x-1">
+                <span>Kiểm duyệt</span>
+                <span class="px-1.5 py-0.2 rounded-full bg-red-500 text-[10px] font-bold text-white">3</span>
+              </button>
+            </div>
+          </div>
+          <div class="flex items-center space-x-3 text-sm">
+            <button onclick="navigateTo(3)" class="px-3 py-1.5 rounded-lg bg-sky-600 hover:bg-sky-500 font-bold text-xs transition cursor-pointer">
+              + Đăng tin NTD
+            </button>
+            <button onclick="navigateTo(4)" class="flex items-center space-x-2 p-1 rounded-lg hover:bg-blue-800/60 transition cursor-pointer">
+              <div class="w-7 h-7 rounded-full bg-gray-200 text-gray-800 flex items-center justify-center font-bold text-xs">MP</div>
+              <span class="text-xs font-semibold">Nguyễn Minh Phú</span>
+            </button>
+          </div>
+        </div>
+
+        <div class="p-8 space-y-6 bg-gray-100">
+          <!-- Hero Banner -->
+          <div class="bg-gradient-to-r from-sky-100 to-blue-50 border border-sky-200 rounded-xl p-5 flex items-center justify-between">
+            <div>
+              <h1 class="text-lg font-bold text-[#003366]">TÌM VIỆC LÀM PART-TIME & FREELANCE CHO SINH VIÊN VĂN LANG</h1>
+              <p class="text-xs text-gray-600 mt-0.5">Hơn 500+ công việc minh bạch, đối soát thông tin pháp nhân và hỗ trợ mộc thực tập.</p>
+            </div>
+            <div class="flex items-center bg-white rounded-lg border border-gray-300 p-1">
+              <input type="text" placeholder="Tìm theo kỹ năng, chức danh..." class="px-3 py-1 text-xs w-60 focus:outline-none">
+              <button class="bg-[#003366] text-white px-3 py-1.5 rounded-md text-xs font-bold hover:bg-blue-900 transition">Tìm kiếm</button>
+            </div>
+          </div>
+
+          <!-- Main 2 Cols -->
+          <div class="grid grid-cols-4 gap-6">
+            <!-- Left Filter -->
+            <div class="bg-white border border-gray-200 rounded-xl p-4 shadow-sm space-y-4 text-xs">
+              <div class="font-bold text-gray-900 pb-2 border-b">⚙️ BỘ LỌC TÌM KIẾM</div>
+              <div class="space-y-1.5">
+                <div class="font-semibold text-gray-700">Cơ sở Văn Lang:</div>
+                <label class="flex items-center space-x-1.5 cursor-pointer"><input type="radio" checked name="f_loc" class="text-blue-900"><span>Tất cả cơ sở</span></label>
+                <label class="flex items-center space-x-1.5 cursor-pointer"><input type="radio" name="f_loc" class="text-blue-900"><span>Bình Thạnh (Cơ sở 3)</span></label>
+                <label class="flex items-center space-x-1.5 cursor-pointer"><input type="radio" name="f_loc" class="text-blue-900"><span>Gò Vấp (Cơ sở 2)</span></label>
+                <label class="flex items-center space-x-1.5 cursor-pointer"><input type="radio" name="f_loc" class="text-blue-900"><span>Quận 1 (Cơ sở 1)</span></label>
+              </div>
+              <div class="border-t pt-3 space-y-1.5">
+                <div class="font-semibold text-gray-700">Mức lương:</div>
+                <label class="flex items-center space-x-1.5"><input type="checkbox" checked><span>25.000đ - 35.000đ/h</span></label>
+                <label class="flex items-center space-x-1.5"><input type="checkbox" checked><span>35.000đ - 50.000đ/h</span></label>
+              </div>
+              <button class="w-full bg-[#003366] text-white py-2 rounded-lg font-bold hover:bg-blue-900 transition">Áp dụng lọc</button>
+            </div>
+
+            <!-- Right Job Cards -->
+            <div class="col-span-3 space-y-3">
+              <div class="flex items-center justify-between text-xs text-gray-600">
+                <span class="font-bold">Tìm thấy 4 công việc phù hợp</span>
+                <span>Sắp xếp: Mới nhất ▼</span>
+              </div>
+
+              <!-- Card 1 (Main Demo Card -> Click opens Screen 2) -->
+              <div class="bg-white border-2 border-blue-300 hover:border-blue-600 rounded-xl p-4 shadow-sm transition hover:shadow-md flex items-center justify-between cursor-pointer" onclick="navigateTo(2)">
+                <div class="space-y-1.5">
+                  <div class="flex items-center space-x-2">
+                    <span class="px-1.5 py-0.5 rounded bg-emerald-100 text-emerald-800 text-[10px] font-bold">HOT</span>
+                    <h3 class="font-bold text-gray-900 hover:text-blue-800 text-sm">Tuyển Thực Tập Sinh Lập Trình Frontend ReactJS (Part-time)</h3>
+                  </div>
+                  <div class="text-xs text-gray-600">Công ty Truyền thông Sáng tạo VLU • 📍 Bình Thạnh (gần CS3)</div>
+                  <div class="flex items-center space-x-3 text-xs">
+                    <span class="text-emerald-700 font-bold">💰 45.000đ / giờ</span>
+                    <span class="text-gray-500">• ⏰ Sáng T2-T4-T6</span>
+                    <span class="text-gray-500">• ⏳ Hạn: 30/11/2026</span>
+                  </div>
+                  <div class="flex items-center space-x-1 text-[10px]">
+                    <span class="px-2 py-0.5 rounded-full bg-sky-100 text-sky-800 font-semibold">ReactJS</span>
+                    <span class="px-2 py-0.5 rounded-full bg-sky-100 text-sky-800 font-semibold">Part-time</span>
+                    <span class="px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-800 font-semibold">Hỗ trợ dấu thực tập</span>
+                  </div>
+                </div>
+                <!-- Action Button -->
+                <button onclick="event.stopPropagation(); navigateTo(2);" class="px-4 py-2 bg-[#003366] hover:bg-blue-900 text-white rounded-lg font-bold text-xs shadow transition cursor-pointer">
+                  Ứng tuyển ngay →
+                </button>
+              </div>
+
+              <!-- Card 2 -->
+              <div class="bg-white border border-gray-200 rounded-xl p-4 shadow-sm flex items-center justify-between">
+                <div class="space-y-1">
+                  <h3 class="font-bold text-gray-900 text-sm">Nhân Viên Phục Vụ Quán Cafe Sách (Linh hoạt theo ca học)</h3>
+                  <div class="text-xs text-gray-600">The Book Cafe VLU • 📍 Gò Vấp (gần Cơ sở 2)</div>
+                  <div class="text-xs text-emerald-700 font-bold">💰 30.000đ / giờ + Thưởng</div>
+                </div>
+                <button onclick="navigateTo(2)" class="px-3 py-1.5 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-lg font-semibold text-xs transition cursor-pointer">
+                  Xem chi tiết
+                </button>
+              </div>
+
+              <!-- Card 3 -->
+              <div class="bg-white border border-gray-200 rounded-xl p-4 shadow-sm flex items-center justify-between">
+                <div class="space-y-1">
+                  <h3 class="font-bold text-gray-900 text-sm">Thiết Kế Banner & Edit Video TikTok Cho Shop Thời Trang</h3>
+                  <div class="text-xs text-gray-600">Chic Studio • 📍 Làm việc từ xa (Online)</div>
+                  <div class="text-xs text-emerald-700 font-bold">💰 1.500.000đ / Dự án</div>
+                </div>
+                <button onclick="navigateTo(2)" class="px-3 py-1.5 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-lg font-semibold text-xs transition cursor-pointer">
+                  Xem chi tiết
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- =============================================================== -->
+      <!-- SCREEN 02: CHI TIẾT VIỆC & MODAL NỘP ĐƠN 1-CHẠM -->
+      <!-- =============================================================== -->
+      <div id="screen-2" class="screen-view hidden">
+        <!-- Header Navbar -->
+        <div class="bg-[#003366] text-white px-8 h-16 flex items-center justify-between">
+          <div class="flex items-center space-x-6">
+            <div class="flex items-center space-x-2 text-lg font-bold cursor-pointer" onclick="navigateTo(1)">
+              <span>🎓</span><span>VLU FREELANCE</span>
+            </div>
+            <div class="text-xs text-blue-200">
+              <span class="cursor-pointer hover:underline" onclick="navigateTo(1)">Trang chủ</span> &gt; CNTT &gt; <b>Tuyển Thực Tập Sinh ReactJS</b>
+            </div>
+          </div>
+          <button onclick="navigateTo(1)" class="text-xs text-blue-200 hover:text-white flex items-center space-x-1 cursor-pointer">
+            <span>← Quay lại danh sách</span>
+          </button>
+        </div>
+
+        <div class="p-8 grid grid-cols-5 gap-6 bg-gray-100">
+          <!-- Cột trái: Chi tiết tin -->
+          <div class="col-span-3 bg-white border border-gray-200 rounded-xl p-6 shadow-sm space-y-4 text-xs leading-relaxed">
+            <div>
+              <h1 class="text-base font-bold text-gray-900">TUYỂN THỰC TẬP SINH LẬP TRÌNH FRONTEND REACTJS</h1>
+              <p class="text-blue-900 font-semibold mt-0.5">Công ty TNHH Truyền thông Sáng tạo VLU ⭐ 4.9/5 (18 đánh giá)</p>
+              <p class="text-gray-500">📍 69/68 Đặng Thùy Trâm, P.13, Bình Thạnh • 💰 <b class="text-emerald-700 text-sm">45.000đ/giờ</b></p>
+            </div>
+            <hr>
+            <div>
+              <h3 class="font-bold text-gray-900 mb-1">1. Mô tả công việc:</h3>
+              <ul class="list-disc list-inside text-gray-600 space-y-0.5">
+                <li>Phối hợp cùng team xây dựng giao diện người dùng ReactJS + TailwindCSS.</li>
+                <li>Tối ưu hóa hiển thị Mobile Responsive và kết nối RESTful API.</li>
+              </ul>
+            </div>
+            <div>
+              <h3 class="font-bold text-gray-900 mb-1">2. Quyền lợi:</h3>
+              <ul class="list-disc list-inside text-gray-600 space-y-0.5">
+                <li>Nhận lương định kỳ theo tuần vào tài khoản sinh viên.</li>
+                <li>Hỗ trợ mộc dấu báo cáo thực tập tốt nghiệp Đại học Văn Lang.</li>
+              </ul>
+            </div>
+          </div>
+
+          <!-- Cột phải: Form nộp đơn -->
+          <div class="col-span-2 bg-white border-2 border-emerald-500 rounded-xl p-5 shadow-lg space-y-3.5 text-xs">
+            <div class="flex items-center justify-between border-b pb-2">
+              <h2 class="font-bold text-[#003366] text-sm flex items-center space-x-1.5">
+                <span>📝</span><span>FORM NỘP ĐƠN 1-CHẠM</span>
+              </h2>
+              <span class="px-1.5 py-0.5 rounded bg-emerald-100 text-emerald-800 font-bold text-[10px]">VERIFIED</span>
+            </div>
+
+            <div class="p-2.5 bg-blue-50/70 rounded-lg space-y-1 text-gray-700">
+              <div class="font-bold text-blue-950">Nguyễn Minh Phú</div>
+              <div>MSSV: 2374802013447 • Khoa CNTT</div>
+              <div class="text-[11px] text-gray-500">sinhvien.demo@student.vlu.edu.vn</div>
+            </div>
+
+            <div class="space-y-1.5">
+              <div class="font-semibold text-gray-800">Chọn CV ứng tuyển:</div>
+              <div class="p-2 rounded border border-blue-300 bg-blue-50/40 font-medium text-blue-900 flex items-center justify-between">
+                <span>📄 CV_NguyenMinhPhu_WebDev.pdf</span>
+                <span class="text-[10px] text-blue-600 underline cursor-pointer" onclick="openCvModal()">Xem CV</span>
+              </div>
+            </div>
+
+            <div class="space-y-1">
+              <div class="font-semibold text-gray-800">Lời nhắn đến NTD:</div>
+              <textarea class="w-full p-2 border rounded text-xs focus:ring-1 focus:ring-blue-500" rows="3">Em là sinh viên năm cuối CNTT Văn Lang, rất mong muốn được thực tập tại công ty...</textarea>
+            </div>
+
+            <div class="flex items-center space-x-2 pt-2">
+              <button onclick="navigateTo(1)" class="px-3 py-2 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-lg font-semibold transition cursor-pointer">
+                Hủy
+              </button>
+              <button onclick="handleApplySubmit()" class="flex-1 py-2 bg-[#059669] hover:bg-emerald-700 text-white rounded-lg font-bold text-xs shadow transition cursor-pointer flex items-center justify-center space-x-1">
+                <span>🚀</span><span>Gửi hồ sơ ngay</span>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- =============================================================== -->
+      <!-- SCREEN 03: PORTAL NHÀ TUYỂN DỤNG (EMPLOYER) -->
+      <!-- =============================================================== -->
+      <div id="screen-3" class="screen-view hidden">
+        <div class="bg-[#003366] text-white px-8 h-16 flex items-center justify-between">
+          <div class="flex items-center space-x-6">
+            <div class="flex items-center space-x-2 text-lg font-bold cursor-pointer" onclick="navigateTo(1)">
+              <span>🎓</span><span>VLU FREELANCE</span>
+              <span class="text-xs text-sky-300 font-normal">| EMPLOYER PORTAL</span>
+            </div>
+            <div class="flex items-center space-x-2 text-sm font-medium">
+              <span class="px-3 py-1.5 rounded-md text-blue-100 hover:bg-blue-800/60 cursor-pointer" onclick="navigateTo(1)">Tin tuyển dụng</span>
+              <span class="px-3 py-1.5 rounded-md bg-blue-900 font-bold">Danh sách ứng viên</span>
+            </div>
+          </div>
+          <button onclick="navigateTo(1)" class="text-xs text-blue-200 hover:text-white cursor-pointer">← Về trang chủ</button>
+        </div>
+
+        <div class="p-8 space-y-5 bg-gray-100">
+          <div class="bg-white p-4 rounded-xl border border-gray-200 flex items-center justify-between text-xs">
+            <div>
+              <span class="font-bold text-gray-900 text-sm">Tuyển Thực Tập Sinh Frontend ReactJS</span>
+              <span class="ml-2 px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-800 font-bold">● Đang mở</span>
+            </div>
+            <div class="text-gray-500 font-medium">Tổng số: <b>4 ứng viên</b></div>
+          </div>
+
+          <!-- Table -->
+          <div class="bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden text-xs">
+            <table class="w-full text-left">
+              <thead class="bg-gray-50 border-b text-gray-600 font-bold">
+                <tr>
+                  <th class="p-3">Ứng viên</th>
+                  <th class="p-3">Hồ sơ</th>
+                  <th class="p-3">Uy tín</th>
+                  <th class="p-3">Trạng thái</th>
+                  <th class="p-3 text-center">Hành động duyệt</th>
+                </tr>
+              </thead>
+              <tbody class="divide-y divide-gray-100">
+                <!-- Row 1: Nguyễn Minh Phú -->
+                <tr class="hover:bg-blue-50/30">
+                  <td class="p-3">
+                    <div class="font-bold text-gray-900">Nguyễn Minh Phú</div>
+                    <div class="text-[11px] text-gray-500">MSSV: 2374802013447 (CNTT)</div>
+                  </td>
+                  <td class="p-3 text-blue-700 underline font-semibold cursor-pointer" onclick="openCvModal()">📄 Xem CV PDF</td>
+                  <td class="p-3 text-amber-600 font-bold">⭐ 5.0 (4 việc)</td>
+                  <td class="p-3"><span class="px-2 py-0.5 rounded bg-emerald-100 text-emerald-800 font-bold">ĐÃ DUYỆT NHẬN</span></td>
+                  <td class="p-3 text-center">
+                    <button onclick="showToast('SĐT: 0911223344 — Đã mở kết nối Zalo!', 'info')" class="px-2.5 py-1 bg-[#003366] text-white rounded font-semibold hover:bg-blue-900 transition">
+                      Liên hệ SĐT/Zalo
+                    </button>
+                  </td>
+                </tr>
+
+                <!-- Row 2: Trần Văn B (Live button flow) -->
+                <tr class="hover:bg-blue-50/30">
+                  <td class="p-3">
+                    <div class="font-bold text-gray-900">Trần Văn B</div>
+                    <div class="text-[11px] text-gray-500">MSSV: 2374802010111 (KTPM)</div>
+                  </td>
+                  <td class="p-3 text-blue-700 underline font-semibold cursor-pointer" onclick="openCvModal()">📄 Xem CV PDF</td>
+                  <td class="p-3 text-amber-600 font-bold">⭐ 4.8 (2 việc)</td>
+                  <td class="p-3" id="e-status-2"><span class="px-2 py-0.5 rounded bg-amber-100 text-amber-800 font-bold">Chờ duyệt</span></td>
+                  <td class="p-3 text-center space-x-1" id="e-actions-2">
+                    <button onclick="eApprove(2, 'Trần Văn B')" class="px-2.5 py-1 bg-[#059669] hover:bg-emerald-700 text-white rounded font-bold transition cursor-pointer">
+                      Duyệt nhận
+                    </button>
+                    <button onclick="eReject(2, 'Trần Văn B')" class="px-2.5 py-1 bg-[#DC2626] hover:bg-red-700 text-white rounded font-bold transition cursor-pointer">
+                      Từ chối
+                    </button>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- =============================================================== -->
+      <!-- SCREEN 04: PROFILE SINH VIÊN (PROFILE) -->
+      <!-- =============================================================== -->
+      <div id="screen-4" class="screen-view hidden">
+        <div class="bg-[#003366] text-white px-8 h-16 flex items-center justify-between">
+          <div class="flex items-center space-x-6">
+            <div class="flex items-center space-x-2 text-lg font-bold cursor-pointer" onclick="navigateTo(1)">
+              <span>🎓</span><span>VLU FREELANCE</span>
+            </div>
+            <div class="text-xs text-blue-200">Hồ sơ năng lực sinh viên</div>
+          </div>
+          <button onclick="navigateTo(1)" class="text-xs text-blue-200 hover:text-white cursor-pointer">← Về trang chủ</button>
+        </div>
+
+        <div class="p-8 grid grid-cols-3 gap-6 bg-gray-100 text-xs">
+          <!-- Left Info -->
+          <div class="bg-white border border-gray-200 rounded-xl p-5 shadow-sm space-y-4">
+            <div class="flex items-center space-x-3">
+              <div class="w-14 h-14 rounded-full bg-blue-100 text-blue-900 border-2 border-[#003366] flex items-center justify-center font-bold text-lg">MP</div>
+              <div>
+                <h2 class="font-bold text-gray-900 text-sm">Nguyễn Minh Phú</h2>
+                <span class="inline-block px-1.5 py-0.5 rounded bg-emerald-100 text-emerald-800 font-bold text-[10px]">✔️ ĐÃ XÁC THỰC VLU</span>
+                <p class="text-gray-500 text-[11px] mt-0.5">MSSV: 2374802013447 • Khoa CNTT</p>
+              </div>
+            </div>
+            <div class="border-t pt-3 space-y-1 text-gray-600">
+              <div>Email: <b>sinhvien.demo@student.vlu.edu.vn</b></div>
+              <div>Đánh giá: <b class="text-amber-600">⭐⭐⭐⭐⭐ 5.0 / 5.0</b></div>
+            </div>
+            <div class="border-t pt-3">
+              <div class="font-bold text-gray-800 mb-1">Kỹ năng:</div>
+              <div class="flex flex-wrap gap-1">
+                <span class="px-2 py-0.5 rounded-full bg-sky-100 text-sky-800 font-semibold">ReactJS</span>
+                <span class="px-2 py-0.5 rounded-full bg-sky-100 text-sky-800 font-semibold">NodeJS</span>
+                <span class="px-2 py-0.5 rounded-full bg-sky-100 text-sky-800 font-semibold">MySQL</span>
+                <span class="px-2 py-0.5 rounded-full bg-sky-100 text-sky-800 font-semibold">Figma</span>
+              </div>
+            </div>
+            <div class="border-t pt-3 p-2 bg-blue-50 rounded border border-blue-200">
+              <div class="font-bold text-blue-900">📄 CV_NguyenMinhPhu_WebDev.pdf</div>
+              <button onclick="openCvModal()" class="text-blue-700 underline font-semibold mt-1 cursor-pointer">👁️ Xem CV trực tiếp</button>
+            </div>
+          </div>
+
+          <!-- Right Reviews -->
+          <div class="col-span-2 bg-white border border-gray-200 rounded-xl p-5 shadow-sm space-y-4">
+            <h2 class="font-bold text-gray-900 text-sm border-b pb-2">LỊCH SỬ VIỆC LÀM &amp; ĐÁNH GIÁ CỦA DOANH NGHIỆP</h2>
+            <div class="p-3 bg-gray-50 rounded-lg border border-gray-200 space-y-1">
+              <div class="flex items-center justify-between font-bold text-gray-900">
+                <span>1. Thực tập sinh Web — Công ty Sáng tạo VLU</span>
+                <span class="text-amber-600">⭐⭐⭐⭐⭐ 5.0</span>
+              </div>
+              <p class="text-gray-600 italic">"Phú làm việc rất chăm chỉ, nắm bắt ReactJS nhanh và hoàn thành task đúng hẹn!"</p>
+              <div class="text-[11px] font-semibold text-emerald-700">✔ Đã cấp mộc tròn thực tập tốt nghiệp</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- =============================================================== -->
+      <!-- SCREEN 05: ADMIN KIỂM DUYỆT (ADMIN) -->
+      <!-- =============================================================== -->
+      <div id="screen-5" class="screen-view hidden">
+        <div class="bg-[#003366] text-white px-8 h-16 flex items-center justify-between">
+          <div class="flex items-center space-x-6">
+            <div class="flex items-center space-x-2 text-lg font-bold cursor-pointer" onclick="navigateTo(1)">
+              <span>🎓</span><span>VLU FREELANCE</span>
+              <span class="text-xs text-red-300 font-normal">| ADMIN PORTAL</span>
+            </div>
+            <div class="text-xs text-blue-200 font-medium">Hệ thống kiểm duyệt tin đăng &amp; Chống lừa đảo</div>
+          </div>
+          <button onclick="navigateTo(1)" class="text-xs text-blue-200 hover:text-white cursor-pointer">← Về trang chủ</button>
+        </div>
+
+        <div class="p-8 space-y-5 bg-gray-100 text-xs">
+          <!-- 4 KPIs -->
+          <div class="grid grid-cols-4 gap-4">
+            <div class="bg-blue-50 border border-blue-200 rounded-xl p-3"><div class="text-blue-700 font-semibold">Sinh viên</div><div class="text-xl font-bold text-blue-900">1,240</div></div>
+            <div class="bg-emerald-50 border border-emerald-200 rounded-xl p-3"><div class="text-emerald-700 font-semibold">Doanh nghiệp</div><div class="text-xl font-bold text-emerald-900">158</div></div>
+            <div class="bg-amber-50 border border-amber-200 rounded-xl p-3"><div class="text-amber-700 font-semibold">Tin an toàn</div><div class="text-xl font-bold text-amber-900">84</div></div>
+            <div class="bg-red-50 border border-red-200 rounded-xl p-3"><div class="text-red-700 font-semibold">Tin chờ duyệt</div><div class="text-xl font-bold text-red-600">3 CẦN DUYỆT</div></div>
+          </div>
+
+          <!-- Moderation Table -->
+          <div class="bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden">
+            <table class="w-full text-left">
+              <thead class="bg-gray-50 border-b text-gray-600 font-bold">
+                <tr>
+                  <th class="p-3">Tin tuyển dụng</th>
+                  <th class="p-3">Nhà tuyển dụng</th>
+                  <th class="p-3">Mức lương</th>
+                  <th class="p-3">Mã số thuế</th>
+                  <th class="p-3 text-center">Kiểm duyệt</th>
+                </tr>
+              </thead>
+              <tbody class="divide-y divide-gray-100">
+                <!-- Tin 1: Cafe sách -->
+                <tr>
+                  <td class="p-3 font-bold text-gray-900">Tuyển Nhân viên Phục vụ Cafe Sách</td>
+                  <td class="p-3 text-gray-600">The Book Cafe VLU</td>
+                  <td class="p-3 text-emerald-700 font-bold">30.000đ/h</td>
+                  <td class="p-3 text-emerald-700 font-semibold">✔ MST: 0319887766</td>
+                  <td class="p-3 text-center" id="a-actions-1">
+                    <button onclick="adminApprove(1)" class="px-2.5 py-1 bg-[#059669] hover:bg-emerald-700 text-white rounded font-bold transition cursor-pointer">
+                      Duyệt tin
+                    </button>
+                  </td>
+                </tr>
+
+                <!-- Tin 2: Lừa đảo -->
+                <tr id="a-row-scam" class="bg-red-50 border-l-4 border-red-500">
+                  <td class="p-3 font-bold text-red-900">⚠️ Việc nhẹ lương cao 500k/ngày gõ mã captcha online</td>
+                  <td class="p-3 text-red-700">Cá nhân tự do (SĐT lạ)</td>
+                  <td class="p-3 text-red-700 font-bold">500.000đ/ngày (Ảo)</td>
+                  <td class="p-3 text-red-800 font-bold">❌ Không MST / Blacklist</td>
+                  <td class="p-3 text-center" id="a-actions-2">
+                    <button onclick="adminBlockScam()" class="px-3 py-1 bg-[#DC2626] hover:bg-red-800 text-white rounded font-bold transition shadow cursor-pointer">
+                      🚫 Bác bỏ &amp; Khóa TK
+                    </button>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </main>
+
+  <!-- =================================================================== -->
+  <!-- MODAL CV PREVIEW OVERLAY -->
+  <!-- =================================================================== -->
+  <div id="modal-cv-preview" class="fixed inset-0 bg-black/70 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4" onclick="closeCvModal()">
+    <div class="bg-white rounded-xl max-w-lg w-full p-6 text-gray-800 space-y-3" onclick="event.stopPropagation()">
+      <div class="flex items-center justify-between border-b pb-2">
+        <h3 class="font-bold text-sm text-[#003366]">📄 XEM TRƯỚC HỒ SƠ CV: NGUYỄN MINH PHÚ</h3>
+        <button onclick="closeCvModal()" class="text-gray-400 hover:text-gray-600 font-bold">✕</button>
+      </div>
+      <div class="text-xs space-y-2 bg-slate-50 p-4 rounded-lg font-mono">
+        <div><b>Họ và tên:</b> NGUYỄN MINH PHÚ (MSSV: 2374802013447)</div>
+        <div><b>Trường:</b> Đại học Văn Lang — Khoa Công nghệ Thông tin</div>
+        <div><b>Kỹ năng:</b> ReactJS, JavaScript ES6, TailwindCSS, Node.js, MySQL, Git</div>
+        <div><b>Dự án:</b> Marketplace việc làm part-time cho sinh viên VLU</div>
+      </div>
+      <div class="flex justify-end">
+        <button onclick="closeCvModal()" class="px-4 py-1.5 bg-[#003366] text-white rounded font-bold text-xs hover:bg-blue-900 transition">Đóng</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- TOAST NOTIFICATION POPUP -->
+  <div id="figma-toast" class="fixed bottom-6 right-6 z-50 bg-[#003366] text-white px-4 py-2.5 rounded-lg shadow-xl text-xs font-semibold hidden transition">
+    Toast message
+  </div>
+
+  <!-- JAVASCRIPT LOGIC -->
+  <script>
+    let currentScreen = 1;
+    const totalScreens = 5;
+    const screenNames = [
+      "01_Home_Job_Discovery",
+      "02_Job_Detail_Modal_Apply",
+      "03_Employer_Candidate_Review",
+      "04_Student_Profile_CV",
+      "05_Admin_Job_Moderation"
+    ];
+
+    function navigateTo(screenNum) {
+      if (screenNum < 1 || screenNum > totalScreens) return;
+      currentScreen = screenNum;
+
+      for (let i = 1; i <= totalScreens; i++) {
+        const el = document.getElementById(`screen-${i}`);
+        if (el) {
+          if (i === currentScreen) {
+            el.classList.remove('hidden');
+            el.classList.add('figma-fade');
+          } else {
+            el.classList.add('hidden');
+          }
+        }
+      }
+
+      document.getElementById('screen-counter').textContent = `${currentScreen} / ${totalScreens}`;
+      document.getElementById('current-flow-name').textContent = `Flow 1 — ${screenNames[currentScreen - 1]}`;
+    }
+
+    function nextScreen() {
+      if (currentScreen < totalScreens) navigateTo(currentScreen + 1);
+    }
+
+    function prevScreen() {
+      if (currentScreen > 1) navigateTo(currentScreen - 1);
+    }
+
+    function restartPrototype() {
+      navigateTo(1);
+      showToast("🔄 Đã khởi động lại Prototype (Flow 1: Trang chủ)");
+    }
+
+    // Keyboard controls
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'r' || e.key === 'R') restartPrototype();
+      if (e.key === 'ArrowRight') nextScreen();
+      if (e.key === 'ArrowLeft') prevScreen();
+    });
+
+    // Flash hotspot indicator when clicking non-interactive space
+    function triggerCanvasClick(e) {
+      if (e.target.closest('button, a, input, textarea, .cursor-pointer')) return;
+      
+      const rect = e.currentTarget.getBoundingClientRect();
+      const x = e.clientX;
+      const y = e.clientY;
+
+      const flash = document.createElement('div');
+      flash.className = 'hotspot-flash';
+      flash.style.left = `${x - 25}px`;
+      flash.style.top = `${y - 15}px`;
+      flash.style.width = '50px';
+      flash.style.height = '30px';
+
+      document.body.appendChild(flash);
+      setTimeout(() => flash.remove(), 500);
+    }
+
+    function toggleHotspots() {
+      showToast("💡 Bấm vào các nút màu xanh để chuyển màn hình!");
+    }
+
+    // Modal controls
+    function openCvModal() {
+      document.getElementById('modal-cv-preview').classList.remove('hidden');
+    }
+    function closeCvModal() {
+      document.getElementById('modal-cv-preview').classList.add('hidden');
+    }
+
+    // Interactive button flows
+    function handleApplySubmit() {
+      showToast("🚀 Hồ sơ của bạn đã được gửi thành công đến NTD!");
+      setTimeout(() => {
+        navigateTo(3); // Jump to employer to see candidate
+        showToast("🏢 Đã chuyển sang Portal Nhà tuyển dụng để duyệt hồ sơ!");
+      }, 1200);
+    }
+
+    function eApprove(id, name) {
+      document.getElementById(`e-status-${id}`).innerHTML = '<span class="px-2 py-0.5 rounded bg-emerald-100 text-emerald-800 font-bold animate-pulse">ĐÃ DUYỆT NHẬN</span>';
+      document.getElementById(`e-actions-${id}`).innerHTML = '<span class="text-emerald-700 font-bold">✔ Đã duyệt</span>';
+      showToast(`✔ Đã duyệt nhận ứng viên ${name}!`);
+    }
+
+    function eReject(id, name) {
+      document.getElementById(`e-status-${id}`).innerHTML = '<span class="px-2 py-0.5 rounded bg-red-100 text-red-800 font-bold">ĐÃ TỪ CHỐI</span>';
+      document.getElementById(`e-actions-${id}`).innerHTML = '<span class="text-gray-400">Đã từ chối</span>';
+      showToast(`Đã từ chối ứng viên ${name}.`);
+    }
+
+    function adminApprove(id) {
+      document.getElementById(`a-actions-${id}`).innerHTML = '<span class="text-emerald-700 font-bold">✔ ĐÃ CÔNG KHAI</span>';
+      showToast("✔ Tin tuyển dụng đã được kiểm duyệt và công khai!");
+    }
+
+    function adminBlockScam() {
+      const row = document.getElementById('a-row-scam');
+      row.classList.remove('bg-red-50');
+      row.classList.add('bg-gray-200', 'line-through', 'opacity-50');
+      document.getElementById('a-actions-2').innerHTML = '<span class="text-red-700 font-bold">🚫 ĐÃ KHÓA & BÁC BỎ</span>';
+      showToast("🚫 Đã khóa tài khoản và chặn tin lừa đảo nạp cọc!");
+    }
+
+    function showToast(msg) {
+      const toast = document.getElementById('figma-toast');
+      toast.textContent = msg;
+      toast.classList.remove('hidden');
+      setTimeout(() => toast.classList.add('hidden'), 3000);
+    }
+
+    function openShareInfo() {
+      showToast("📋 Đã sao chép link Prototype để gửi cho Giảng viên!");
+    }
+  </script>
+</body>
+</html>

@@ -1,0 +1,151 @@
+=== Page 1 ===
+T R Ư Ờ N G  Đ Ạ I  H Ọ C
+VĂN LANG
+K H O A  C Ô N G  N G H Ệ  T H Ô N G  T I N
+C H U Y Ê N  Đ Ề  T Ố T  N G H I Ệ P  2
+BUỔI 9
+Triển khai sản phẩm và viết báo cáo
+Giảng Viên Giảng Dạy:
+ThS. Nguyễn Văn Trung
+
+=== Page 2 ===
+Mục tiêu buổi học
+Triển khai/đóng gói được sản phẩm ở dạng có thể demo 
+độc lập, không phụ thuộc máy của lập trình viên
+Nắm được cấu trúc báo cáo khóa luận chuẩn theo quy 
+trình phát triển sản phẩm CNTT
+Có bản nháp báo cáo đầy đủ để GVHD góp ý trước khi 
+hoàn thiện
+Chuẩn bị đầy đủ minh chứng (ảnh, số liệu, demo) cho 
+báo cáo cuối kỳ
+Văn Lang · Chuyên đề tốt nghiệp 2 · Buổi 9 1
+
+=== Page 3 ===
+Nội dung chính
+Tóm tắt trọng tâm buổi học
+Triển khai/đóng gói sản phẩm (CNPM): Deploy ứng dụng lên môi trường có thể truy cập được (server miễn phí, dịch vụ cloud free tier, hoặc 
+chạy local có hướng dẫn rõ)
+Đóng gói mô hình và demo (KHDL/AI): KHDL: đóng gói dashboard thành ứng dụng chạy được độc lập (Streamlit app) hoặc file báo cáo trực 
+quan hoàn chỉnh
+Cấu trúc báo cáo khóa luận chuẩn: Mở đầu: lý do chọn đề tài, mục tiêu, phạm vi
+Chuẩn bị minh chứng cho báo cáo: Ảnh chụp màn hình các chức năng/kết quả chính, có chú thích rõ ràng
+Văn Lang · Chuyên đề tốt nghiệp 2 · Buổi 9 2
+
+=== Page 4 ===
+Quy trình thực hiện trong buổi
+1
+Triển khai/đóng gói sản phẩm
+→
+2
+Viết báo cáo theo cấu trúc chuẩn
+→
+3
+Chuẩn bị minh chứng (ảnh, số 
+liệu, demo)
+→
+4
+GVHD góp ý bản nháp báo cáo
+Văn Lang · Chuyên đề tốt nghiệp 2 · Buổi 9 3
+
+=== Page 5 ===
+Ví dụ áp dụng theo 3 chuyên ngành
+Công nghệ phần mềm
+Nền tảng quản lý freelance/marketplace việc làm part-
+time cho sinh viên
+Deploy: backend + frontend lên dịch vụ cloud miễn 
+phí, hoặc đóng gói chạy local kèm hướng dẫn chi 
+tiết
+Tài khoản demo: 1 tài khoản Sinh viên, 1 tài khoản 
+Nhà tuyển dụng có sẵn dữ liệu tin/ứng tuyển mẫu
+Khoa học dữ liệu
+Phân tích & dự báo xu hướng tuyển dụng ngành CNTT 
+từ dữ liệu tin đăng việc làm
+Đóng gói: dashboard Streamlit chạy độc lập, hoặc 
+xuất báo cáo phân tích dạng PDF/HTML trực quan
+Demo: chuẩn bị sẵn file dữ liệu mẫu để chạy 
+dashboard không phụ thuộc kết nối mạng lúc báo 
+cáo
+Trí tuệ nhân tạo
+Hệ thống nhận diện khuôn mặt điểm danh tự động
+Đóng gói: script/giao diện demo chạy nhận diện 
+trực tiếp qua webcam hoặc trên video mẫu đã quay 
+sẵn
+Dự phòng: quay sẵn 1 video demo ngắn (1-2 phút) 
+phòng trường hợp camera/ánh sáng lúc báo cáo 
+không tốt
+Văn Lang · Chuyên đề tốt nghiệp 2 · Buổi 9 4
+
+=== Page 6 ===
+HOẠT ĐỘNG NHÓM T ẠI LỚP
+1 Triển khai/đóng gói sản phẩm
+Deploy hoặc đóng gói sản phẩm ở dạng chạy được độc lập
+Chuẩn bị tài khoản/dữ liệu demo sẵn sàng
+Viết hướng dẫn cài đặt/chạy ngắn gọn kèm mã nguồn
+2 Viết bản nháp báo cáo và nhận góp ý
+Hoàn thành bản nháp đầy đủ 8 mục của báo cáo
+Đính kèm minh chứng (ảnh, số liệu) cho phần Kết quả đạt được
+Ghi nhận góp ý của GVHD để hoàn thiện ở buổi 10
+Văn Lang · Chuyên đề tốt nghiệp 2 · Buổi 9 5
+
+=== Page 7 ===
+Lỗi thường gặp & lưu ý
+Chỉ demo được trên máy cá nhân của lập trình viên, không chạy được ở môi trường khác hoặc máy của người khác
+Báo cáo copy gần như nguyên văn từ tài liệu thiết kế các buổi trước mà không tổng hợp lại theo mạch câu chuyện
+Không có phương án dự phòng, phụ thuộc hoàn toàn vào mạng/thiết bị hoạt động tốt đúng lúc báo cáo
+Văn Lang · Chuyên đề tốt nghiệp 2 · Buổi 9 6
+
+=== Page 8 ===
+Tự thực hiện ở nhà (10,5 giờ)
+Hoàn thiện việc triển khai sản phẩm, kiểm tra lại toàn bộ luồng demo trên môi trường đã triển khai
+Viết và hoàn chỉnh báo cáo theo góp ý của GVHD, đảm bảo đủ 8 mục và mạch lạc
+Chuẩn bị đầy đủ tài liệu minh chứng (screenshot, số liệu, đường dẫn demo)
+Quay video demo dự phòng (nếu chưa có), kiểm tra lại chất lượng hình ảnh/âm thanh
+Rà soát chính tả, định dạng của báo cáo trước khi nộp bản hoàn chỉnh
+Cập nhật nhật ký thực hiện đề tài với nội dung buổi 9
+Văn Lang · Chuyên đề tốt nghiệp 2 · Buổi 9 7
+
+=== Page 9 ===
+Sản phẩm/tài liệu cần bàn giao cuối buổi
+Sản phẩm đã triển khai/đóng gói, chạy được độc lập
+Bản nháp báo cáo đầy đủ 8 mục, đã được GVHD góp ý
+Bộ minh chứng (ảnh, số liệu, demo/video dự phòng)
+Văn Lang · Chuyên đề tốt nghiệp 2 · Buổi 9 8
+
+=== Page 10 ===
+Tiêu chí đánh giá áp dụng cho buổi này
+Rubric 1 - Chuyên cần
+10%
+Điểm danh & mức độ tham gia 10 buổi hướng dẫn
+ÁP DỤNG
+Rubric 2 - Đánh giá giữa kỳ
+30%
+GVHD đánh giá sản phẩm theo từng mốc + nhật ký thực 
+hiện đề tài
+Rubric 3 - Báo cáo cuối kỳ
+60%
+Hội đồng đánh giá báo cáo, sản phẩm, demo và phần bảo 
+vệ
+Buổi 9 tính điểm chuyên cần (Rubric 1); chất lượng triển khai và báo cáo sẽ là nền tảng trực tiếp cho điểm Rubric 3 ở buổi báo cáo chính thức.
+Văn Lang · Chuyên đề tốt nghiệp 2 · Buổi 9 9
+
+=== Page 11 ===
+Câu hỏi thảo luận nhanh
+Dành thời gian cuối buổi để cả lớp cùng trao đổi
+1 Phần nào của báo cáo nhóm bạn thấy khó viết nhất - phần thiết kế, phần kết quả, hay phần hạn chế?
+2 Nếu đúng ngày báo cáo mà sản phẩm demo online gặp sự cố, nhóm bạn đã có phương án dự phòng nào chưa?
+Văn Lang · Chuyên đề tốt nghiệp 2 · Buổi 9 10
+
+=== Page 12 ===
+T Ổ N G  K Ế T  B U Ổ I  9
+Triển khai sản phẩm và viết báo cáo
+Sản phẩm đã triển khai/đóng gói và chạy thử thành công trên môi trường độc lập
+Báo cáo đã có bản nháp đầy đủ 8 mục, được GVHD góp ý
+Bộ minh chứng (ảnh, số liệu, demo dự phòng) đã chuẩn bị đầy đủ
+Nhóm đã nắm rõ những điểm cần chỉnh sửa trước buổi tổng duyệt (buổi 10)
+Buổi tiếp theo:
+Tổng duyệt sản phẩm và báo cáo trước khi bảo vệ chính thức
+
+=== Page 13 ===
+HỎI - ĐÁP
+Cảm ơn các nhóm - hẹn gặp lại ở buổi tiếp theo
+

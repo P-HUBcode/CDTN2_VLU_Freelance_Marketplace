@@ -1,0 +1,151 @@
+=== Page 1 ===
+T R Ư Ờ N G  Đ Ạ I  H Ọ C
+VĂN LANG
+K H O A  C Ô N G  N G H Ệ  T H Ô N G  T I N
+C H U Y Ê N  Đ Ề  T Ố T  N G H I Ệ P  2
+BUỔI 6
+Xây dựng sản phẩm - Sprint 1
+Giảng Viên Giảng Dạy:
+ThS. Nguyễn Văn Trung
+
+=== Page 2 ===
+Mục tiêu buổi học
+Bắt đầu xây dựng sản phẩm thực tế theo thiết kế đã 
+duyệt ở buổi 5
+Biết cách dùng Git để quản lý mã nguồn/phiên bản theo 
+nhóm
+Được GVHD hướng dẫn kỹ thuật 1:1 theo từng nhóm 
+khi gặp vướng mắc
+ Có bản demo tiến độ đầu tiên vào cuối buổi
+Văn Lang · Chuyên đề tốt nghiệp 2 · Buổi 6 1
+
+=== Page 3 ===
+Nội dung chính
+Tóm tắt trọng tâm buổi học
+Nguyên tắc xây dựng sản phẩm theo sprint: Làm theo đúng thứ tự ưu tiên trong backlog đã lập ở buổi 3, không nhảy sang việc "thú vị hơn" 
+trước
+Quản lý mã nguồn bằng Git: Mỗi nhóm nên có 1 repository chung (GitHub/GitLab), mỗi thành viên làm việc trên nhánh (branch) riêng
+Cách làm việc hiệu quả trong buổi hướng dẫn 1:1: Mỗi nhóm chuẩn bị sẵn danh sách vướng mắc cụ thể trước khi đến lượt GVHD hỗ trợ, 
+tránh hỏi chung chung
+Chuẩn bị demo tiến độ cuối buổi: Không cần demo hoàn chỉnh - chỉ cần thể hiện được phần đã chạy được, dù nhỏ
+Văn Lang · Chuyên đề tốt nghiệp 2 · Buổi 6 2
+
+=== Page 4 ===
+Quy trình thực hiện trong buổi
+1
+Khởi tạo repository và cấu trúc 
+project
+→
+2
+Xây dựng theo thứ tự ưu tiên 
+trong backlog
+→
+3
+GVHD hướng dẫn kỹ thuật 1:1 
+theo nhóm
+→
+4
+Demo nhanh tiến độ cuối buổi
+Văn Lang · Chuyên đề tốt nghiệp 2 · Buổi 6 3
+
+=== Page 5 ===
+Ví dụ áp dụng theo 3 chuyên ngành
+Công nghệ phần mềm
+Nền tảng quản lý freelance/marketplace việc làm part-
+time cho sinh viên
+Ưu tiên buổi 6: hoàn thành đăng ký/đăng nhập, 
+phân quyền, và CRUD cơ bản cho tin tuyển dụng
+Mỗi thành viên làm việc trên 1 nhánh riêng 
+(feature/auth, feature/job-post...), commit thường 
+xuyên
+Khoa học dữ liệu
+Phân tích & dự báo xu hướng tuyển dụng ngành CNTT 
+từ dữ liệu tin đăng việc làm
+Ưu tiên buổi 6: hoàn thiện script thu thập/làm sạch 
+dữ liệu, chạy được pipeline từ đầu đến bảng 
+feature
+Lưu code xử lý dữ liệu vào repository, ghi chú rõ 
+từng bước trong notebook/script
+Trí tuệ nhân tạo
+Hệ thống nhận diện khuôn mặt điểm danh tự động
+Ưu tiên buổi 6: hoàn thành module enrollment -
+thu ảnh khuôn mặt và lưu đặc trưng vào cơ sở dữ 
+liệu
+Test thử enrollment với 2-3 khuôn mặt của chính 
+thành viên trong nhóm
+Văn Lang · Chuyên đề tốt nghiệp 2 · Buổi 6 4
+
+=== Page 6 ===
+HOẠT ĐỘNG NHÓM T ẠI LỚP
+1 Xây dựng chức năng theo backlog
+Bắt đầu với mục backlog ưu tiên cao nhất chưa hoàn thành
+Commit code lên repository chung ít nhất 2 lần trong buổi
+Ghi chú lại vướng mắc kỹ thuật cần hỏi GVHD
+2 Chuẩn bị và thực hiện demo nhanh
+Chuẩn bị dữ liệu mẫu để demo mượt mà
+Demo ngắn gọn phần đã chạy được trước GVHD
+Ghi nhận việc còn dang dở để tiếp tục đầu buổi 7
+Văn Lang · Chuyên đề tốt nghiệp 2 · Buổi 6 5
+
+=== Page 7 ===
+Lỗi thường gặp & lưu ý
+Cả nhóm cùng sửa trực tiếp trên 1 nhánh chính (main/master), dẫn đến xung đột code (merge conflict) liên tục
+Cố gắng hoàn thiện toàn bộ giao diện đẹp trước khi chức năng thực sự chạy được
+Không commit thường xuyên, dồn đến cuối buổi mới đẩy code lên khiến khó theo dõi tiến độ thực tế
+Văn Lang · Chuyên đề tốt nghiệp 2 · Buổi 6 6
+
+=== Page 8 ===
+Tự thực hiện ở nhà (10,5 giờ)
+Tiếp tục xây dựng các chức năng/mô-đun theo backlog của sprint 1 đến khi hoàn thành phần được phân công
+Đẩy code lên repository chung thường xuyên, kèm message commit rõ ràng
+Ghi lại các vướng mắc kỹ thuật đã tự giải quyết được và cách giải quyết (hữu ích cho báo cáo sau này)
+Chuẩn bị sẵn bản demo tiến độ để trình bày ở đầu buổi 7
+Nhóm trưởng tổng hợp tiến độ của cả nhóm, xác định phần nào có nguy cơ chậm
+Cập nhật nhật ký thực hiện đề tài với nội dung buổi 6
+Văn Lang · Chuyên đề tốt nghiệp 2 · Buổi 6 7
+
+=== Page 9 ===
+Sản phẩm/tài liệu cần bàn giao cuối buổi
+Mã nguồn đã đẩy lên repository chung, có lịch sử commit rõ ràng
+Bản demo tiến độ (dù còn đơn giản) của các chức năng ưu tiên cao
+Nhật ký thực hiện đề tài - mục ghi buổi 6
+Văn Lang · Chuyên đề tốt nghiệp 2 · Buổi 6 8
+
+=== Page 10 ===
+Tiêu chí đánh giá áp dụng cho buổi này
+Rubric 1 - Chuyên cần
+10%
+Điểm danh & mức độ tham gia 10 buổi hướng dẫn
+ÁP DỤNG
+Rubric 2 - Đánh giá giữa kỳ
+30%
+GVHD đánh giá sản phẩm theo từng mốc + nhật ký thực 
+hiện đề tài
+Rubric 3 - Báo cáo cuối kỳ
+60%
+Hội đồng đánh giá báo cáo, sản phẩm, demo và phần bảo 
+vệ
+Buổi 6 tính điểm chuyên cần (Rubric 1); tiến độ xây dựng sẽ được đánh giá chính thức ở mốc giữa kỳ 2 (buổi 7) theo Rubric 2.
+Văn Lang · Chuyên đề tốt nghiệp 2 · Buổi 6 9
+
+=== Page 11 ===
+Câu hỏi thảo luận nhanh
+Dành thời gian cuối buổi để cả lớp cùng trao đổi
+1 Vướng mắc kỹ thuật nào nhóm bạn mất nhiều thời gian nhất để giải quyết trong buổi hôm nay?
+2 Nếu ước tính lại, nhóm bạn có đang đi đúng tiến độ để hoàn thành Must-have vào cuối buổi 7 không?
+Văn Lang · Chuyên đề tốt nghiệp 2 · Buổi 6 10
+
+=== Page 12 ===
+T Ổ N G  K Ế T  B U Ổ I  6
+Xây dựng sản phẩm - Sprint 1
+Ít nhất 1 luồng chức năng ưu tiên cao chạy được đầu -cuối (dù đơn giản)
+Mã nguồn của mọi thành viên đã được đẩy lên repository chung
+Nhóm đã demo nhanh được tiến độ trước GVHD
+Danh sách việc còn dang dở đã được ghi rõ để tiếp tục ở buổi 7
+Buổi tiếp theo:
+Xây dựng sản phẩm - Sprint 2 (Mốc đánh giá giữa kỳ 2)
+
+=== Page 13 ===
+HỎI - ĐÁP
+Cảm ơn các nhóm - hẹn gặp lại ở buổi tiếp theo
+

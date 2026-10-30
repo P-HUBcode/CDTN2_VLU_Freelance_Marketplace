@@ -1,0 +1,150 @@
+=== Page 1 ===
+T R Ư Ờ N G  Đ Ạ I  H Ọ C
+VĂN LANG
+K H O A  C Ô N G  N G H Ệ  T H Ô N G  T I N
+C H U Y Ê N  Đ Ề  T Ố T  N G H I Ệ P  2
+BUỔI 7
+Xây dựng sản phẩm - Sprint 2 (Mốc đánh giá giữa kỳ - lần 2)
+Giảng Viên Giảng Dạy:
+ThS. Nguyễn Văn Trung
+
+=== Page 2 ===
+Mục tiêu buổi học
+Demo được tiến độ sản phẩm rõ ràng hơn buổi 6, thể 
+hiện các chức năng Must-have
+Hiểu cách GVHD chấm mốc giữa kỳ 2 (Rubric 2) và 
+checkpoint go/no-go
+Tích hợp được các module do từng thành viên xây dựng 
+thành 1 sản phẩm thống nhất
+Điều chỉnh kịp phạm vi đề tài nếu nhóm đang chậm tiến 
+độ
+Văn Lang · Chuyên đề tốt nghiệp 2 · Buổi 7 1
+
+=== Page 3 ===
+Nội dung chính
+Tóm tắt trọng tâm buổi học
+Demo tiến độ và nhận góp ý: Mỗi nhóm demo trực tiếp sản phẩm hiện tại trước GVHD (và có thể trước lớp)
+Checkpoint go/no-go: "Go": nhóm đang đúng tiến độ, tiếp tục theo kế hoạch ban đầu
+Tích hợp các module thành sản phẩm hoàn chỉnh: CNPM: đảm bảo frontend gọi đúng API backend, dữ liệu hiển thị nhất quán giữa các màn 
+hình
+Cách GVHD đánh giá mốc giữa kỳ 2 (Rubric 2): So sánh mức độ hoàn thành thực tế với kế hoạch sprint đã lập ở buổi 3
+Văn Lang · Chuyên đề tốt nghiệp 2 · Buổi 7 2
+
+=== Page 4 ===
+Quy trình thực hiện trong buổi
+1
+Từng nhóm demo tiến độ trước 
+lớp
+→
+2
+GVHD đánh giá theo mốc 2 
+(Rubric 2)
+→
+3
+Rà soát checkpoint go/no-go
+→
+4
+Tích hợp các module thành sản 
+phẩm thống nhất
+Văn Lang · Chuyên đề tốt nghiệp 2 · Buổi 7 3
+
+=== Page 5 ===
+Ví dụ áp dụng theo 3 chuyên ngành
+Công nghệ phần mềm
+Nền tảng quản lý freelance/marketplace việc làm part-
+time cho sinh viên
+Demo: luồng đầy đủ đăng tin → tìm kiếm → ứng 
+tuyển → nhà tuyển dụng duyệt hồ sơ
+Tích hợp: kiểm tra frontend và backend đã đồng bộ 
+đúng trạng thái ứng tuyển (chưa duyệt/đã duyệt/từ 
+chối)
+Khoa học dữ liệu
+Phân tích & dự báo xu hướng tuyển dụng ngành CNTT 
+từ dữ liệu tin đăng việc làm
+Demo: chạy pipeline từ dữ liệu thô đến dashboard 
+hiển thị top kỹ năng theo thời gian
+Tích hợp: dashboard đọc trực tiếp từ bảng feature 
+đã xử lý, không cần copy dữ liệu thủ công
+Trí tuệ nhân tạo
+Hệ thống nhận diện khuôn mặt điểm danh tự động
+Demo: nhận diện real-time qua camera, kết quả 
+điểm danh được lưu vào cơ sở dữ liệu ngay lập tức
+Tích hợp: module nhận diện gọi đúng API lưu điểm 
+danh, không chạy tách rời trong file riêng
+Văn Lang · Chuyên đề tốt nghiệp 2 · Buổi 7 4
+
+=== Page 6 ===
+HOẠT ĐỘNG NHÓM T ẠI LỚP
+1 Demo tiến độ sản phẩm
+Demo luồng chức năng chính đã hoàn thành từ buổi 6 đến nay
+Nêu rõ phần nào đã xong, phần nào còn dang dở
+Ghi nhận góp ý của GVHD ngay trong buổi
+2 Rà soát go/no-go và tích hợp module
+Đối chiếu tiến độ thực tế với backlog/kế hoạch sprint đã lập
+Quyết định rõ: giữ nguyên phạm vi hay cắt giảm Should-have/Could-have
+Kiểm tra và khắc phục các điểm chưa tích hợp tốt giữa các module
+Văn Lang · Chuyên đề tốt nghiệp 2 · Buổi 7 5
+
+=== Page 7 ===
+Lỗi thường gặp & lưu ý
+Nhóm biết mình đang chậm tiến độ nhưng không dám cắt giảm phạm vi, dẫn đến buổi 8 -9 dồn việc không kịp
+Các module hoạt động riêng lẻ tốt nhưng chưa từng được ghép chung để chạy thử một lần nào
+Demo không chuẩn bị trước kịch bản, mất nhiều thời gian loay hoay tìm chức năng để demo
+Văn Lang · Chuyên đề tốt nghiệp 2 · Buổi 7 6
+
+=== Page 8 ===
+Tự thực hiện ở nhà (10,5 giờ)
+Hoàn thiện các chức năng còn lại theo backlog đã điều chỉnh (nếu có cắt giảm phạm vi)
+Tích hợp các mô-đun đã xây dựng thành sản phẩm hoàn chỉnh sơ bộ, chạy thử toàn bộ luồng ít nhất 1 lần
+Khắc phục các lỗi tích hợp đã phát hiện trong buổi
+Nhóm trưởng cập nhật lại backlog/kế hoạch sprint theo quyết định go/no -go
+Mỗi thành viên rà soát lại phần việc của mình sau khi tích hợp, đảm bảo không có xung đột
+Cập nhật nhật ký thực hiện đề tài với nội dung buổi 7 và kết quả chấm mốc 2
+Văn Lang · Chuyên đề tốt nghiệp 2 · Buổi 7 7
+
+=== Page 9 ===
+Sản phẩm/tài liệu cần bàn giao cuối buổi
+Sản phẩm đã tích hợp các module thành 1 hệ thống chạy thử được
+Bảng go/no-go và backlog đã cập nhật (nếu có điều chỉnh phạm vi)
+Nhật ký thực hiện đề tài từ buổi 1-7
+Văn Lang · Chuyên đề tốt nghiệp 2 · Buổi 7 8
+
+=== Page 10 ===
+Tiêu chí đánh giá áp dụng cho buổi này
+Rubric 1 - Chuyên cần
+10%
+Điểm danh & mức độ tham gia 10 buổi hướng dẫn
+ÁP DỤNG
+Rubric 2 - Đánh giá giữa kỳ
+30%
+GVHD đánh giá sản phẩm theo từng mốc + nhật ký thực 
+hiện đề tài
+ÁP DỤNG
+Rubric 3 - Báo cáo cuối kỳ
+60%
+Hội đồng đánh giá báo cáo, sản phẩm, demo và phần bảo 
+vệ
+Buổi 7 là Mốc giữa kỳ 2: GVHD tiếp tục chấm sản phẩm và nhật ký theo Rubric 2 (30%), cộng với điểm chuyên cần (Rubric 1).
+Văn Lang · Chuyên đề tốt nghiệp 2 · Buổi 7 9
+
+=== Page 11 ===
+Câu hỏi thảo luận nhanh
+Dành thời gian cuối buổi để cả lớp cùng trao đổi
+1 Nhóm bạn đang ở trạng thái "go" hay "no-go"? Nếu là "no-go", nhóm sẽ cắt giảm phần nào?
+2 Lỗi tích hợp nào giữa các module khiến nhóm bạn bất ngờ nhất khi ghép lại với nhau?
+Văn Lang · Chuyên đề tốt nghiệp 2 · Buổi 7 10
+
+=== Page 12 ===
+T Ổ N G  K Ế T  B U Ổ I  7
+Xây dựng sản phẩm - Sprint 2 (Mốc đánh giá giữa kỳ 2)
+Sản phẩm đã được demo trước GVHD với luồng chức năng chính chạy được
+Quyết định go/no-go đã rõ ràng, backlog đã cập nhật nếu có cắt giảm
+Các module đã được tích hợp, không còn chạy rời rạc từng phần
+Nhật ký thực hiện đề tài phản ánh đúng tiến độ thực tế đến buổi 7
+Buổi tiếp theo:
+Kiểm thử và tinh chỉnh sản phẩm
+
+=== Page 13 ===
+HỎI - ĐÁP
+Cảm ơn các nhóm - hẹn gặp lại ở buổi tiếp theo
+

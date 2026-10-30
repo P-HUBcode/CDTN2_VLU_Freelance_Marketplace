@@ -1,0 +1,92 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 900" width="1440" height="900">
+  <defs>
+    <filter id="cardShadow" x="-5%" y="-5%" width="110%" height="115%">
+      <feDropShadow dx="0" dy="2" stdDeviation="4" flood-opacity="0.06"/>
+    </filter>
+  </defs>
+  
+  <rect width="1440" height="900" fill="#F3F4F6"/>
+  
+    <!-- Navigation Header -->
+    <rect x="0" y="0" width="1440" height="70" fill="#003366"/>
+    <text x="60" y="44" fill="#FFFFFF" font-size="20" font-weight="bold" font-family="system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif">🎓 VLU FREELANCE</text>
+    <text x="210" y="44" fill="#38BDF8" font-size="13" font-weight="bold" font-family="system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif">| ADMIN PORTAL</text>
+    
+        <text x="360" y="42" fill="#E2E8F0" font-size="14" font-family="system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif">Dashboard Thống kê</text>
+        <rect x="520" y="24" width="190" height="34" rx="6" fill="#0369A1"/>
+        <text x="535" y="46" fill="#FFFFFF" font-weight="bold" font-size="14" font-family="system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif">Duyệt Tin Việc Làm (3)</text>
+        <text x="750" y="42" fill="#E2E8F0" font-size="14" font-family="system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif">Quản lý Users</text>
+        
+    
+    <!-- User action area -->
+    <rect x="1100" y="18" width="130" height="34" rx="6" fill="#0284C7"/>
+    <text x="1122" y="40" fill="#FFFFFF" font-weight="bold" font-size="13" font-family="system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif">+ Đăng tin NTD</text>
+    
+    <circle cx="1270" cy="35" r="16" fill="#E2E8F0"/>
+    <text x="1263" y="40" font-size="14">👤</text>
+    <text x="1295" y="40" fill="#FFFFFF" font-weight="600" font-size="13" font-family="system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif">Nguyễn Minh Phú</text>
+    
+
+  <!-- 4 KPI Stat Cards -->
+  <rect x="60" y="95" width="310" height="75" rx="8" fill="#EFF6FF" stroke="#BFDBFE"/>
+  <text x="85" y="125" fill="#1E40AF" font-size="13" font-family="system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif">Tổng số Sinh viên đăng ký:</text>
+  <text x="85" y="153" fill="#1E3A8A" font-size="22" font-weight="bold" font-family="system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif">1,240</text>
+
+  <rect x="395" y="95" width="310" height="75" rx="8" fill="#ECFDF5" stroke="#A7F3D0"/>
+  <text x="420" y="125" fill="#065F46" font-size="13" font-family="system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif">Doanh nghiệp đã kiểm duyệt:</text>
+  <text x="420" y="153" fill="#064E3B" font-size="22" font-weight="bold" font-family="system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif">158</text>
+
+  <rect x="735" y="95" width="310" height="75" rx="8" fill="#FEF3C7" stroke="#FDE68A"/>
+  <text x="760" y="125" fill="#92400E" font-size="13" font-family="system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif">Tin việc làm đang chạy an toàn:</text>
+  <text x="760" y="153" fill="#78350F" font-size="22" font-weight="bold" font-family="system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif">84</text>
+
+  <rect x="1070" y="95" width="310" height="75" rx="8" fill="#FEE2E2" stroke="#FECACA"/>
+  <text x="1095" y="125" fill="#991B1B" font-size="13" font-family="system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif">Tin tuyển dụng chờ duyệt:</text>
+  <text x="1095" y="153" fill="#DC2626" font-size="22" font-weight="bold" font-family="system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif">3 CẦN DUYỆT</text>
+
+  <!-- Admin Table Box -->
+  <rect x="60" y="190" width="1320" height="580" rx="12" fill="#FFFFFF" stroke="#E5E7EB" filter="url(#cardShadow)"/>
+  <text x="90" y="230" fill="#111827" font-size="16" font-weight="bold" font-family="system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif">DANH SÁCH TIN TUYỂN DỤNG CHỜ KIỂM DUYỆT TRƯỚC KHI HIỂN THỊ</text>
+
+  <!-- Header -->
+  <rect x="90" y="255" width="1260" height="42" fill="#F1F5F9" rx="6"/>
+  <text x="110" y="281" fill="#475569" font-size="13" font-weight="bold" font-family="system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif">Tiêu đề tin tuyển dụng</text>
+  <text x="430" y="281" fill="#475569" font-size="13" font-weight="bold" font-family="system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif">Doanh nghiệp / NTD</text>
+  <text x="710" y="281" fill="#475569" font-size="13" font-weight="bold" font-family="system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif">Mức thù lao &amp; Ca</text>
+  <text x="920" y="281" fill="#475569" font-size="13" font-weight="bold" font-family="system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif">Mã số thuế / Pháp nhân</text>
+  <text x="1150" y="281" fill="#475569" font-size="13" font-weight="bold" font-family="system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif">Thao tác kiểm duyệt</text>
+
+  <!-- Row 1: Tin Hợp Lệ -->
+  <line x1="90" y1="300" x2="1350" y2="300" stroke="#E2E8F0"/>
+  <text x="110" y="335" fill="#111827" font-size="14" font-weight="bold" font-family="system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif">Tuyển Nhân viên Phục vụ Cafe Sách</text>
+  <text x="110" y="355" fill="#64748B" font-size="12" font-family="system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif">Đăng lúc: 23/10/2026 - 08:30</text>
+  <text x="430" y="340" fill="#334155" font-size="13" font-family="system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif">The Book Cafe VLU</text>
+  <text x="710" y="340" fill="#059669" font-size="13" font-weight="bold" font-family="system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif">30.000đ/h • Tối T3-T5-T7</text>
+
+  <rect x="920" y="322" width="170" height="28" rx="6" fill="#DCFCE7"/>
+  <text x="930" y="341" fill="#166534" font-size="12" font-weight="bold" font-family="system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif">✔ MST: 0319887766 (Hợp lệ)</text>
+
+  <rect x="1150" y="320" width="85" height="32" rx="6" fill="#059669"/>
+  <text x="1165" y="341" fill="#FFFFFF" font-size="12" font-weight="bold" font-family="system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif">Duyệt tin</text>
+  <rect x="1245" y="320" width="85" height="32" rx="6" fill="#DC2626"/>
+  <text x="1265" y="341" fill="#FFFFFF" font-size="12" font-weight="bold" font-family="system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif">Từ chối</text>
+
+  <!-- Row 2: Tin Nghi Vấn Lừa Đảo (Highlight Hồng Đỏ) -->
+  <line x1="90" y1="380" x2="1350" y2="380" stroke="#FCA5A5"/>
+  <rect x="90" y="380" width="1260" height="75" fill="#FEF2F2"/>
+  <text x="110" y="415" fill="#B91C1C" font-size="14" font-weight="bold" font-family="system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif">⚠️ Việc nhẹ lương cao 500k/ngày gõ mã captcha online</text>
+  <text x="110" y="435" fill="#EF4444" font-size="12" font-family="system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif">Cảnh báo: Dấu hiệu lừa đảo đa cấp thu phí cọc ban đầu</text>
+  <text x="430" y="420" fill="#B91C1C" font-size="13" font-family="system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif">Cá nhân tự do (SĐT rác không rõ)</text>
+  <text x="710" y="420" fill="#B91C1C" font-size="13" font-weight="bold" font-family="system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif">500.000đ/ngày (Bất thường)</text>
+
+  <rect x="920" y="405" width="170" height="28" rx="6" fill="#FEE2E2"/>
+  <text x="930" y="424" fill="#B91C1C" font-size="12" font-weight="bold" font-family="system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif">❌ Không MST / Blacklist</text>
+
+  <rect x="1150" y="402" width="180" height="34" rx="6" fill="#DC2626"/>
+  <text x="1165" y="424" fill="#FFFFFF" font-size="12" font-weight="bold" font-family="system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif">🚫 Bác bỏ &amp; Khóa TK</text>
+
+  <!-- Legend -->
+  <rect x="60" y="800" width="1320" height="70" rx="8" fill="#FFFFFF" stroke="#003366" stroke-width="1.5"/>
+  <text x="80" y="825" fill="#003366" font-size="13" font-weight="bold" font-family="system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif">📌 FIGMA SPEC - MÀN HÌNH 05: CỔNG QUẢN TRỊ ADMIN KIỂM DUYỆT CHỐNG LỪA ĐẢO</text>
+  <text x="80" y="848" fill="#4B5563" font-size="12" font-family="system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif">• Giải quyết bài toán bảo vệ sinh viên Văn Lang trước bẫy việc làm  •  Khớp FR-13 (Kiểm duyệt tin) &amp; FR-14 (Quản lý User)</text>
+</svg>

@@ -1,0 +1,88 @@
+<?xml version='1.0' encoding='utf-8'?>
+<mxfile host="app.diagrams.net">
+  <diagram id="ERD_Database" name="ERD_Database_FreelanceMarketplace">
+    <mxGraphModel dx="1387" dy="793" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1169" pageHeight="827" background="#ffffff" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="title" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#003366;fontColor=#ffffff;fontSize=14;fontStyle=1;align=center;strokeColor=#002244;shadow=1;" value="SƠ ĐỒ CƠ SỞ DỮ LIỆU QUAN HỆ (ENTITY RELATIONSHIP DIAGRAM - ERD)&lt;br&gt;&lt;span style=&quot;font-size:11px;font-weight:normal;&quot;&gt;Đề tài: Nền tảng quản lý freelance / marketplace việc làm part-time cho sinh viên&lt;/span&gt;" vertex="1">
+          <mxGeometry height="50" width="1040" x="60" y="20" as="geometry" />
+        </mxCell>
+        <mxCell id="tbl_users" parent="1" style="swimlane;fontStyle=1;align=center;verticalAlign=top;childLayout=stackLayout;horizontal=1;startSize=30;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=0;marginBottom=0;html=1;whiteSpace=wrap;fillColor=#003366;fontColor=#ffffff;strokeColor=#003366;strokeWidth=1.5;shadow=1;" value="users (Tài khoản người dùng)" vertex="1">
+          <mxGeometry height="245" width="280" x="60" y="95" as="geometry" />
+        </mxCell>
+        <mxCell id="tbl_users_body" parent="tbl_users" style="text;strokeColor=none;fillColor=#ffffff;align=left;verticalAlign=top;spacingLeft=8;spacingRight=8;spacingTop=6;spacingBottom=6;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;whiteSpace=wrap;html=1;fontSize=11;fontColor=#222222;lineHeight=1.4;" value="🔑 &lt;b&gt;id&lt;/b&gt;: INT (PK, Auto Increment)&lt;br&gt;• &lt;b&gt;email&lt;/b&gt;: VARCHAR(150) [UNIQUE]&lt;br&gt;• &lt;b&gt;password_hash&lt;/b&gt;: VARCHAR(255)&lt;br&gt;• &lt;b&gt;full_name&lt;/b&gt;: VARCHAR(100)&lt;br&gt;• &lt;b&gt;phone&lt;/b&gt;: VARCHAR(20)&lt;br&gt;• &lt;b&gt;role&lt;/b&gt;: ENUM('student', 'employer', 'admin')&lt;br&gt;• &lt;b&gt;is_verified&lt;/b&gt;: BOOLEAN [Default: false]&lt;br&gt;• &lt;b&gt;avatar_url&lt;/b&gt;: VARCHAR(255)&lt;br&gt;• &lt;b&gt;created_at&lt;/b&gt;: DATETIME" vertex="1">
+          <mxGeometry height="213" width="280" y="30" as="geometry" />
+        </mxCell>
+        <mxCell id="tbl_student" parent="1" style="swimlane;fontStyle=1;align=center;verticalAlign=top;childLayout=stackLayout;horizontal=1;startSize=30;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=0;marginBottom=0;html=1;whiteSpace=wrap;fillColor=#003366;fontColor=#ffffff;strokeColor=#003366;strokeWidth=1.5;shadow=1;" value="student_profiles (Hồ sơ Sinh viên)" vertex="1">
+          <mxGeometry height="245" width="280" x="60" y="410" as="geometry" />
+        </mxCell>
+        <mxCell id="tbl_student_body" parent="tbl_student" style="text;strokeColor=none;fillColor=#ffffff;align=left;verticalAlign=top;spacingLeft=8;spacingRight=8;spacingTop=6;spacingBottom=6;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;whiteSpace=wrap;html=1;fontSize=11;fontColor=#222222;lineHeight=1.4;" value="🔑 &lt;b&gt;id&lt;/b&gt;: INT (PK, Auto Increment)&lt;br&gt;🔗 &lt;b&gt;user_id&lt;/b&gt;: INT (FK -&gt; users.id)&lt;br&gt;• &lt;b&gt;student_code&lt;/b&gt;: VARCHAR(20) [Email VLU]&lt;br&gt;• &lt;b&gt;university&lt;/b&gt;: VARCHAR(100)&lt;br&gt;• &lt;b&gt;major&lt;/b&gt;: VARCHAR(100)&lt;br&gt;• &lt;b&gt;skills&lt;/b&gt;: TEXT (Kỹ năng, chuyên môn)&lt;br&gt;• &lt;b&gt;cv_url&lt;/b&gt;: VARCHAR(255) [Link PDF Cloud]&lt;br&gt;• &lt;b&gt;bio&lt;/b&gt;: TEXT (Giới thiệu bản thân)&lt;br&gt;• &lt;b&gt;rating_avg&lt;/b&gt;: DECIMAL(2,1) [Default: 5.0]" vertex="1">
+          <mxGeometry height="213" width="280" y="30" as="geometry" />
+        </mxCell>
+        <mxCell id="tbl_emp" parent="1" style="swimlane;fontStyle=1;align=center;verticalAlign=top;childLayout=stackLayout;horizontal=1;startSize=30;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=0;marginBottom=0;html=1;whiteSpace=wrap;fillColor=#003366;fontColor=#ffffff;strokeColor=#003366;strokeWidth=1.5;shadow=1;" value="employer_profiles (Hồ sơ NTD)" vertex="1">
+          <mxGeometry height="223" width="290" x="440" y="95" as="geometry" />
+        </mxCell>
+        <mxCell id="tbl_emp_body" parent="tbl_emp" style="text;strokeColor=none;fillColor=#ffffff;align=left;verticalAlign=top;spacingLeft=8;spacingRight=8;spacingTop=6;spacingBottom=6;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;whiteSpace=wrap;html=1;fontSize=11;fontColor=#222222;lineHeight=1.4;" value="🔑 &lt;b&gt;id&lt;/b&gt;: INT (PK, Auto Increment)&lt;br&gt;🔗 &lt;b&gt;user_id&lt;/b&gt;: INT (FK -&gt; users.id)&lt;br&gt;• &lt;b&gt;company_name&lt;/b&gt;: VARCHAR(150)&lt;br&gt;• &lt;b&gt;tax_code&lt;/b&gt;: VARCHAR(50) [Mã số thuế]&lt;br&gt;• &lt;b&gt;address&lt;/b&gt;: VARCHAR(255)&lt;br&gt;• &lt;b&gt;website&lt;/b&gt;: VARCHAR(150)&lt;br&gt;• &lt;b&gt;description&lt;/b&gt;: TEXT (Giới thiệu NTD)&lt;br&gt;• &lt;b&gt;rating_avg&lt;/b&gt;: DECIMAL(2,1) [Default: 5.0]" vertex="1">
+          <mxGeometry height="191" width="290" y="30" as="geometry" />
+        </mxCell>
+        <mxCell id="tbl_cat" parent="1" style="swimlane;fontStyle=1;align=center;verticalAlign=top;childLayout=stackLayout;horizontal=1;startSize=30;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=0;marginBottom=0;html=1;whiteSpace=wrap;fillColor=#003366;fontColor=#ffffff;strokeColor=#003366;strokeWidth=1.5;shadow=1;" value="categories (Danh mục ngành nghề)" vertex="1">
+          <mxGeometry height="135" width="280" x="820" y="95" as="geometry" />
+        </mxCell>
+        <mxCell id="tbl_cat_body" parent="tbl_cat" style="text;strokeColor=none;fillColor=#ffffff;align=left;verticalAlign=top;spacingLeft=8;spacingRight=8;spacingTop=6;spacingBottom=6;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;whiteSpace=wrap;html=1;fontSize=11;fontColor=#222222;lineHeight=1.4;" value="🔑 &lt;b&gt;id&lt;/b&gt;: INT (PK, Auto Increment)&lt;br&gt;• &lt;b&gt;name&lt;/b&gt;: VARCHAR(100) (Tên ngành nghề)&lt;br&gt;• &lt;b&gt;slug&lt;/b&gt;: VARCHAR(100) [UNIQUE]&lt;br&gt;• &lt;b&gt;description&lt;/b&gt;: VARCHAR(255)" vertex="1">
+          <mxGeometry height="103" width="280" y="30" as="geometry" />
+        </mxCell>
+        <mxCell id="tbl_jobs" parent="1" style="swimlane;fontStyle=1;align=center;verticalAlign=top;childLayout=stackLayout;horizontal=1;startSize=30;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=0;marginBottom=0;html=1;whiteSpace=wrap;fillColor=#003366;fontColor=#ffffff;strokeColor=#003366;strokeWidth=1.5;shadow=1;" value="jobs (Tin tuyển dụng việc làm)" vertex="1">
+          <mxGeometry height="333" width="290" x="440" y="380" as="geometry" />
+        </mxCell>
+        <mxCell id="tbl_jobs_body" parent="tbl_jobs" style="text;strokeColor=none;fillColor=#ffffff;align=left;verticalAlign=top;spacingLeft=8;spacingRight=8;spacingTop=6;spacingBottom=6;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;whiteSpace=wrap;html=1;fontSize=11;fontColor=#222222;lineHeight=1.4;" value="🔑 &lt;b&gt;id&lt;/b&gt;: INT (PK, Auto Increment)&lt;br&gt;🔗 &lt;b&gt;employer_id&lt;/b&gt;: INT (FK -&gt; employer.id)&lt;br&gt;🔗 &lt;b&gt;category_id&lt;/b&gt;: INT (FK -&gt; category.id)&lt;br&gt;• &lt;b&gt;title&lt;/b&gt;: VARCHAR(200) (Tiêu đề tin)&lt;br&gt;• &lt;b&gt;description&lt;/b&gt;: TEXT (Mô tả công việc)&lt;br&gt;• &lt;b&gt;requirements&lt;/b&gt;: TEXT (Yêu cầu kỹ năng)&lt;br&gt;• &lt;b&gt;job_type&lt;/b&gt;: ENUM('part_time', 'freelance')&lt;br&gt;• &lt;b&gt;salary_amount&lt;/b&gt;: DECIMAL(12,2)&lt;br&gt;• &lt;b&gt;salary_unit&lt;/b&gt;: ENUM('hourly', 'daily', 'monthly')&lt;br&gt;• &lt;b&gt;district&lt;/b&gt;: VARCHAR(50) (Quận/Huyện)&lt;br&gt;• &lt;b&gt;deadline&lt;/b&gt;: DATE (Hạn nộp hồ sơ)&lt;br&gt;• &lt;b&gt;status&lt;/b&gt;: ENUM('pending', 'approved', 'closed')&lt;br&gt;• &lt;b&gt;created_at&lt;/b&gt;: DATETIME" vertex="1">
+          <mxGeometry height="301" width="290" y="30" as="geometry" />
+        </mxCell>
+        <mxCell id="tbl_apps" parent="1" style="swimlane;fontStyle=1;align=center;verticalAlign=top;childLayout=stackLayout;horizontal=1;startSize=30;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=0;marginBottom=0;html=1;whiteSpace=wrap;fillColor=#003366;fontColor=#ffffff;strokeColor=#003366;strokeWidth=1.5;shadow=1;" value="applications (Đơn ứng tuyển)" vertex="1">
+          <mxGeometry height="223" width="280" x="820" y="280" as="geometry" />
+        </mxCell>
+        <mxCell id="tbl_apps_body" parent="tbl_apps" style="text;strokeColor=none;fillColor=#ffffff;align=left;verticalAlign=top;spacingLeft=8;spacingRight=8;spacingTop=6;spacingBottom=6;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;whiteSpace=wrap;html=1;fontSize=11;fontColor=#222222;lineHeight=1.4;" value="🔑 &lt;b&gt;id&lt;/b&gt;: INT (PK, Auto Increment)&lt;br&gt;🔗 &lt;b&gt;job_id&lt;/b&gt;: INT (FK -&gt; jobs.id)&lt;br&gt;🔗 &lt;b&gt;student_id&lt;/b&gt;: INT (FK -&gt; student_profiles.id)&lt;br&gt;• &lt;b&gt;cover_letter&lt;/b&gt;: TEXT (Lời nhắn ứng tuyển)&lt;br&gt;• &lt;b&gt;cv_file_url&lt;/b&gt;: VARCHAR(255) [Link PDF Cloud]&lt;br&gt;• &lt;b&gt;status&lt;/b&gt;: ENUM('submitted', 'accepted', 'rejected')&lt;br&gt;• &lt;b&gt;applied_at&lt;/b&gt;: DATETIME&lt;br&gt;• &lt;b&gt;updated_at&lt;/b&gt;: DATETIME" vertex="1">
+          <mxGeometry height="191" width="280" y="30" as="geometry" />
+        </mxCell>
+        <mxCell id="tbl_rev" parent="1" style="swimlane;fontStyle=1;align=center;verticalAlign=top;childLayout=stackLayout;horizontal=1;startSize=30;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=0;marginBottom=0;html=1;whiteSpace=wrap;fillColor=#003366;fontColor=#ffffff;strokeColor=#003366;strokeWidth=1.5;shadow=1;" value="reviews (Đánh giá 2 chiều)" vertex="1">
+          <mxGeometry height="201" width="280" x="820" y="560" as="geometry" />
+        </mxCell>
+        <mxCell id="tbl_rev_body" parent="tbl_rev" style="text;strokeColor=none;fillColor=#ffffff;align=left;verticalAlign=top;spacingLeft=8;spacingRight=8;spacingTop=6;spacingBottom=6;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;whiteSpace=wrap;html=1;fontSize=11;fontColor=#222222;lineHeight=1.4;" value="🔑 &lt;b&gt;id&lt;/b&gt;: INT (PK, Auto Increment)&lt;br&gt;🔗 &lt;b&gt;job_id&lt;/b&gt;: INT (FK -&gt; jobs.id)&lt;br&gt;🔗 &lt;b&gt;reviewer_id&lt;/b&gt;: INT (FK -&gt; users.id)&lt;br&gt;🔗 &lt;b&gt;reviewee_id&lt;/b&gt;: INT (FK -&gt; users.id)&lt;br&gt;• &lt;b&gt;rating_score&lt;/b&gt;: INT (1 - 5 Sao)&lt;br&gt;• &lt;b&gt;comment&lt;/b&gt;: TEXT (Nhận xét đánh giá)&lt;br&gt;• &lt;b&gt;created_at&lt;/b&gt;: DATETIME" vertex="1">
+          <mxGeometry height="169" width="280" y="30" as="geometry" />
+        </mxCell>
+        <mxCell id="rel_u_s" edge="1" parent="1" source="tbl_users" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=2;strokeColor=#003366;fontSize=10;fontColor=#003366;fontStyle=1;" target="tbl_student" value="1 — 1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="rel_u_e" edge="1" parent="1" source="tbl_users" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=2;strokeColor=#003366;fontSize=10;fontColor=#003366;fontStyle=1;" target="tbl_emp" value="1 — 1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="rel_e_j" edge="1" parent="1" source="tbl_emp" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=2;strokeColor=#003366;fontSize=10;fontColor=#003366;fontStyle=1;" target="tbl_jobs" value="1 — N (Đăng tin)">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="rel_c_j" edge="1" parent="1" source="tbl_cat" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=2;strokeColor=#003366;fontSize=10;fontColor=#003366;fontStyle=1;" target="tbl_jobs" value="1 — N">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="770" y="162.5" />
+              <mxPoint x="770" y="350" />
+              <mxPoint x="585" y="350" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="rel_j_a" edge="1" parent="1" source="tbl_jobs" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=2;strokeColor=#003366;fontSize=10;fontColor=#003366;fontStyle=1;" target="tbl_apps" value="1 — N (Nhận hồ sơ)">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="rel_s_a" edge="1" parent="1" source="tbl_student" style="edgeStyle=orthogonalEdgeStyle;rounded=1;strokeWidth=2;strokeColor=#1F4E78;fontSize=10;fontColor=#1F4E78;entryX=0;entryY=0.5;exitX=1;exitY=0.5;" target="tbl_apps" value="1 — N (Ứng tuyển)">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="340" y="360" />
+              <mxPoint x="820" y="360" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="rel_j_r" edge="1" parent="1" source="tbl_jobs" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=2;strokeColor=#003366;fontSize=10;fontColor=#003366;fontStyle=1;" target="tbl_rev" value="1 — N (Chấm sao)">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+      <mxCell id="legend_erd_box" value="BẢNG CHÚ THÍCH CƠ SỞ DỮ LIỆU &amp; RÀNG BUỘC TOÀN VẸN (ERD LEGEND)" style="swimlane;startSize=26;horizontal=1;rounded=1;arcSize=6;html=1;whiteSpace=wrap;collapsible=0;fillColor=#F8F9FA;strokeColor=#003366;strokeWidth=1.5;fontColor=#003366;fontSize=11;fontStyle=1;shadow=1;" parent="1" vertex="1"><mxGeometry x="60" y="785" width="1040" height="100" as="geometry" /></mxCell><mxCell id="legend_erd_left" value="&lt;b&gt;• 🔑 PK (Primary Key):&lt;/b&gt; Khóa chính tự tăng (Auto Increment), định danh duy nhất cho từng bản ghi&lt;br&gt;&lt;b&gt;• 🔗 FK (Foreign Key):&lt;/b&gt; Khóa ngoại, thiết lập ràng buộc toàn vẹn tham chiếu chặt chẽ giữa các bảng&lt;br&gt;&lt;b&gt;• Quan hệ 1 — 1:&lt;/b&gt; 1 tài khoản Users gắn liền với duy nhất 1 Profile Sinh viên hoặc NTD (Cascade Delete)&lt;br&gt;&lt;b&gt;• Quan hệ 1 — N:&lt;/b&gt; 1 NTD đăng nhiều Jobs; 1 Job nhận nhiều Đơn ứng tuyển (Applications) &amp; Đánh giá (Reviews)" style="text;html=1;whiteSpace=wrap;fillColor=none;strokeColor=none;fontSize=10;fontColor=#222222;align=left;verticalAlign=top;spacingLeft=10;spacingTop=6;lineHeight=1.4;" parent="legend_erd_box" vertex="1"><mxGeometry x="0" y="26" width="560" height="74" as="geometry" /></mxCell><mxCell id="legend_erd_right" value="&lt;b&gt;• Chuẩn hóa:&lt;/b&gt; CSDL MySQL 8.0 đạt chuẩn 3NF (7 bảng thực thể độc lập, tối ưu hiệu năng)&lt;br&gt;&lt;b&gt;• Tối ưu Index:&lt;/b&gt; Đánh chỉ mục tại `district`, `salary_amount`, `status` giúp bộ lọc tìm kiếm phản hồi dưới 300ms&lt;br&gt;&lt;b&gt;• SVTH 1:&lt;/b&gt; Nguyễn Minh Phú (MSSV: 2374802013447) — Thiết kế CSDL ERD &amp; API Contract&lt;br&gt;&lt;b&gt;• SVTH 2:&lt;/b&gt; Hà Đại Vĩ (MSSV: 2374802010551) — Thiết kế Wireframe UI/UX &amp; Figma Specs" style="text;html=1;whiteSpace=wrap;fillColor=none;strokeColor=none;fontSize=10;fontColor=#222222;align=left;verticalAlign=top;spacingLeft=10;spacingTop=6;lineHeight=1.4;" parent="legend_erd_box" vertex="1"><mxGeometry x="560" y="26" width="480" height="74" as="geometry" /></mxCell></root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

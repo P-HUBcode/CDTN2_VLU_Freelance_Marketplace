@@ -1,0 +1,153 @@
+=== Page 1 ===
+T R Ư Ờ N G  Đ Ạ I  H Ọ C
+VĂN LANG
+K H O A  C Ô N G  N G H Ệ  T H Ô N G  T I N
+C H U Y Ê N  Đ Ề  T Ố T  N G H I Ệ P  2
+BUỔI 3
+Lập kế hoạch dự án theo Agile/Scrum rút gọn
+Giảng Viên Giảng Dạy:
+ThS. Nguyễn Văn Trung
+
+=== Page 2 ===
+Mục tiêu buổi học
+Hiểu mô hình Agile/Scrum rút gọn phù hợp với đồ án 
+ngắn hạn 10 buổi
+Biết cách chuyển yêu cầu đã có ở buổi 2 thành 1 
+product backlog cụ thể
+Phân chia được backlog thành các sprint tương ứng các 
+buổi còn lại
+Phân vai trò kỹ thuật rõ ràng cho từng thành viên trong 
+nhóm
+Văn Lang · Chuyên đề tốt nghiệp 2 · Buổi 3 1
+
+=== Page 3 ===
+Nội dung chính
+Tóm tắt trọng tâm buổi học
+Agile/Scrum rút gọn cho đồ án ngắn hạn: Không cần áp dụng đầy đủ Scrum (daily stand-up, sprint review chính thức...) - chỉ giữ lại phần cốt 
+lõi: backlog, sprint, demo cuối sprint
+Product backlog là gì: Là danh sách toàn bộ công việc/tính năng cần làm, được sắp xếp theo mức độ ưu tiên
+Cách chia sprint theo 10 buổi: Sprint thiết kế: buổi 4-5 (kiến trúc tổng thể → thiết kế chi tiết)
+Phân vai trò kỹ thuật trong nhóm: CNPM: backend, frontend, cơ sở dữ liệu/tích hợp, kiểm thử - có thể một người đảm nhiệm nhiều vai trò 
+nếu nhóm ít người
+Văn Lang · Chuyên đề tốt nghiệp 2 · Buổi 3 2
+
+=== Page 4 ===
+Quy trình thực hiện trong buổi
+1
+Chuyển yêu cầu buổi 2 thành các 
+mục backlog
+→
+2
+Sắp xếp backlog theo mức độ ưu 
+tiên
+→
+3
+Chia backlog thành các sprint 
+theo 10 buổi
+→
+4
+Phân vai trò kỹ thuật cho từng 
+thành viên
+Văn Lang · Chuyên đề tốt nghiệp 2 · Buổi 3 3
+
+=== Page 5 ===
+Ví dụ áp dụng theo 3 chuyên ngành
+Công nghệ phần mềm
+Nền tảng quản lý freelance/marketplace việc làm part-
+time cho sinh viên
+Backlog ưu tiên Must-have: đăng ký/đăng nhập, 
+đăng tin, tìm kiếm, ứng tuyển
+Should-have: đánh giá sau công việc, thông báo cơ 
+bản
+Khoa học dữ liệu
+Phân tích & dự báo xu hướng tuyển dụng ngành CNTT 
+từ dữ liệu tin đăng việc làm
+Backlog ưu tiên Must-have: thu thập & làm sạch dữ 
+liệu, EDA, dashboard cơ bản
+Should-have: mô hình dự báo xu hướng theo thời 
+gian, trực quan hóa nâng cao
+Trí tuệ nhân tạo
+Hệ thống nhận diện khuôn mặt điểm danh tự động
+Backlog ưu tiên Must-have: thu thập ảnh khuôn 
+mặt (enrollment), nhận diện real-time, lưu kết quả 
+điểm danh
+Should-have: giao diện tra cứu lịch sử điểm danh 
+đầy đủ, cải thiện độ chính xác trong điều kiện ánh 
+sáng khác nhau
+Văn Lang · Chuyên đề tốt nghiệp 2 · Buổi 3 4
+
+=== Page 6 ===
+HOẠT ĐỘNG NHÓM T ẠI LỚP
+1 Xây dựng product backlog
+Chuyển toàn bộ yêu cầu chức năng đã đánh số thành các mục backlog
+Gắn nhãn ưu tiên MoSCoW cho từng mục (Must/Should/Could/Won't)
+Sắp xếp lại backlog theo thứ tự ưu tiên từ cao đến thấp
+2 Lập kế hoạch sprint và phân vai trò
+Xác định mục backlog nào sẽ hoàn thành ở sprint xây dựng buổi 6, buổi 
+nào ở buổi 7
+Mỗi thành viên nhận 1 vai trò kỹ thuật cụ thể, ghi rõ vào bảng phân vai trò
+Thống nhất cách nhóm sẽ demo tiến độ ở cuối mỗi sprint (buổi 6, 7)
+Văn Lang · Chuyên đề tốt nghiệp 2 · Buổi 3 5
+
+=== Page 7 ===
+Lỗi thường gặp & lưu ý
+Đưa quá nhiều mục vào Must-have khiến sprint xây dựng bị quá tải, không kịp hoàn thành
+Phân vai trò xong nhưng không ai chịu trách nhiệm phần tích hợp giữa các module do các thành viên làm riêng lẻ
+Backlog không bám sát yêu cầu đã đánh số ở buổi 2, dẫn đến làm thiếu hoặc làm thừa tính năng
+Văn Lang · Chuyên đề tốt nghiệp 2 · Buổi 3 6
+
+=== Page 8 ===
+Tự thực hiện ở nhà (10,5 giờ)
+Hoàn thiện product backlog và kế hoạch sprint của nhóm theo góp ý tại lớp
+Mỗi thành viên xác nhận lại vai trò kỹ thuật của mình và các mục backlog liên quan
+Cập nhật nhật ký thực hiện đề tài với nội dung buổi 3
+Thiết lập công cụ theo dõi backlog đơn giản (bảng Trello/Excel/Notion tùy nhóm chọn)
+Từng thành viên bắt đầu tìm hiểu sâu hơn công nghệ liên quan đến vai trò của mình
+Chuẩn bị câu hỏi về thiết kế kiến trúc để trao đổi với GVHD ở buổi 4
+Văn Lang · Chuyên đề tốt nghiệp 2 · Buổi 3 7
+
+=== Page 9 ===
+Sản phẩm/tài liệu cần bàn giao cuối buổi
+Product backlog đã ưu tiên theo MoSCoW
+Bảng kế hoạch sprint ánh xạ theo 10 buổi
+Bảng phân vai trò kỹ thuật của từng thành viên
+Văn Lang · Chuyên đề tốt nghiệp 2 · Buổi 3 8
+
+=== Page 10 ===
+Tiêu chí đánh giá áp dụng cho buổi này
+Rubric 1 - Chuyên cần
+10%
+Điểm danh & mức độ tham gia 10 buổi hướng dẫn
+ÁP DỤNG
+Rubric 2 - Đánh giá giữa kỳ
+30%
+GVHD đánh giá sản phẩm theo từng mốc + nhật ký thực 
+hiện đề tài
+Rubric 3 - Báo cáo cuối kỳ
+60%
+Hội đồng đánh giá báo cáo, sản phẩm, demo và phần bảo 
+vệ
+Buổi 3 vẫn tính điểm chuyên cần (Rubric 1); backlog và phân vai trò sẽ là căn cứ để GVHD theo dõi tiến độ ở các mốc giữa kỳ.
+Văn Lang · Chuyên đề tốt nghiệp 2 · Buổi 3 9
+
+=== Page 11 ===
+Câu hỏi thảo luận nhanh
+Dành thời gian cuối buổi để cả lớp cùng trao đổi
+1 Mục backlog nào nhóm bạn dự đoán sẽ mất nhiều thời gian hơn ước tính ban đầu? Vì sao?
+2 Nếu một thành viên trong nhóm không hoàn thành đúng hạn phần việc của mình, nhóm sẽ xử lý thế nào?
+Văn Lang · Chuyên đề tốt nghiệp 2 · Buổi 3 10
+
+=== Page 12 ===
+T Ổ N G  K Ế T  B U Ổ I  3
+Lập kế hoạch dự án theo Agile/Scrum rút gọn
+Product backlog đầy đủ, đã gắn nhãn ưu tiên MoSCoW
+Backlog đã được chia rõ theo từng sprint/buổi còn lại
+Mỗi thành viên có 1 vai trò kỹ thuật cụ thể, không chồng chéo
+Nhóm đã thống nhất công cụ/cách thức theo dõi tiến độ
+Buổi tiếp theo:
+Thiết kế kiến trúc/pipeline tổng thể
+
+=== Page 13 ===
+HỎI - ĐÁP
+Cảm ơn các nhóm - hẹn gặp lại ở buổi tiếp theo
+

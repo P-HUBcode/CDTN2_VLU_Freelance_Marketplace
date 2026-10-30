@@ -1,0 +1,161 @@
+=== Page 1 ===
+T R Ư Ờ N G  Đ Ạ I  H Ọ C
+VĂN LANG
+K H O A  C Ô N G  N G H Ệ  T H Ô N G  T I N
+C H U Y Ê N  Đ Ề  T Ố T  N G H I Ệ P  2
+BUỔI 5
+Thiết kế chi tiết (Mốc đánh giá giữa kỳ - lần 1)
+Giảng Viên Giảng Dạy:
+ThS. Nguyễn Văn Trung
+
+=== Page 2 ===
+Mục tiêu buổi học
+Hoàn thành thiết kế chi tiết: CSDL/API (CNPM), 
+EDA/feature engineering (KHDL), thực nghiệm/baseline 
+(AI)
+Hiểu rõ cách GVHD chấm điểm mốc giữa kỳ 1 theo 
+Rubric 2
+Có bộ tài liệu thiết kế chi tiết hoàn chỉnh, sẵn sàng 
+chuyển sang giai đoạn xây dựng
+Nhật ký thực hiện đề tài được cập nhật đầy đủ, phản 
+ánh đúng quá trình làm việc
+Văn Lang · Chuyên đề tốt nghiệp 2 · Buổi 5 1
+
+=== Page 3 ===
+Nội dung chính
+Tóm tắt trọng tâm buổi học
+Thiết kế CSDL và API contract (CNPM): Thiết kế ERD (sơ đồ thực thể-quan hệ): xác định bảng, khóa chính/khóa ngoại, quan hệ giữa các 
+bảng
+Phân tích khám phá dữ liệu và feature engineering (KHDL): EDA: thống kê mô tả, phân phối dữ liệu, phát hiện giá trị thiếu/bất thường trên 
+dữ liệu thực tế đã thu thập được
+Thiết kế thực nghiệm và chọn baseline (AI): Thiết kế thực nghiệm: cách chia tập dữ liệu train/validation/test, chỉ số đánh giá sẽ dùng 
+(accuracy, precision/recall...)
+Cách GVHD đánh giá mốc giữa kỳ 1 (Rubric 2): GVHD xem xét: mức độ hoàn chỉnh của thiết kế chi tiết so với thiết kế tổng thể đã duyệt ở 
+buổi 4
+Văn Lang · Chuyên đề tốt nghiệp 2 · Buổi 5 2
+
+=== Page 4 ===
+Quy trình thực hiện trong buổi
+1
+Hoàn thiện thiết kế chi tiết theo 
+chuyên ngành
+→
+2
+Tổng hợp thành bộ tài liệu thiết 
+kế đầy đủ
+→
+3
+GVHD đánh giá sản phẩm theo 
+mốc 1
+→
+4
+GVHD đối chiếu nhật ký thực 
+hiện đề tài
+Văn Lang · Chuyên đề tốt nghiệp 2 · Buổi 5 3
+
+=== Page 5 ===
+Ví dụ áp dụng theo 3 chuyên ngành
+Công nghệ phần mềm
+Nền tảng quản lý freelance/marketplace việc làm part-
+time cho sinh viên
+ERD: bảng User (SV/NTD/Admin), JobPost, 
+Application, Review - có khóa ngoại liên kết đúng 
+nghiệp vụ
+API contract mẫu: POST /api/jobs (tạo tin tuyển 
+dụng) - input: title, description, salary - output: 
+jobId, status
+Khoa học dữ liệu
+Phân tích & dự báo xu hướng tuyển dụng ngành CNTT 
+từ dữ liệu tin đăng việc làm
+EDA phát hiện: kỹ năng "Java", "SQL", "Python" 
+xuất hiện nhiều nhất trong tin tuyển dụng thu thập 
+được
+Feature table: mỗi dòng là 1 tin tuyển dụng, các cột 
+là kỹ năng được trích xuất (dạng 0/1), mức lương, 
+khu vực, thời gian đăng
+Trí tuệ nhân tạo
+Hệ thống nhận diện khuôn mặt điểm danh tự động
+Thiết kế thực nghiệm: 80% ảnh dùng huấn 
+luyện/enrollment, 20% dùng kiểm tra độ chính xác 
+nhận diện
+Baseline: dùng face_recognition với ngưỡng khoảng 
+cách mặc định của thư viện, đo tỷ lệ nhận diện 
+đúng ban đầu
+Văn Lang · Chuyên đề tốt nghiệp 2 · Buổi 5 4
+
+=== Page 6 ===
+HOẠT ĐỘNG NHÓM T ẠI LỚP
+1 Hoàn thiện thiết kế chi tiết
+Hoàn thành tài liệu thiết kế chi tiết theo đúng chuyên ngành 
+(ERD/API/wireframe hoặc EDA/feature hoặc thực nghiệm/baseline)
+Đảm bảo thiết kế chi tiết khớp với kiến trúc tổng thể đã duyệt ở buổi 4
+Chuẩn bị trình bày sản phẩm thiết kế cho GVHD chấm mốc 1
+2 Rà soát và hoàn thiện nhật ký thực hiện đề tài
+Rà soát nhật ký từ buổi 1 đến buổi 4, bổ sung phần còn thiếu
+Mỗi thành viên xác nhận phần việc của mình đã được ghi nhận đúng
+Nộp nhật ký cùng bộ tài liệu thiết kế chi tiết cho GVHD
+Văn Lang · Chuyên đề tốt nghiệp 2 · Buổi 5 5
+
+=== Page 7 ===
+Lỗi thường gặp & lưu ý
+Thiết kế chi tiết không khớp với kiến trúc tổng thể đã duyệt ở buổi 4 (ví dụ đổi công nghệ giữa chừng mà không cập nhật lại)
+Nhật ký thực hiện đề tài chỉ được ghi dồn vào sát buổi 5, không phản ánh đúng quá trình làm việc thực tế
+Với KHDL: chọn feature quá nhiều nhưng không giải thích được ý nghĩa của từng feature
+Văn Lang · Chuyên đề tốt nghiệp 2 · Buổi 5 6
+
+=== Page 8 ===
+Tự thực hiện ở nhà (10,5 giờ)
+Hoàn thiện toàn bộ tài liệu thiết kế chi tiết theo góp ý của GVHD tại buổi chấm mốc 1
+Chuẩn bị môi trường phát triển đầy đủ để bắt đầu xây dựng sản phẩm ở buổi 6 (cài thư viện, khởi tạo project...)
+Rà soát lại backlog buổi 3, điều chỉnh nếu thiết kế chi tiết phát sinh thay đổi phạm vi
+Mỗi thành viên chuẩn bị sẵn phần việc kỹ thuật của mình cho sprint xây dựng đầu tiên (buổi 6)
+Nhóm trưởng tổng hợp toàn bộ tài liệu thiết kế thành 1 bộ hồ sơ thống nhất
+Cập nhật nhật ký thực hiện đề tài với nội dung buổi 5 và kết quả chấm mốc 1
+Văn Lang · Chuyên đề tốt nghiệp 2 · Buổi 5 7
+
+=== Page 9 ===
+Sản phẩm/tài liệu cần bàn giao cuối buổi
+Bộ tài liệu thiết kế chi tiết hoàn chỉnh (theo chuyên ngành)
+Nhật ký thực hiện đề tài từ buổi 1-5
+Môi trường phát triển đã sẵn sàng cho buổi xây dựng
+Văn Lang · Chuyên đề tốt nghiệp 2 · Buổi 5 8
+
+=== Page 10 ===
+Tiêu chí đánh giá áp dụng cho buổi này
+Rubric 1 - Chuyên cần
+10%
+Điểm danh & mức độ tham gia 10 buổi hướng dẫn
+ÁP DỤNG
+Rubric 2 - Đánh giá giữa kỳ
+30%
+GVHD đánh giá sản phẩm theo từng mốc + nhật ký thực 
+hiện đề tài
+ÁP DỤNG
+Rubric 3 - Báo cáo cuối kỳ
+60%
+Hội đồng đánh giá báo cáo, sản phẩm, demo và phần bảo 
+vệ
+Buổi 5 là Mốc giữa kỳ 1: ngoài điểm chuyên cần (Rubric 1), GVHD chính thức chấm sản phẩm thiết kế và nhật ký theo Rubric 2 (30%).
+Văn Lang · Chuyên đề tốt nghiệp 2 · Buổi 5 9
+
+=== Page 11 ===
+Câu hỏi thảo luận nhanh
+Dành thời gian cuối buổi để cả lớp cùng trao đổi
+1 Phần thiết kế chi tiết nào của nhóm bạn khiến bạn tự tin nhất, và phần nào còn khiến bạn lo lắng?
+2 Nếu phải cắt giảm 1 phần trong thiết kế chi tiết để kịp tiến độ, nhóm bạn sẽ cắt phần nào trước?
+Văn Lang · Chuyên đề tốt nghiệp 2 · Buổi 5 10
+
+=== Page 12 ===
+T Ổ N G  K Ế T  B U Ổ I  5
+Thiết kế chi tiết (Mốc đánh giá giữa kỳ 1)
+Bộ tài liệu thiết kế chi tiết đầy đủ, khớp với kiến trúc tổng thể
+Nhật ký thực hiện đề tài từ buổi 1-5 được cập nhật và GVHD đã đối chiếu
+Môi trường phát triển đã cài đặt xong, sẵn sàng viết code/chạy thử nghiệm ở buổi 6
+Nhóm đã nhận được góp ý cụ thể từ GVHD để điều chỉnh trước khi xây dựng
+Buổi tiếp theo:
+Xây dựng sản phẩm - Sprint 1
+
+=== Page 13 ===
+HỎI - ĐÁP
+Cảm ơn các nhóm - hẹn gặp lại ở buổi tiếp theo
+

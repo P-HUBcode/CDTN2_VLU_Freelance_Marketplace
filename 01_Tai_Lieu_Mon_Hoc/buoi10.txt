@@ -1,0 +1,152 @@
+=== Page 1 ===
+T R Ư Ờ N G  Đ Ạ I  H Ọ C
+VĂN LANG
+K H O A  C Ô N G  N G H Ệ  T H Ô N G  T I N
+C H U Y Ê N  Đ Ề  T Ố T  N G H I Ệ P  2
+BUỔI 10
+Tổng duyệt sản phẩm và báo cáo trước khi bảo vệ chính thức
+Giảng Viên Giảng Dạy:
+ThS. Nguyễn Văn Trung
+
+=== Page 2 ===
+Mục tiêu buổi học
+Hoàn thiện lần cuối sản phẩm và báo cáo trước khi bảo 
+vệ chính thức
+Được tập dượt thuyết trình và phản biện nội bộ với 
+GVHD
+Nắm rõ quy định, thời gian và thành phần hội đồng của 
+buổi báo cáo chính thức
+ Sẵn sàng 100% cho buổi bảo vệ tổ chức 1 tuần sau
+Văn Lang · Chuyên đề tốt nghiệp 2 · Buổi 10 1
+
+=== Page 3 ===
+Nội dung chính
+Tóm tắt trọng tâm buổi học
+Rà soát lần cuối sản phẩm và báo cáo: Kiểm tra lại toàn bộ luồng demo trên đúng thiết bị/môi trường sẽ dùng khi báo cáo chính thức
+Thuyết trình thử và phản biện nội bộ: Mỗi nhóm thuyết trình thử đúng thời lượng dự kiến của buổi báo cáo chính thức
+Những câu hỏi phản biện thường gặp: Vì sao chọn công nghệ/phương pháp này mà không phải phương pháp khác?
+Quy định buổi báo cáo chính thức (1 tuần sau): Thời lượng thuyết trình và demo cho mỗi nhóm theo quy định của khoa/hội đồng
+Văn Lang · Chuyên đề tốt nghiệp 2 · Buổi 10 2
+
+=== Page 4 ===
+Quy trình thực hiện trong buổi
+1
+Rà soát lần cuối sản phẩm và 
+báo cáo
+→
+2
+Thuyết trình thử và phản biện 
+nội bộ
+→
+3
+GVHD góp ý hoàn thiện lần cuối
+→
+4
+Phổ biến quy định buổi báo cáo 
+chính thức
+Văn Lang · Chuyên đề tốt nghiệp 2 · Buổi 10 3
+
+=== Page 5 ===
+Ví dụ áp dụng theo 3 chuyên ngành
+Công nghệ phần mềm
+Nền tảng quản lý freelance/marketplace việc làm part-
+time cho sinh viên
+Rà soát: thử lại luồng đăng tin - ứng tuyển - duyệt 
+hồ sơ trên đúng trình duyệt/thiết bị sẽ dùng khi báo 
+cáo
+Câu hỏi phản biện dự kiến: "Vì sao chọn kiến trúc 
+phân lớp thay vì microservices?" - chuẩn bị sẵn câu 
+trả lời ngắn gọn
+Khoa học dữ liệu
+Phân tích & dự báo xu hướng tuyển dụng ngành CNTT 
+từ dữ liệu tin đăng việc làm
+Rà soát: chạy lại dashboard trên máy sẽ dùng để 
+báo cáo, kiểm tra số liệu trong slide khớp với 
+dashboard thực tế
+Câu hỏi phản biện dự kiến: "Kết quả dự báo có ý 
+nghĩa gì với sinh viên thực tế?" - chuẩn bị ví dụ ứng 
+dụng cụ thể
+Trí tuệ nhân tạo
+Hệ thống nhận diện khuôn mặt điểm danh tự động
+Rà soát: chạy thử nhận diện trên đúng camera/thiết 
+bị sẽ mang đến buổi báo cáo, kiểm tra video dự 
+phòng hoạt động tốt
+Câu hỏi phản biện dự kiến: "Độ chính xác X% đã đủ 
+tin cậy để triển khai thực tế chưa?" - chuẩn bị câu 
+trả lời có cơ sở số liệu
+Văn Lang · Chuyên đề tốt nghiệp 2 · Buổi 10 4
+
+=== Page 6 ===
+HOẠT ĐỘNG NHÓM T ẠI LỚP
+1 Thuyết trình thử trước GVHD
+Thuyết trình đúng thời lượng, đúng phân công đã chuẩn bị
+Demo trực tiếp sản phẩm như trong buổi báo cáo thật
+Trả lời ít nhất 2-3 câu hỏi phản biện từ GVHD
+2 Hoàn thiện lần cuối theo góp ý
+Ghi lại toàn bộ góp ý của GVHD về nội dung, cách trình bày, và demo
+Lập danh sách việc cần chỉnh sửa trước buổi báo cáo chính thức
+Xác nhận lại phân công ai làm gì trong tuần chỉnh sửa cuối cùng
+Văn Lang · Chuyên đề tốt nghiệp 2 · Buổi 10 5
+
+=== Page 7 ===
+Lỗi thường gặp & lưu ý
+Thuyết trình thử vượt quá nhiều thời lượng quy định mà không có kế hoạch cắt gọn nội dung
+Không phân công rõ ai trả lời loại câu hỏi phản biện nào, dẫn đến lúng túng khi bị hỏi
+Chỉnh sửa slide/báo cáo đến sát giờ báo cáo chính thức mà không kiểm tra lại lần cuối
+Văn Lang · Chuyên đề tốt nghiệp 2 · Buổi 10 6
+
+=== Page 8 ===
+Tự thực hiện ở nhà (10,5 giờ)
+Hoàn thiện sản phẩm và báo cáo lần cuối theo góp ý từ buổi thuyết trình thử
+Luyện tập lại thuyết trình theo đúng thời lượng và phân công đã chốt
+Kiểm tra lại toàn bộ minh chứng, số liệu trong slide khớp với báo cáo văn bản
+Chuẩn bị phương án dự phòng cuối cùng (video demo, bản in báo cáo, USB chứa sản phẩm...)
+Nộp sản phẩm và báo cáo hoàn chỉnh theo đúng quy định và thời hạn của khoa
+Cập nhật nhật ký thực hiện đề tài với nội dung buổi 10, hoàn thiện toàn bộ nhật ký từ buổi 1 -10
+Văn Lang · Chuyên đề tốt nghiệp 2 · Buổi 10 7
+
+=== Page 9 ===
+Sản phẩm/tài liệu cần bàn giao cuối buổi
+Sản phẩm và báo cáo hoàn chỉnh, đã nộp đúng hạn theo quy định
+Slide thuyết trình đã hoàn thiện theo đúng thời lượng quy định
+Nhật ký thực hiện đề tài hoàn chỉnh từ buổi 1 đến buổi 10
+Văn Lang · Chuyên đề tốt nghiệp 2 · Buổi 10 8
+
+=== Page 10 ===
+Tiêu chí đánh giá áp dụng cho buổi này
+Rubric 1 - Chuyên cần
+10%
+Điểm danh & mức độ tham gia 10 buổi hướng dẫn
+ÁP DỤNG
+Rubric 2 - Đánh giá giữa kỳ
+30%
+GVHD đánh giá sản phẩm theo từng mốc + nhật ký thực 
+hiện đề tài
+Rubric 3 - Báo cáo cuối kỳ
+60%
+Hội đồng đánh giá báo cáo, sản phẩm, demo và phần bảo 
+vệ
+Buổi 10 tính điểm chuyên cần (Rubric 1). Rubric 3 (60%, hội đồng chấm báo cáo/sản phẩm/demo/bảo vệ) sẽ áp dụng ở buổi báo cáochính thức, tổ chức 1 tuần sau.
+Văn Lang · Chuyên đề tốt nghiệp 2 · Buổi 10 9
+
+=== Page 11 ===
+Câu hỏi thảo luận nhanh
+Dành thời gian cuối buổi để cả lớp cùng trao đổi
+1 Câu hỏi phản biện nào ở buổi tổng duyệt khiến nhóm bạn phải suy nghĩ lâu nhất trước khi trả lời?
+2 Nhìn lại cả 10 buổi, bài học lớn nhất nhóm bạn rút ra được trong quá trình làm đề tài là gì?
+Văn Lang · Chuyên đề tốt nghiệp 2 · Buổi 10 10
+
+=== Page 12 ===
+T Ổ N G  K Ế T  B U Ổ I  1 0
+Tổng duyệt sản phẩm và báo cáo trước khi bảo vệ chính thức
+Sản phẩm và báo cáo đã hoàn thiện lần cuối theo góp ý của GVHD
+Nhóm đã thuyết trình thử đúng thời lượng và trả lời được các câu hỏi phản biện cơ bản
+Sản phẩm và báo cáo đã được nộp đúng hạn theo quy định
+Nhóm đã nắm rõ thời gian, địa điểm và thành phần hội đồng buổi báo cáo chính thức
+Buổi tiếp theo:
+Báo cáo và bảo vệ đề tài trước hội đồng (1 tuần sau)
+
+=== Page 13 ===
+HỎI - ĐÁP
+Cảm ơn các nhóm - hẹn gặp lại ở buổi tiếp theo
+

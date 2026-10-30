@@ -1,0 +1,151 @@
+=== Page 1 ===
+T R Ư Ờ N G  Đ Ạ I  H Ọ C
+VĂN LANG
+K H O A  C Ô N G  N G H Ệ  T H Ô N G  T I N
+C H U Y Ê N  Đ Ề  T Ố T  N G H I Ệ P  2
+BUỔI 4
+Thiết kế kiến trúc/ pipeline tổng thể
+Giảng Viên Giảng Dạy:
+ThS. Nguyễn Văn Trung
+
+=== Page 2 ===
+Mục tiêu buổi học
+Hiểu cách thiết kế kiến trúc hệ thống (CNPM), pipeline 
+dữ liệu (KHDL) hoặc kiến trúc mô hình (AI)
+Lựa chọn được công nghệ/stack phù hợp với đề tài và 
+năng lực nhóm
+Có tài liệu thiết kế kiến trúc/pipeline tổng thể được 
+GVHD góp ý
+ Sẵn sàng bước vào thiết kế chi tiết ở buổi 5
+Văn Lang · Chuyên đề tốt nghiệp 2 · Buổi 4 1
+
+=== Page 3 ===
+Nội dung chính
+Tóm tắt trọng tâm buổi học
+Thiết kế kiến trúc hệ thống (CNPM): Mô hình phổ biến cho đồ án: kiến trúc phân lớp (layered) gồm Presentation - Business logic - Data 
+access
+Thiết kế pipeline dữ liệu (KHDL): Pipeline chuẩn: Thu thập dữ liệu → Làm sạch/chuẩn hóa → Phân tích (EDA) → Mô hình hóa → Trực quan 
+hóa
+Xác định kiến trúc/loại mô hình (AI): Xác định bài toán thuộc dạng nào: phân loại, nhận diện, dự đoán... để chọn hướng mô hình phù hợp
+Nguyên tắc chọn công nghệ cho đồ án ngắn hạn: Ưu tiên công nghệ nhóm đã có kinh nghiệm hơn công nghệ mới nhưng "hot"
+Văn Lang · Chuyên đề tốt nghiệp 2 · Buổi 4 2
+
+=== Page 4 ===
+Quy trình thực hiện trong buổi
+1
+Phác thảo kiến trúc/pipeline 
+tổng thể
+→
+2
+Lựa chọn công nghệ/stack cụ thể
+→
+3
+Từng nhóm trình bày phương án 
+thiết kế
+→
+4
+GVHD góp ý, nhóm hoàn thiện 
+tài liệu
+Văn Lang · Chuyên đề tốt nghiệp 2 · Buổi 4 3
+
+=== Page 5 ===
+Ví dụ áp dụng theo 3 chuyên ngành
+Công nghệ phần mềm
+Nền tảng quản lý freelance/marketplace việc làm part-
+time cho sinh viên
+Kiến trúc: Frontend (React) → Backend REST API 
+(Spring Boot) → MySQL
+Lớp Business logic xử lý nghiệp vụ đăng tin/ứng 
+tuyển, lớp Data access thao tác với cơ sở dữ liệu
+Khoa học dữ liệu
+Phân tích & dự báo xu hướng tuyển dụng ngành CNTT 
+từ dữ liệu tin đăng việc làm
+Pipeline: Crawl/tải dataset → Làm sạch bằng 
+pandas → Lưu vào file/CSDL trung gian → EDA → 
+Mô hình dự báo → Dashboard (Streamlit)
+Quyết định thiết kế: dữ liệu trung gian lưu dạng 
+CSV đã chuẩn hóa để dễ tái sử dụng ở các bước sau
+Trí tuệ nhân tạo
+Hệ thống nhận diện khuôn mặt điểm danh tự động
+Pipeline: Enrollment (thu ảnh khuôn mặt SV) → 
+Trích xuất đặc trưng khuôn mặt → Lưu vector đặc 
+trưng → Nhận diện real-time → Ghi điểm danh
+Quyết định thiết kế: dùng thư viện face_recognition 
+(dựa trên dlib) có sẵn thay vì tự huấn luyện mô hình 
+từ đầu
+Văn Lang · Chuyên đề tốt nghiệp 2 · Buổi 4 4
+
+=== Page 6 ===
+HOẠT ĐỘNG NHÓM T ẠI LỚP
+1 Phác thảo kiến trúc/pipeline tổng thể
+Vẽ sơ đồ thể hiện các thành phần chính và luồng dữ liệu/xử lý giữa chúng
+Ghi chú công nghệ dự kiến cho từng thành phần
+Đánh dấu điểm nhóm còn chưa chắc chắn cần hỏi GVHD
+2 Bảo vệ phương án thiết kế trước lớp
+Trình bày sơ đồ kiến trúc/pipeline và lý do chọn công nghệ
+Trả lời câu hỏi phản biện từ GVHD/nhóm khác
+Ghi nhận góp ý cần chỉnh sửa vào nhật ký thực hiện đề tài
+Văn Lang · Chuyên đề tốt nghiệp 2 · Buổi 4 5
+
+=== Page 7 ===
+Lỗi thường gặp & lưu ý
+Chọn công nghệ mới hoàn toàn với cả nhóm chỉ vì "nghe nói nó tốt", không tính đến thời gian học thêm
+Kiến trúc quá phức tạp so với quy mô sản phẩm thực tế (ví dụ dùng microservices cho một ứng dụng nhỏ)
+Với KHDL/AI: chưa kiểm tra được nguồn dữ liệu/mô hình có sẵn có thực sự hoạt động trước khi chốt pipeline
+Văn Lang · Chuyên đề tốt nghiệp 2 · Buổi 4 6
+
+=== Page 8 ===
+Tự thực hiện ở nhà (10,5 giờ)
+Hoàn thiện tài liệu thiết kế kiến trúc/pipeline tổng thể theo góp ý của GVHD
+Cài đặt và kiểm tra thử môi trường phát triển với công nghệ đã chọn (chạy thử "Hello World")
+Với KHDL/AI: thử tải/truy cập nguồn dữ liệu hoặc mô hình dự kiến dùng để xác nhận khả thi
+Mỗi thành viên đọc tài liệu/hướng dẫn nhanh cho công nghệ thuộc phần việc của mình
+Nhóm trưởng tổng hợp lại tài liệu thiết kế thành 1 bản hoàn chỉnh, thống nhất định dạng
+Cập nhật nhật ký thực hiện đề tài với nội dung buổi 4
+Văn Lang · Chuyên đề tốt nghiệp 2 · Buổi 4 7
+
+=== Page 9 ===
+Sản phẩm/tài liệu cần bàn giao cuối buổi
+Sơ đồ kiến trúc/pipeline tổng thể
+Bảng công nghệ đã chọn kèm lý do
+Nhật ký thực hiện đề tài - mục ghi buổi 4
+Văn Lang · Chuyên đề tốt nghiệp 2 · Buổi 4 8
+
+=== Page 10 ===
+Tiêu chí đánh giá áp dụng cho buổi này
+Rubric 1 - Chuyên cần
+10%
+Điểm danh & mức độ tham gia 10 buổi hướng dẫn
+ÁP DỤNG
+Rubric 2 - Đánh giá giữa kỳ
+30%
+GVHD đánh giá sản phẩm theo từng mốc + nhật ký thực 
+hiện đề tài
+Rubric 3 - Báo cáo cuối kỳ
+60%
+Hội đồng đánh giá báo cáo, sản phẩm, demo và phần bảo 
+vệ
+Buổi 4 vẫn tính điểm chuyên cần (Rubric 1); tài liệu kiến trúc sẽ được xem xét cùng thiết kế chi tiết ở mốc giữa kỳ 1 (buổi 5).
+Văn Lang · Chuyên đề tốt nghiệp 2 · Buổi 4 9
+
+=== Page 11 ===
+Câu hỏi thảo luận nhanh
+Dành thời gian cuối buổi để cả lớp cùng trao đổi
+1 Thành phần nào trong kiến trúc/pipeline của nhóm bạn có nguy cơ trở thành điểm nghẽn (bottleneck) nhất?
+2 Nếu công nghệ đã chọn gặp vấn đề không giải quyết được, nhóm bạn có phương án B nào không?
+Văn Lang · Chuyên đề tốt nghiệp 2 · Buổi 4 10
+
+=== Page 12 ===
+T Ổ N G  K Ế T  B U Ổ I  4
+Thiết kế kiến trúc/pipeline tổng thể
+Sơ đồ kiến trúc/pipeline tổng thể đã được GVHD góp ý và nhóm chỉnh sửa
+Công nghệ/stack đã được chốt, không còn phân vân giữa nhiều phương án
+Môi trường phát triển đã được cài đặt và chạy thử thành công
+Với KHDL/AI: đã xác nhận nguồn dữ liệu/mô hình dự kiến khả thi
+Buổi tiếp theo:
+Thiết kế chi tiết (Mốc đánh giá giữa kỳ 1)
+
+=== Page 13 ===
+HỎI - ĐÁP
+Cảm ơn các nhóm - hẹn gặp lại ở buổi tiếp theo
+

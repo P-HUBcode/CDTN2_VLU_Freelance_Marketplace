@@ -1,0 +1,979 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>VLU Freelance Marketplace — Interactive Prototype Demo</title>
+  <script src="https://www.gstatic.com/antigravity/web/dev/tailwindcss.min.js"></script>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+    body { font-family: 'Inter', system-ui, sans-serif; }
+    .toast-animate { animation: slideIn 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
+    @keyframes slideIn { from { transform: translateY(-20px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+  </style>
+</head>
+<body class="bg-gray-100 text-gray-800 min-h-screen flex flex-col">
+
+  <!-- TOP PROTOCOL BAR / SIMULATOR CONTROLS -->
+  <div class="bg-slate-900 text-white px-4 py-2 flex flex-wrap items-center justify-between text-xs border-b border-slate-700 select-none">
+    <div class="flex items-center space-x-2">
+      <span class="inline-block w-2.5 h-2.5 rounded-full bg-emerald-400 animate-pulse"></span>
+      <span class="font-bold tracking-wide">FIGMA INTERACTIVE PROTOTYPE SIMULATOR</span>
+      <span class="text-slate-400">| Đề tài: Marketplace việc làm sinh viên ĐH Văn Lang</span>
+    </div>
+    <!-- Quick Switcher for Testing Flows -->
+    <div class="flex items-center space-x-1.5 bg-slate-800 p-1 rounded-lg">
+      <span class="text-slate-400 px-1 font-medium">Chuyển vai trò:</span>
+      <button onclick="switchView('home')" id="btn-role-sv" class="px-2.5 py-1 rounded bg-[#003366] text-white font-medium hover:bg-blue-700 transition">🧑‍🎓 Sinh viên</button>
+      <button onclick="switchView('employer')" id="btn-role-ntd" class="px-2.5 py-1 rounded text-slate-300 hover:text-white hover:bg-slate-700 transition">🏢 Nhà tuyển dụng</button>
+      <button onclick="switchView('admin')" id="btn-role-admin" class="px-2.5 py-1 rounded text-slate-300 hover:text-white hover:bg-slate-700 transition">🛡️ Admin kiểm duyệt</button>
+    </div>
+  </div>
+
+  <!-- MAIN NAVIGATION HEADER -->
+  <header class="bg-[#003366] text-white shadow-md sticky top-0 z-40">
+    <div class="max-w-7xl mx-auto px-4 h-16 flex items-center justify-between">
+      <div class="flex items-center space-x-6">
+        <a href="javascript:void(0)" onclick="switchView('home')" class="flex items-center space-x-2 text-lg font-bold tracking-tight hover:opacity-90">
+          <span class="text-2xl">🎓</span>
+          <span>VLU FREELANCE</span>
+        </a>
+        <nav class="hidden md:flex items-center space-x-1 text-sm font-medium">
+          <button onclick="switchView('home')" id="nav-home" class="px-3 py-2 rounded-md bg-blue-900/60 text-white">Việc làm mới</button>
+          <button onclick="switchView('employer')" id="nav-employer" class="px-3 py-2 rounded-md text-blue-100 hover:bg-blue-800/50 hover:text-white transition">Dành cho NTD</button>
+          <button onclick="switchView('profile')" id="nav-profile" class="px-3 py-2 rounded-md text-blue-100 hover:bg-blue-800/50 hover:text-white transition">Hồ sơ cá nhân & CV</button>
+          <button onclick="switchView('admin')" id="nav-admin" class="px-3 py-2 rounded-md text-blue-100 hover:bg-blue-800/50 hover:text-white transition flex items-center space-x-1">
+            <span>Kiểm duyệt</span>
+            <span class="px-1.5 py-0.2 rounded-full bg-red-500 text-[10px] font-bold text-white">3</span>
+          </button>
+        </nav>
+      </div>
+
+      <div class="flex items-center space-x-3 text-sm">
+        <button onclick="switchView('employer')" class="hidden sm:inline-flex items-center px-3 py-1.5 rounded-lg bg-sky-600 hover:bg-sky-500 font-semibold shadow-sm transition">
+          + Đăng tin tuyển dụng
+        </button>
+        <button onclick="switchView('profile')" class="flex items-center space-x-2 p-1.5 rounded-lg hover:bg-blue-800/50 transition">
+          <div class="w-8 h-8 rounded-full bg-slate-200 text-slate-800 flex items-center justify-center font-bold text-xs border border-white/50">
+            MP
+          </div>
+          <div class="hidden lg:block text-left">
+            <div class="font-semibold text-xs leading-none">Nguyễn Minh Phú</div>
+            <div class="text-[10px] text-emerald-300 font-medium leading-none mt-1">Đã xác thực VLU</div>
+          </div>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- TOAST NOTIFICATION CONTAINER -->
+  <div id="toast-container" class="fixed top-20 right-5 z-50 flex flex-col space-y-2 pointer-events-none"></div>
+
+  <!-- MAIN APPLICATION SCREENS -->
+  <main class="flex-1 max-w-7xl w-full mx-auto p-4 md:p-6">
+
+    <!-- ================================================================= -->
+    <!-- VIEW 1: TRANG CHỦ & TÌM KIẾM VIỆC LÀM (STUDENT HOME) -->
+    <!-- ================================================================= -->
+    <div id="view-home" class="space-y-6">
+      <!-- Hero Banner -->
+      <div class="bg-gradient-to-r from-sky-100 via-blue-50 to-indigo-100 border border-sky-200 rounded-2xl p-6 shadow-sm flex flex-col md:flex-row items-center justify-between gap-4">
+        <div>
+          <h1 class="text-xl md:text-2xl font-bold text-[#003366]">TÌM VIỆC LÀM PART-TIME & FREELANCE CHO SINH VIÊN VĂN LANG</h1>
+          <p class="text-sm text-gray-600 mt-1">Hơn 500+ công việc minh bạch, đối soát mã số thuế pháp nhân và hỗ trợ đóng dấu mộc thực tập.</p>
+        </div>
+        <div class="w-full md:w-auto flex items-center bg-white rounded-xl shadow-sm border border-gray-300 p-1.5">
+          <input type="text" id="search-input" placeholder="Nhập chức danh, kỹ năng (vd: ReactJS, Pha chế...)" class="px-3 py-1.5 text-sm w-full md:w-72 focus:outline-none">
+          <button onclick="filterJobs()" class="bg-[#003366] hover:bg-blue-900 text-white px-4 py-2 rounded-lg text-sm font-semibold transition">Tìm kiếm</button>
+        </div>
+      </div>
+
+      <!-- Main Layout: 2 Columns -->
+      <div class="grid grid-cols-1 lg:grid-cols-4 gap-6">
+        <!-- Sidebar Filter (Cột trái) -->
+        <div class="bg-white border border-gray-200 rounded-xl p-5 shadow-sm space-y-5 h-fit">
+          <div class="flex items-center justify-between border-b pb-3">
+            <h2 class="font-bold text-gray-900 text-sm flex items-center space-x-1.5">
+              <span>⚙️</span><span>BỘ LỌC TÌM KIẾM</span>
+            </h2>
+            <button onclick="resetFilter()" class="text-xs text-sky-600 hover:underline">Đặt lại</button>
+          </div>
+
+          <div>
+            <h3 class="text-xs font-bold text-gray-700 uppercase tracking-wider mb-2">Cơ sở Văn Lang</h3>
+            <div class="space-y-1.5 text-sm text-gray-600">
+              <label class="flex items-center space-x-2 cursor-pointer"><input type="radio" name="loc" value="all" checked onchange="filterJobs()" class="text-[#003366]"><span>Tất cả địa điểm</span></label>
+              <label class="flex items-center space-x-2 cursor-pointer"><input type="radio" name="loc" value="cs3" onchange="filterJobs()" class="text-[#003366]"><span>Bình Thạnh (Cơ sở 3)</span></label>
+              <label class="flex items-center space-x-2 cursor-pointer"><input type="radio" name="loc" value="cs2" onchange="filterJobs()" class="text-[#003366]"><span>Gò Vấp (Cơ sở 2)</span></label>
+              <label class="flex items-center space-x-2 cursor-pointer"><input type="radio" name="loc" value="cs1" onchange="filterJobs()" class="text-[#003366]"><span>Quận 1 (Cơ sở 1)</span></label>
+              <label class="flex items-center space-x-2 cursor-pointer"><input type="radio" name="loc" value="remote" onchange="filterJobs()" class="text-[#003366]"><span>Online / Làm từ xa</span></label>
+            </div>
+          </div>
+
+          <div class="border-t pt-4">
+            <h3 class="text-xs font-bold text-gray-700 uppercase tracking-wider mb-2">Mức lương (VNĐ/giờ)</h3>
+            <div class="space-y-1.5 text-sm text-gray-600">
+              <label class="flex items-center space-x-2 cursor-pointer"><input type="checkbox" checked onchange="filterJobs()" class="rounded text-[#003366]"><span>25.000đ - 35.000đ/h</span></label>
+              <label class="flex items-center space-x-2 cursor-pointer"><input type="checkbox" checked onchange="filterJobs()" class="rounded text-[#003366]"><span>35.000đ - 50.000đ/h</span></label>
+              <label class="flex items-center space-x-2 cursor-pointer"><input type="checkbox" onchange="filterJobs()" class="rounded text-[#003366]"><span>> 50.000đ/h hoặc Dự án</span></label>
+            </div>
+          </div>
+
+          <div class="border-t pt-4">
+            <h3 class="text-xs font-bold text-gray-700 uppercase tracking-wider mb-2">Khung ca học rảnh</h3>
+            <div class="space-y-1.5 text-sm text-gray-600">
+              <label class="flex items-center space-x-2 cursor-pointer"><input type="checkbox" class="rounded text-[#003366]"><span>Ca sáng (08h - 12h)</span></label>
+              <label class="flex items-center space-x-2 cursor-pointer"><input type="checkbox" checked class="rounded text-[#003366]"><span>Ca tối (18h - 22h)</span></label>
+              <label class="flex items-center space-x-2 cursor-pointer"><input type="checkbox" class="rounded text-[#003366]"><span>Cuối tuần (T7 - CN)</span></label>
+            </div>
+          </div>
+
+          <button onclick="showToast('Đã áp dụng bộ lọc thành công!', 'success')" class="w-full bg-[#003366] hover:bg-blue-900 text-white py-2 rounded-lg text-sm font-semibold transition">
+            Áp dụng bộ lọc
+          </button>
+        </div>
+
+        <!-- Job Cards List (Cột phải) -->
+        <div class="lg:col-span-3 space-y-4">
+          <div class="flex items-center justify-between text-sm text-gray-600 px-1">
+            <span class="font-medium">Tìm thấy <b id="job-count" class="text-gray-900">4</b> việc làm phù hợp</span>
+            <span class="text-xs">Sắp xếp: <b>Mới nhất ▼</b></span>
+          </div>
+
+          <!-- Job Card 1 -->
+          <div class="job-item bg-white border border-gray-200 hover:border-blue-400 rounded-xl p-5 shadow-sm transition hover:shadow-md flex flex-col sm:flex-row sm:items-center justify-between gap-4" data-loc="cs3" data-title="reactjs lập trình frontend">
+            <div class="space-y-2">
+              <div class="flex items-center space-x-2">
+                <span class="px-2 py-0.5 rounded bg-emerald-100 text-emerald-800 font-bold text-xs">MỚI ĐĂNG</span>
+                <h3 class="font-bold text-gray-900 hover:text-blue-700 cursor-pointer text-base" onclick="openJobDetail()">
+                  Tuyển Thực Tập Sinh Lập Trình Frontend ReactJS (Part-time)
+                </h3>
+              </div>
+              <div class="text-xs text-gray-600 flex flex-wrap items-center gap-x-4 gap-y-1">
+                <span>🏢 Công ty Truyền thông Sáng tạo VLU</span>
+                <span>📍 69/68 Đặng Thùy Trâm, P.13, Bình Thạnh</span>
+              </div>
+              <div class="flex items-center space-x-3 text-xs">
+                <span class="text-emerald-700 font-bold text-sm">💰 45.000đ / giờ</span>
+                <span class="text-gray-500">• ⏰ Sáng T2-T4-T6</span>
+                <span class="text-gray-500">• ⏳ Hạn: 30/11/2026</span>
+              </div>
+              <div class="flex items-center space-x-1.5 pt-1">
+                <span class="px-2 py-0.5 rounded-full bg-sky-100 text-sky-800 text-[11px] font-semibold">ReactJS</span>
+                <span class="px-2 py-0.5 rounded-full bg-sky-100 text-sky-800 text-[11px] font-semibold">Part-time</span>
+                <span class="px-2 py-0.5 rounded-full bg-sky-100 text-sky-800 text-[11px] font-semibold">Bình Thạnh (CS3)</span>
+                <span class="px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-800 text-[11px] font-semibold">Hỗ trợ mộc thực tập</span>
+              </div>
+            </div>
+            <div class="flex sm:flex-col gap-2 shrink-0">
+              <button onclick="openApplyModal('Tuyển Thực Tập Sinh Lập Trình Frontend ReactJS', 'Công ty Truyền thông Sáng tạo VLU', '45.000đ/giờ')" class="w-full sm:w-auto px-4 py-2.5 rounded-lg bg-[#003366] hover:bg-blue-900 text-white font-semibold text-xs transition shadow-sm">
+                Ứng tuyển ngay
+              </button>
+              <button onclick="openJobDetail()" class="w-full sm:w-auto px-4 py-2 rounded-lg bg-gray-100 hover:bg-gray-200 text-gray-700 font-medium text-xs transition">
+                Chi tiết
+              </button>
+            </div>
+          </div>
+
+          <!-- Job Card 2 -->
+          <div class="job-item bg-white border border-gray-200 hover:border-blue-400 rounded-xl p-5 shadow-sm transition hover:shadow-md flex flex-col sm:flex-row sm:items-center justify-between gap-4" data-loc="cs2" data-title="cafe phục vụ barista">
+            <div class="space-y-2">
+              <h3 class="font-bold text-gray-900 hover:text-blue-700 cursor-pointer text-base" onclick="openApplyModal('Nhân Viên Phục Vụ Quán Cafe Sách', 'The Book Cafe VLU', '30.000đ/giờ')">
+                Nhân Viên Phục Vụ Quán Cafe Sách (Linh hoạt ca học)
+              </h3>
+              <div class="text-xs text-gray-600 flex flex-wrap items-center gap-x-4 gap-y-1">
+                <span>☕ The Book Cafe VLU</span>
+                <span>📍 128 Nguyễn Thái Sơn, Gò Vấp (gần Cơ sở 2)</span>
+              </div>
+              <div class="flex items-center space-x-3 text-xs">
+                <span class="text-emerald-700 font-bold text-sm">💰 30.000đ / giờ + Thưởng</span>
+                <span class="text-gray-500">• ⏰ Ca tối 18h - 22h</span>
+                <span class="text-gray-500">• ⏳ Hạn: 25/11/2026</span>
+              </div>
+              <div class="flex items-center space-x-1.5 pt-1">
+                <span class="px-2 py-0.5 rounded-full bg-sky-100 text-sky-800 text-[11px] font-semibold">Phục vụ</span>
+                <span class="px-2 py-0.5 rounded-full bg-sky-100 text-sky-800 text-[11px] font-semibold">Linh hoạt ca</span>
+                <span class="px-2 py-0.5 rounded-full bg-sky-100 text-sky-800 text-[11px] font-semibold">Gò Vấp (CS2)</span>
+              </div>
+            </div>
+            <div class="flex sm:flex-col gap-2 shrink-0">
+              <button onclick="openApplyModal('Nhân Viên Phục Vụ Quán Cafe Sách', 'The Book Cafe VLU', '30.000đ/giờ')" class="w-full sm:w-auto px-4 py-2.5 rounded-lg bg-[#003366] hover:bg-blue-900 text-white font-semibold text-xs transition shadow-sm">
+                Ứng tuyển ngay
+              </button>
+              <button onclick="showToast('Công việc thích hợp cho sinh viên rảnh buổi tối!', 'info')" class="w-full sm:w-auto px-4 py-2 rounded-lg bg-gray-100 hover:bg-gray-200 text-gray-700 font-medium text-xs transition">
+                Chi tiết
+              </button>
+            </div>
+          </div>
+
+          <!-- Job Card 3 -->
+          <div class="job-item bg-white border border-gray-200 hover:border-blue-400 rounded-xl p-5 shadow-sm transition hover:shadow-md flex flex-col sm:flex-row sm:items-center justify-between gap-4" data-loc="remote" data-title="thiết kế banner video tiktok freelance">
+            <div class="space-y-2">
+              <h3 class="font-bold text-gray-900 hover:text-blue-700 cursor-pointer text-base" onclick="openApplyModal('Thiết Kế Banner & Edit Video TikTok', 'Chic Studio', '1.500.000đ/Dự án')">
+                Thiết Kế Banner & Edit Video TikTok Cho Shop Thời Trang (Freelance)
+              </h3>
+              <div class="text-xs text-gray-600 flex flex-wrap items-center gap-x-4 gap-y-1">
+                <span>🎨 Chic Studio</span>
+                <span>📍 Làm việc từ xa (Online / Remote)</span>
+              </div>
+              <div class="flex items-center space-x-3 text-xs">
+                <span class="text-emerald-700 font-bold text-sm">💰 1.500.000đ / Dự án (4 video/tuần)</span>
+                <span class="text-gray-500">• ⏳ Hạn: 20/11/2026</span>
+              </div>
+              <div class="flex items-center space-x-1.5 pt-1">
+                <span class="px-2 py-0.5 rounded-full bg-sky-100 text-sky-800 text-[11px] font-semibold">Freelance</span>
+                <span class="px-2 py-0.5 rounded-full bg-sky-100 text-sky-800 text-[11px] font-semibold">Online</span>
+                <span class="px-2 py-0.5 rounded-full bg-sky-100 text-sky-800 text-[11px] font-semibold">Photoshop / CapCut</span>
+              </div>
+            </div>
+            <div class="flex sm:flex-col gap-2 shrink-0">
+              <button onclick="openApplyModal('Thiết Kế Banner & Edit Video TikTok', 'Chic Studio', '1.500.000đ/Dự án')" class="w-full sm:w-auto px-4 py-2.5 rounded-lg bg-[#003366] hover:bg-blue-900 text-white font-semibold text-xs transition shadow-sm">
+                Ứng tuyển ngay
+              </button>
+              <button onclick="showToast('Yêu cầu gửi kèm link Portfolio hoặc file demo.', 'info')" class="w-full sm:w-auto px-4 py-2 rounded-lg bg-gray-100 hover:bg-gray-200 text-gray-700 font-medium text-xs transition">
+                Chi tiết
+              </button>
+            </div>
+          </div>
+
+          <!-- Job Card 4 -->
+          <div class="job-item bg-white border border-gray-200 hover:border-blue-400 rounded-xl p-5 shadow-sm transition hover:shadow-md flex flex-col sm:flex-row sm:items-center justify-between gap-4" data-loc="cs1" data-title="gia sư tiếng anh dạy kèm lớp 8">
+            <div class="space-y-2">
+              <h3 class="font-bold text-gray-900 hover:text-blue-700 cursor-pointer text-base" onclick="openApplyModal('Gia Sư Dạy Kèm Tiếng Anh Lớp 8', 'Phụ huynh học sinh', '150.000đ/buổi')">
+                Gia Sư Dạy Kèm Tiếng Anh Lớp 8 (Giao tiếp & Ngữ pháp)
+              </h3>
+              <div class="text-xs text-gray-600 flex flex-wrap items-center gap-x-4 gap-y-1">
+                <span>📚 Phụ huynh học sinh</span>
+                <span>📍 45 Nguyễn Thị Minh Khai, Quận 1 (gần Cơ sở 1)</span>
+              </div>
+              <div class="flex items-center space-x-3 text-xs">
+                <span class="text-emerald-700 font-bold text-sm">💰 150.000đ / buổi (90 phút)</span>
+                <span class="text-gray-500">• ⏰ Tối T3 - T5 (19h - 20h30)</span>
+              </div>
+              <div class="flex items-center space-x-1.5 pt-1">
+                <span class="px-2 py-0.5 rounded-full bg-sky-100 text-sky-800 text-[11px] font-semibold">Gia sư</span>
+                <span class="px-2 py-0.5 rounded-full bg-sky-100 text-sky-800 text-[11px] font-semibold">Quận 1 (CS1)</span>
+                <span class="px-2 py-0.5 rounded-full bg-sky-100 text-sky-800 text-[11px] font-semibold">Tiếng Anh</span>
+              </div>
+            </div>
+            <div class="flex sm:flex-col gap-2 shrink-0">
+              <button onclick="openApplyModal('Gia Sư Dạy Kèm Tiếng Anh Lớp 8', 'Phụ huynh học sinh', '150.000đ/buổi')" class="w-full sm:w-auto px-4 py-2.5 rounded-lg bg-[#003366] hover:bg-blue-900 text-white font-semibold text-xs transition shadow-sm">
+                Ứng tuyển ngay
+              </button>
+              <button onclick="showToast('Ưu tiên sinh viên có chứng chỉ IELTS / TOEIC.', 'info')" class="w-full sm:w-auto px-4 py-2 rounded-lg bg-gray-100 hover:bg-gray-200 text-gray-700 font-medium text-xs transition">
+                Chi tiết
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ================================================================= -->
+    <!-- VIEW 2: CHI TIẾT VIỆC LÀM (JOB DETAIL VIEW) -->
+    <!-- ================================================================= -->
+    <div id="view-detail" class="hidden space-y-6">
+      <div class="flex items-center justify-between text-xs text-gray-500">
+        <a href="javascript:void(0)" onclick="switchView('home')" class="text-sky-600 hover:underline flex items-center space-x-1">
+          <span>← Quay lại danh sách việc làm</span>
+        </a>
+        <span>Mã tin: #JOB-VLU-2026-001</span>
+      </div>
+
+      <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <!-- Cột trái chi tiết -->
+        <div class="lg:col-span-2 bg-white border border-gray-200 rounded-xl p-6 shadow-sm space-y-6">
+          <div class="border-b pb-4">
+            <h1 class="text-xl font-bold text-gray-900">Tuyển Thực Tập Sinh Lập Trình Frontend ReactJS (Part-time)</h1>
+            <p class="text-sm text-[#003366] font-semibold mt-1">Công ty TNHH Truyền thông Sáng tạo VLU ⭐ 4.9/5 (18 đánh giá)</p>
+            <p class="text-xs text-gray-500 mt-1">📍 69/68 Đặng Thùy Trâm, P.13, Q. Bình Thạnh, TP.HCM</p>
+            <div class="mt-3 flex items-center space-x-4">
+              <span class="text-emerald-700 font-bold text-lg">💰 45.000đ / giờ</span>
+              <span class="px-2.5 py-1 rounded-md bg-emerald-100 text-emerald-800 text-xs font-semibold">Được hỗ trợ mộc báo cáo</span>
+            </div>
+          </div>
+
+          <div class="space-y-4 text-sm text-gray-700 leading-relaxed">
+            <div>
+              <h3 class="font-bold text-gray-900 text-base mb-1">1. Mô tả công việc:</h3>
+              <ul class="list-disc list-inside space-y-1 text-gray-600">
+                <li>Phối hợp cùng team xây dựng giao diện người dùng bằng ReactJS và TailwindCSS.</li>
+                <li>Tối ưu hóa hiển thị trên thiết bị di động (Mobile Responsive).</li>
+                <li>Hỗ trợ ghép nối RESTful API với Backend server NodeJS/Express.</li>
+              </ul>
+            </div>
+
+            <div>
+              <h3 class="font-bold text-gray-900 text-base mb-1">2. Yêu cầu ứng viên:</h3>
+              <ul class="list-disc list-inside space-y-1 text-gray-600">
+                <li>Là sinh viên năm 3 hoặc năm cuối chuyên ngành CNTT / KTPM trường Đại học Văn Lang.</li>
+                <li>Nắm vững kiến thức HTML5, CSS3, JavaScript ES6 và React cơ bản.</li>
+                <li>Có thái độ chủ động, tinh thần học hỏi cao, đúng hẹn.</li>
+              </ul>
+            </div>
+
+            <div>
+              <h3 class="font-bold text-gray-900 text-base mb-1">3. Quyền lợi:</h3>
+              <ul class="list-disc list-inside space-y-1 text-gray-600">
+                <li>Thù lao rõ ràng, nhận lương định kỳ theo tuần hoặc theo tháng.</li>
+                <li>Hỗ trợ ký xác nhận và đóng mộc tròn báo cáo thực tập tốt nghiệp.</li>
+                <li>Lịch làm việc linh hoạt, được đăng ký ca làm theo thời khóa biểu học tập.</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <!-- Cột phải: Khung Nộp Đơn Nhanh -->
+        <div class="bg-white border border-gray-200 rounded-xl p-6 shadow-sm space-y-5 h-fit">
+          <h2 class="font-bold text-[#003366] text-base border-b pb-2">NỘP ĐƠN ỨNG TUYỂN (1-CHẠM)</h2>
+          <div class="p-3 bg-slate-50 rounded-lg border border-slate-200 text-xs space-y-1.5">
+            <div class="flex items-center justify-between">
+              <span class="font-bold text-gray-900">Nguyễn Minh Phú</span>
+              <span class="px-1.5 py-0.5 rounded bg-emerald-100 text-emerald-800 font-bold text-[10px]">VERIFIED VLU</span>
+            </div>
+            <div class="text-gray-600">MSSV: 2374802013447 • Khoa CNTT</div>
+            <div class="text-gray-500">Email: sinhvien.demo@student.vlu.edu.vn</div>
+          </div>
+
+          <div class="space-y-2">
+            <label class="text-xs font-bold text-gray-700">Chọn CV đính kèm:</label>
+            <div class="p-2.5 rounded-lg border border-blue-200 bg-blue-50/50 flex items-center justify-between">
+              <div class="text-xs text-blue-900 font-medium">📄 CV_NguyenMinhPhu_WebDev.pdf</div>
+              <button onclick="openCvModal()" class="text-xs text-blue-600 hover:underline">Xem</button>
+            </div>
+          </div>
+
+          <button onclick="openApplyModal('Tuyển Thực Tập Sinh Lập Trình Frontend ReactJS', 'Công ty Truyền thông Sáng tạo VLU', '45.000đ/giờ')" class="w-full bg-[#059669] hover:bg-emerald-700 text-white py-3 rounded-lg font-bold text-sm transition shadow-sm flex items-center justify-center space-x-1.5">
+            <span>🚀</span><span>Gửi hồ sơ ngay lập tức</span>
+          </button>
+          <p class="text-[11px] text-gray-500 text-center">NTD sẽ nhận được thông báo tức thì và phản hồi trong 24 giờ.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- ================================================================= -->
+    <!-- VIEW 3: PORTAL NHÀ TUYỂN DỤNG (EMPLOYER VIEW) -->
+    <!-- ================================================================= -->
+    <div id="view-employer" class="hidden space-y-6">
+      <div class="bg-white border border-gray-200 rounded-xl p-5 shadow-sm flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+        <div>
+          <span class="px-2 py-0.5 rounded bg-emerald-100 text-emerald-800 font-bold text-xs">TIN ĐANG MỞ</span>
+          <h1 class="text-lg font-bold text-gray-900 mt-1">Tuyển Thực Tập Sinh Lập Trình Frontend ReactJS (Part-time)</h1>
+          <p class="text-xs text-gray-500">Đăng ngày: 18/10/2026 • Tổng số: <span id="app-total-badge" class="font-bold text-gray-800">4 ứng viên</span></p>
+        </div>
+        <div class="flex items-center space-x-2">
+          <button onclick="showToast('Chức năng chỉnh sửa tin đăng đã sẵn sàng!', 'info')" class="px-3 py-1.5 border border-gray-300 rounded-lg text-xs font-medium hover:bg-gray-50 transition">✏️ Sửa tin</button>
+          <button onclick="showToast('Đã xuất danh sách ứng viên ra tệp Excel!', 'success')" class="px-3 py-1.5 bg-[#003366] text-white rounded-lg text-xs font-medium hover:bg-blue-900 transition">📥 Xuất Excel</button>
+        </div>
+      </div>
+
+      <!-- Applicant Table -->
+      <div class="bg-white border border-gray-200 rounded-xl shadow-sm overflow-hidden">
+        <div class="px-6 py-4 border-b border-gray-200 flex items-center justify-between">
+          <h2 class="font-bold text-gray-900 text-sm">DANH SÁCH SINH VIÊN NỘP HỒ SƠ ỨNG TUYỂN</h2>
+          <span class="text-xs text-gray-500">Nhấn nút "Duyệt nhận" hoặc "Từ chối" để thử nghiệm luồng</span>
+        </div>
+        <div class="overflow-x-auto">
+          <table class="w-full text-left border-collapse text-sm">
+            <thead>
+              <tr class="bg-gray-50 text-gray-600 text-xs font-bold uppercase border-b border-gray-200">
+                <th class="py-3 px-4">Ứng viên</th>
+                <th class="py-3 px-4">Thời gian</th>
+                <th class="py-3 px-4">Hồ sơ CV</th>
+                <th class="py-3 px-4">Uy tín</th>
+                <th class="py-3 px-4">Trạng thái</th>
+                <th class="py-3 px-4 text-center">Hành động của NTD</th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-gray-100">
+              <!-- Row 1: Nguyễn Minh Phú -->
+              <tr id="row-sv-1" class="hover:bg-blue-50/30 transition">
+                <td class="py-3.5 px-4">
+                  <div class="font-bold text-gray-900">Nguyễn Minh Phú</div>
+                  <div class="text-xs text-gray-500">MSSV: 2374802013447 (Khoa CNTT)</div>
+                </td>
+                <td class="py-3.5 px-4 text-xs text-gray-500">20/10/2026<br>09:30</td>
+                <td class="py-3.5 px-4">
+                  <button onclick="openCvModal()" class="text-xs font-semibold text-blue-700 hover:underline flex items-center space-x-1">
+                    <span>📄</span><span>Xem CV PDF</span>
+                  </button>
+                </td>
+                <td class="py-3.5 px-4 text-xs font-bold text-amber-600">⭐ 5.0 (4 việc)</td>
+                <td class="py-3.5 px-4" id="status-sv-1">
+                  <span class="px-2.5 py-1 rounded-full bg-emerald-100 text-emerald-800 text-xs font-bold">ĐÃ DUYỆT NHẬN</span>
+                </td>
+                <td class="py-3.5 px-4 text-center">
+                  <button onclick="showToast('SĐT Sinh viên: 0911223344 - Đã mở kết nối Zalo!', 'info')" class="px-3 py-1.5 rounded-lg bg-[#003366] text-white text-xs font-semibold hover:bg-blue-900 transition">
+                    Liên hệ SĐT/Zalo
+                  </button>
+                </td>
+              </tr>
+
+              <!-- Row 2: Trần Văn B -->
+              <tr id="row-sv-2" class="hover:bg-blue-50/30 transition">
+                <td class="py-3.5 px-4">
+                  <div class="font-bold text-gray-900">Trần Văn B</div>
+                  <div class="text-xs text-gray-500">MSSV: 2374802010111 (Khoa KTPM)</div>
+                </td>
+                <td class="py-3.5 px-4 text-xs text-gray-500">21/10/2026<br>14:15</td>
+                <td class="py-3.5 px-4">
+                  <button onclick="openCvModal()" class="text-xs font-semibold text-blue-700 hover:underline flex items-center space-x-1">
+                    <span>📄</span><span>Xem CV PDF</span>
+                  </button>
+                </td>
+                <td class="py-3.5 px-4 text-xs font-bold text-amber-600">⭐ 4.8 (2 việc)</td>
+                <td class="py-3.5 px-4" id="status-sv-2">
+                  <span class="px-2.5 py-1 rounded-full bg-amber-100 text-amber-800 text-xs font-bold">Chờ duyệt</span>
+                </td>
+                <td class="py-3.5 px-4 text-center space-x-1.5" id="actions-sv-2">
+                  <button onclick="approveCandidate('sv-2', 'Trần Văn B')" class="px-3 py-1.5 rounded-lg bg-[#059669] hover:bg-emerald-700 text-white text-xs font-semibold transition">
+                    Duyệt nhận
+                  </button>
+                  <button onclick="rejectCandidate('sv-2', 'Trần Văn B')" class="px-3 py-1.5 rounded-lg bg-[#DC2626] hover:bg-red-700 text-white text-xs font-semibold transition">
+                    Từ chối
+                  </button>
+                </td>
+              </tr>
+
+              <!-- Row 3: Lê Thị C -->
+              <tr id="row-sv-3" class="hover:bg-blue-50/30 transition">
+                <td class="py-3.5 px-4">
+                  <div class="font-bold text-gray-900">Lê Thị C</div>
+                  <div class="text-xs text-gray-500">MSSV: 2374802010222 (Khoa CNTT)</div>
+                </td>
+                <td class="py-3.5 px-4 text-xs text-gray-500">22/10/2026<br>10:00</td>
+                <td class="py-3.5 px-4">
+                  <button onclick="openCvModal()" class="text-xs font-semibold text-blue-700 hover:underline flex items-center space-x-1">
+                    <span>📄</span><span>Xem CV PDF</span>
+                  </button>
+                </td>
+                <td class="py-3.5 px-4 text-xs font-bold text-amber-600">⭐ 5.0 (1 việc)</td>
+                <td class="py-3.5 px-4" id="status-sv-3">
+                  <span class="px-2.5 py-1 rounded-full bg-amber-100 text-amber-800 text-xs font-bold">Chờ duyệt</span>
+                </td>
+                <td class="py-3.5 px-4 text-center space-x-1.5" id="actions-sv-3">
+                  <button onclick="approveCandidate('sv-3', 'Lê Thị C')" class="px-3 py-1.5 rounded-lg bg-[#059669] hover:bg-emerald-700 text-white text-xs font-semibold transition">
+                    Duyệt nhận
+                  </button>
+                  <button onclick="rejectCandidate('sv-3', 'Lê Thị C')" class="px-3 py-1.5 rounded-lg bg-[#DC2626] hover:bg-red-700 text-white text-xs font-semibold transition">
+                    Từ chối
+                  </button>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- ================================================================= -->
+    <!-- VIEW 4: PROFILE SINH VIÊN (STUDENT PROFILE VIEW) -->
+    <!-- ================================================================= -->
+    <div id="view-profile" class="hidden space-y-6">
+      <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <!-- Cột trái: Thẻ tóm tắt -->
+        <div class="bg-white border border-gray-200 rounded-xl p-6 shadow-sm space-y-5">
+          <div class="flex items-center space-x-4">
+            <div class="w-16 h-16 rounded-full bg-blue-100 text-blue-900 border-2 border-[#003366] flex items-center justify-center font-bold text-xl">
+              MP
+            </div>
+            <div>
+              <div class="flex items-center space-x-2">
+                <h1 class="font-bold text-gray-900 text-lg">Nguyễn Minh Phú</h1>
+              </div>
+              <span class="inline-block mt-0.5 px-2 py-0.5 rounded bg-emerald-100 text-emerald-800 font-bold text-[10px]">
+                ✔️ ĐÃ XÁC THỰC VLU
+              </span>
+              <p class="text-xs text-gray-500 mt-1">MSSV: 2374802013447 • Khoa CNTT</p>
+            </div>
+          </div>
+
+          <div class="border-t pt-4 space-y-2 text-xs text-gray-600">
+            <div><b>Email trường:</b> sinhvien.demo@student.vlu.edu.vn</div>
+            <div><b>Số điện thoại:</b> 0911223344</div>
+            <div><b>Đánh giá trung bình:</b> <span class="font-bold text-amber-600">⭐⭐⭐⭐⭐ 5.0 / 5.0</span> (4 việc thành công)</div>
+          </div>
+
+          <div class="border-t pt-4">
+            <h3 class="text-xs font-bold text-gray-800 uppercase mb-2">Giới thiệu bản thân:</h3>
+            <p class="text-xs text-gray-600 leading-relaxed bg-gray-50 p-3 rounded-lg border border-gray-200">
+              Sinh viên năm cuối chuyên ngành CNTT Trường Đại học Văn Lang. Đam mê phát triển web với ReactJS, NodeJS, MySQL và đã có kinh nghiệm trợ giảng.
+            </p>
+          </div>
+
+          <div class="border-t pt-4">
+            <h3 class="text-xs font-bold text-gray-800 uppercase mb-2">Kỹ năng chuyên môn (Skill Tags):</h3>
+            <div class="flex flex-wrap gap-1.5">
+              <span class="px-2.5 py-1 rounded-full bg-sky-100 text-sky-800 text-xs font-semibold">ReactJS</span>
+              <span class="px-2.5 py-1 rounded-full bg-sky-100 text-sky-800 text-xs font-semibold">Node.js</span>
+              <span class="px-2.5 py-1 rounded-full bg-sky-100 text-sky-800 text-xs font-semibold">MySQL</span>
+              <span class="px-2.5 py-1 rounded-full bg-sky-100 text-sky-800 text-xs font-semibold">TailwindCSS</span>
+              <span class="px-2.5 py-1 rounded-full bg-sky-100 text-sky-800 text-xs font-semibold">Git</span>
+              <span class="px-2.5 py-1 rounded-full bg-sky-100 text-sky-800 text-xs font-semibold">Figma</span>
+            </div>
+          </div>
+
+          <div class="border-t pt-4 space-y-2">
+            <h3 class="text-xs font-bold text-gray-800 uppercase mb-1">Tệp CV đính kèm:</h3>
+            <div class="p-3 rounded-lg bg-blue-50 border border-blue-200 space-y-2">
+              <div class="text-xs font-bold text-blue-900">📄 CV_NguyenMinhPhu_WebDev.pdf (1.8 MB)</div>
+              <div class="flex items-center space-x-2 text-xs">
+                <button onclick="openCvModal()" class="text-blue-700 hover:underline font-semibold">👁️ Xem trực tiếp</button>
+                <span class="text-gray-300">|</span>
+                <button onclick="showToast('Đang tải xuống CV...', 'info')" class="text-blue-700 hover:underline">📥 Tải về</button>
+                <span class="text-gray-300">|</span>
+                <button onclick="showToast('Chọn file mới từ máy tính để cập nhật CV.', 'info')" class="text-blue-700 hover:underline">🔄 Đổi CV</button>
+              </div>
+            </div>
+          </div>
+
+          <button onclick="showToast('Đã mở form chỉnh sửa hồ sơ cá nhân!', 'info')" class="w-full bg-[#003366] hover:bg-blue-900 text-white py-2 rounded-lg text-xs font-semibold transition">
+            ✏️ Chỉnh sửa hồ sơ
+          </button>
+        </div>
+
+        <!-- Cột phải: Lịch sử và Đánh giá -->
+        <div class="lg:col-span-2 bg-white border border-gray-200 rounded-xl p-6 shadow-sm space-y-5">
+          <h2 class="font-bold text-gray-900 text-base border-b pb-3">LỊCH SỬ CÔNG VIỆC & ĐÁNH GIÁ TỪ NHÀ TUYỂN DỤNG</h2>
+
+          <div class="space-y-4">
+            <!-- Review 1 -->
+            <div class="p-4 rounded-xl border border-gray-200 bg-gray-50/50 space-y-2">
+              <div class="flex items-center justify-between">
+                <h3 class="font-bold text-gray-900 text-sm">1. Thực tập sinh Lập trình Web — Công ty Sáng tạo VLU</h3>
+                <span class="text-xs text-gray-500">Hoàn thành: 09/2026</span>
+              </div>
+              <div class="text-amber-500 font-bold text-xs">⭐⭐⭐⭐⭐ 5.0 / 5.0</div>
+              <p class="text-xs text-gray-600 italic">"Phú làm việc rất chăm chỉ, nắm bắt ReactJS nhanh và bàn giao code đúng hẹn. Rất chủ động trong công việc!"</p>
+              <div class="text-[11px] font-semibold text-emerald-700">✔ Đã cấp mộc chứng nhận thực tập tốt nghiệp</div>
+            </div>
+
+            <!-- Review 2 -->
+            <div class="p-4 rounded-xl border border-gray-200 bg-gray-50/50 space-y-2">
+              <div class="flex items-center justify-between">
+                <h3 class="font-bold text-gray-900 text-sm">2. Hỗ trợ Sự kiện Chào Tân Sinh viên Khóa 29</h3>
+                <span class="text-xs text-gray-500">Hoàn thành: 10/2026</span>
+              </div>
+              <div class="text-amber-500 font-bold text-xs">⭐⭐⭐⭐⭐ 5.0 / 5.0</div>
+              <p class="text-xs text-gray-600 italic">"Nhiệt tình, luôn đúng giờ, điều phối và hỗ trợ các bạn tân sinh viên giải đáp thắc mắc rất chu đáo."</p>
+            </div>
+
+            <!-- Review 3 -->
+            <div class="p-4 rounded-xl border border-gray-200 bg-gray-50/50 space-y-2">
+              <div class="flex items-center justify-between">
+                <h3 class="font-bold text-gray-900 text-sm">3. Hỗ trợ nhập liệu CSDL Shop Chic Fashion</h3>
+                <span class="text-xs text-gray-500">Hoàn thành: 08/2026</span>
+              </div>
+              <div class="text-amber-500 font-bold text-xs">⭐⭐⭐⭐⭐ 5.0 / 5.0</div>
+              <p class="text-xs text-gray-600 italic">"Cẩn thận, chính xác, hoàn thành trước hạn bàn giao 2 ngày. Rất mong được tiếp tục cộng tác!"</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ================================================================= -->
+    <!-- VIEW 5: CỔNG QUẢN TRỊ ADMIN (ADMIN MODERATION VIEW) -->
+    <!-- ================================================================= -->
+    <div id="view-admin" class="hidden space-y-6">
+      <!-- 4 KPI Cards -->
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+        <div class="bg-blue-50 border border-blue-200 rounded-xl p-4">
+          <div class="text-xs text-blue-700 font-semibold">Sinh viên đăng ký</div>
+          <div class="text-2xl font-bold text-blue-900 mt-1">1,240</div>
+        </div>
+        <div class="bg-emerald-50 border border-emerald-200 rounded-xl p-4">
+          <div class="text-xs text-emerald-700 font-semibold">Doanh nghiệp đã duyệt</div>
+          <div class="text-2xl font-bold text-emerald-900 mt-1">158</div>
+        </div>
+        <div class="bg-amber-50 border border-amber-200 rounded-xl p-4">
+          <div class="text-xs text-amber-700 font-semibold">Việc làm đang chạy</div>
+          <div class="text-2xl font-bold text-amber-900 mt-1">84</div>
+        </div>
+        <div class="bg-red-50 border border-red-200 rounded-xl p-4">
+          <div class="text-xs text-red-700 font-semibold">Tin chờ duyệt</div>
+          <div class="text-2xl font-bold text-red-600 mt-1" id="admin-pending-count">3 CẦN DUYỆT</div>
+        </div>
+      </div>
+
+      <!-- Moderation Table -->
+      <div class="bg-white border border-gray-200 rounded-xl shadow-sm overflow-hidden">
+        <div class="px-6 py-4 border-b border-gray-200 flex items-center justify-between">
+          <div>
+            <h2 class="font-bold text-gray-900 text-sm">HỆ THỐNG KIỂM DUYỆT TIN ĐĂNG — BẢO VỆ SINH VIÊN VĂN LANG</h2>
+            <p class="text-xs text-gray-500">Phát hiện và ngăn chặn các tin lừa đảo nạp cọc đa cấp, bảo đảm an toàn cho sinh viên.</p>
+          </div>
+        </div>
+        <div class="overflow-x-auto">
+          <table class="w-full text-left border-collapse text-sm">
+            <thead>
+              <tr class="bg-gray-50 text-gray-600 text-xs font-bold uppercase border-b border-gray-200">
+                <th class="py-3 px-4">Tiêu đề tin đăng</th>
+                <th class="py-3 px-4">Nhà tuyển dụng</th>
+                <th class="py-3 px-4">Mức lương & Ca</th>
+                <th class="py-3 px-4">MST / Pháp nhân</th>
+                <th class="py-3 px-4 text-center">Thao tác duyệt</th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-gray-100">
+              <!-- Tin 1: Hợp lệ -->
+              <tr id="admin-row-1" class="hover:bg-blue-50/30 transition">
+                <td class="py-3.5 px-4">
+                  <div class="font-bold text-gray-900">Tuyển Nhân viên Phục vụ Cafe Sách</div>
+                  <div class="text-xs text-gray-500">Gò Vấp • 4 ứng viên</div>
+                </td>
+                <td class="py-3.5 px-4 text-xs font-medium text-gray-700">The Book Cafe VLU</td>
+                <td class="py-3.5 px-4 text-xs font-bold text-emerald-700">30.000đ/h • Tối</td>
+                <td class="py-3.5 px-4">
+                  <span class="px-2 py-0.5 rounded bg-emerald-100 text-emerald-800 text-xs font-bold">✔ MST: 0319887766</span>
+                </td>
+                <td class="py-3.5 px-4 text-center space-x-1.5" id="admin-actions-1">
+                  <button onclick="adminApprove(1)" class="px-3 py-1.5 rounded-lg bg-[#059669] hover:bg-emerald-700 text-white text-xs font-semibold transition">
+                    Duyệt tin
+                  </button>
+                  <button onclick="adminReject(1)" class="px-3 py-1.5 rounded-lg bg-gray-200 hover:bg-gray-300 text-gray-700 text-xs font-semibold transition">
+                    Từ chối
+                  </button>
+                </td>
+              </tr>
+
+              <!-- Tin 2: Lừa đảo (Cảnh báo đỏ) -->
+              <tr id="admin-row-2" class="bg-red-50/70 border-l-4 border-red-500 hover:bg-red-100/60 transition">
+                <td class="py-3.5 px-4">
+                  <div class="font-bold text-red-900 flex items-center space-x-1">
+                    <span>⚠️</span><span>Việc nhẹ lương cao 500k/ngày gõ mã captcha online</span>
+                  </div>
+                  <div class="text-xs text-red-600 font-medium">Dấu hiệu: Thu phí đặt cọc, không rõ địa chỉ cụ thể</div>
+                </td>
+                <td class="py-3.5 px-4 text-xs font-medium text-red-800">Cá nhân tự do (SĐT lạ)</td>
+                <td class="py-3.5 px-4 text-xs font-bold text-red-700">500.000đ/ngày (Bất thường)</td>
+                <td class="py-3.5 px-4">
+                  <span class="px-2 py-0.5 rounded bg-red-200 text-red-900 text-xs font-bold">❌ Không MST / Blacklist</span>
+                </td>
+                <td class="py-3.5 px-4 text-center" id="admin-actions-2">
+                  <button onclick="adminBlock(2)" class="px-3 py-1.5 rounded-lg bg-[#DC2626] hover:bg-red-800 text-white text-xs font-bold transition shadow-sm">
+                    🚫 Bác bỏ & Khóa TK
+                  </button>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+  </main>
+
+  <!-- ================================================================= -->
+  <!-- MODAL 1: FORM NỘP ĐƠN ỨNG TUYỂN (1-CHẠM) -->
+  <!-- ================================================================= -->
+  <div id="modal-apply" class="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+    <div class="bg-white rounded-2xl max-w-lg w-full p-6 shadow-2xl space-y-4 toast-animate">
+      <div class="flex items-center justify-between border-b pb-3">
+        <h3 class="font-bold text-[#003366] text-base flex items-center space-x-2">
+          <span>📝</span><span>NỘP ĐƠN ỨNG TUYỂN 1-CHẠM</span>
+        </h3>
+        <button onclick="closeApplyModal()" class="text-gray-400 hover:text-gray-600 text-lg font-bold">✕</button>
+      </div>
+
+      <div class="space-y-1">
+        <div id="modal-job-title" class="font-bold text-gray-900 text-sm">Tuyển Thực Tập Sinh Lập Trình Frontend ReactJS</div>
+        <div id="modal-company" class="text-xs text-gray-500">Công ty TNHH Truyền thông Sáng tạo VLU • 45.000đ/giờ</div>
+      </div>
+
+      <!-- Prefilled Info -->
+      <div class="p-3 bg-blue-50/60 rounded-xl border border-blue-200 text-xs space-y-1">
+        <div class="flex items-center justify-between">
+          <span class="font-bold text-blue-950">Ứng viên: Nguyễn Minh Phú</span>
+          <span class="px-1.5 py-0.5 rounded bg-emerald-200 text-emerald-900 font-bold text-[10px]">ĐÃ XÁC THỰC VLU</span>
+        </div>
+        <div class="text-blue-900">MSSV: 2374802013447 • Email: sinhvien.demo@student.vlu.edu.vn</div>
+      </div>
+
+      <!-- CV Option -->
+      <div class="space-y-2 text-xs">
+        <label class="font-bold text-gray-700">Chọn CV ứng tuyển:</label>
+        <div class="space-y-1.5">
+          <label class="flex items-center space-x-2 p-2 rounded-lg border border-blue-300 bg-blue-50/40 cursor-pointer">
+            <input type="radio" name="cv_select" checked class="text-[#003366]">
+            <span class="font-semibold text-gray-800">Dùng CV có sẵn: <u>CV_NguyenMinhPhu_WebDev.pdf</u></span>
+          </label>
+          <label class="flex items-center space-x-2 p-2 rounded-lg border border-gray-200 cursor-pointer">
+            <input type="radio" name="cv_select" class="text-[#003366]">
+            <span class="text-gray-600">Tải lên file CV mới từ máy tính (.pdf)</span>
+          </label>
+        </div>
+      </div>
+
+      <!-- Cover letter -->
+      <div class="space-y-1 text-xs">
+        <label class="font-bold text-gray-700">Lời nhắn gửi Nhà tuyển dụng (Cover Letter):</label>
+        <textarea id="cover-letter-text" rows="3" class="w-full p-2.5 rounded-lg border border-gray-300 text-xs focus:ring-1 focus:ring-blue-500 focus:outline-none" placeholder="Nhập lời chào hỏi và giới thiệu ngắn gọn..."></textarea>
+      </div>
+
+      <div class="flex items-center justify-end space-x-2 pt-2">
+        <button onclick="closeApplyModal()" class="px-4 py-2 rounded-lg bg-gray-100 hover:bg-gray-200 text-gray-700 text-xs font-semibold transition">
+          Hủy bỏ
+        </button>
+        <button onclick="submitApplication()" class="px-5 py-2 rounded-lg bg-[#059669] hover:bg-emerald-700 text-white text-xs font-bold transition shadow-sm flex items-center space-x-1.5">
+          <span>🚀</span><span>Xác nhận gửi hồ sơ</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ================================================================= -->
+  <!-- MODAL 2: XEM TRƯỚC CV PDF CỦA SINH VIÊN -->
+  <!-- ================================================================= -->
+  <div id="modal-cv" class="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+    <div class="bg-white rounded-2xl max-w-2xl w-full p-6 shadow-2xl space-y-4 toast-animate">
+      <div class="flex items-center justify-between border-b pb-3">
+        <div class="flex items-center space-x-2">
+          <span class="text-red-500 font-bold text-lg">📄</span>
+          <div>
+            <h3 class="font-bold text-gray-900 text-sm">XEM TRƯỚC CV: CV_NguyenMinhPhu_WebDev.pdf</h3>
+            <p class="text-[11px] text-gray-500">Kích thước: 1.8 MB • Trạng thái: Đã lưu trữ trên Cloudinary</p>
+          </div>
+        </div>
+        <button onclick="closeCvModal()" class="text-gray-400 hover:text-gray-600 text-lg font-bold">✕</button>
+      </div>
+
+      <!-- CV Mock Preview Content -->
+      <div class="border border-gray-200 rounded-xl p-6 bg-slate-50 space-y-4 text-xs font-mono">
+        <div class="border-b pb-2">
+          <div class="text-base font-bold text-gray-900">NGUYỄN MINH PHÚ — WEB FRONTEND DEVELOPER</div>
+          <div class="text-gray-600 font-sans mt-0.5">MSSV: 2374802013447 • ĐH Văn Lang • SĐT: 0911223344</div>
+        </div>
+        <div class="space-y-1">
+          <div class="font-bold text-gray-800">MỤC TIÊU NGHỀ NGHIỆP:</div>
+          <p class="text-gray-600 font-sans">Ứng tuyển vị trí Thực tập sinh / Lập trình viên Part-time ReactJS, đóng góp vào các dự án thực tế của công ty.</p>
+        </div>
+        <div class="space-y-1">
+          <div class="font-bold text-gray-800">KỸ NĂNG:</div>
+          <p class="text-gray-600 font-sans">HTML5, CSS3, JavaScript ES6, ReactJS, TailwindCSS, RESTful API, Git, Figma, MySQL.</p>
+        </div>
+        <div class="space-y-1">
+          <div class="font-bold text-gray-800">DỰ ÁN ĐÃ LÀM:</div>
+          <p class="text-gray-600 font-sans">• Website Freelance Marketplace cho sinh viên VLU (Đồ án môn Chuyên đề tốt nghiệp 2).</p>
+        </div>
+      </div>
+
+      <div class="flex items-center justify-between pt-2">
+        <span class="text-[11px] text-emerald-700 font-semibold">✔ Đã đối soát thông tin sinh viên từ cơ sở dữ liệu trường</span>
+        <button onclick="closeCvModal()" class="px-4 py-2 rounded-lg bg-[#003366] text-white text-xs font-semibold hover:bg-blue-900 transition">
+          Đóng cửa sổ
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- JAVASCRIPT LOGIC & FLOW SIMULATION -->
+  <script>
+    // Tab switching logic
+    function switchView(viewName) {
+      const views = ['home', 'detail', 'employer', 'profile', 'admin'];
+      views.forEach(v => {
+        const el = document.getElementById(`view-${v}`);
+        if (el) el.classList.add('hidden');
+      });
+
+      const activeEl = document.getElementById(`view-${viewName}`);
+      if (activeEl) activeEl.classList.remove('hidden');
+
+      // Update Nav active styling
+      const navIds = ['home', 'employer', 'profile', 'admin'];
+      navIds.forEach(id => {
+        const btn = document.getElementById(`nav-${id}`);
+        if (btn) {
+          if (id === viewName) {
+            btn.className = "px-3 py-2 rounded-md bg-blue-900/60 text-white font-semibold";
+          } else {
+            btn.className = "px-3 py-2 rounded-md text-blue-100 hover:bg-blue-800/50 hover:text-white transition";
+          }
+        }
+      });
+
+      // Role buttons active style
+      const roleSv = document.getElementById('btn-role-sv');
+      const roleNtd = document.getElementById('btn-role-ntd');
+      const roleAdmin = document.getElementById('btn-role-admin');
+
+      roleSv.className = (viewName === 'home' || viewName === 'detail' || viewName === 'profile') 
+        ? "px-2.5 py-1 rounded bg-[#003366] text-white font-medium" 
+        : "px-2.5 py-1 rounded text-slate-300 hover:text-white hover:bg-slate-700 transition";
+
+      roleNtd.className = (viewName === 'employer')
+        ? "px-2.5 py-1 rounded bg-[#003366] text-white font-medium" 
+        : "px-2.5 py-1 rounded text-slate-300 hover:text-white hover:bg-slate-700 transition";
+
+      roleAdmin.className = (viewName === 'admin')
+        ? "px-2.5 py-1 rounded bg-[#003366] text-white font-medium" 
+        : "px-2.5 py-1 rounded text-slate-300 hover:text-white hover:bg-slate-700 transition";
+
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    // Modal controls
+    function openApplyModal(title, company, salary) {
+      document.getElementById('modal-job-title').textContent = title;
+      document.getElementById('modal-company').textContent = `${company} • ${salary}`;
+      document.getElementById('cover-letter-text').value = "Kính gửi Quý công ty, em là sinh viên năm cuối ngành CNTT Văn Lang, đã có kinh nghiệm thực hành với ReactJS và rất mong có cơ hội được thực tập tại công ty.";
+      document.getElementById('modal-apply').classList.remove('hidden');
+    }
+
+    function closeApplyModal() {
+      document.getElementById('modal-apply').classList.add('hidden');
+    }
+
+    function openJobDetail() {
+      switchView('detail');
+    }
+
+    function openCvModal() {
+      document.getElementById('modal-cv').classList.remove('hidden');
+    }
+
+    function closeCvModal() {
+      document.getElementById('modal-cv').classList.add('hidden');
+    }
+
+    // Submit Application Flow
+    function submitApplication() {
+      closeApplyModal();
+      showToast("🚀 Hồ sơ ứng tuyển của bạn đã được gửi thành công đến Nhà tuyển dụng!", "success");
+      
+      // Update applicant count badge
+      const totalEl = document.getElementById('app-total-badge');
+      if (totalEl) totalEl.textContent = "5 ứng viên (Bạn vừa nộp)";
+      
+      // Notify switch to employer portal to see it
+      setTimeout(() => {
+        showToast("💡 Gợi ý: Bạn có thể bấm vào 'Dành cho NTD' ở menu trên để xem nhà tuyển dụng duyệt hồ sơ!", "info");
+      }, 1500);
+    }
+
+    // Employer Candidate Approval Flow
+    function approveCandidate(id, name) {
+      const statusEl = document.getElementById(`status-${id}`);
+      const actionsEl = document.getElementById(`actions-${id}`);
+      if (statusEl && actionsEl) {
+        statusEl.innerHTML = '<span class="px-2.5 py-1 rounded-full bg-emerald-100 text-emerald-800 text-xs font-bold animate-pulse">ĐÃ DUYỆT NHẬN</span>';
+        actionsEl.innerHTML = '<button onclick="showToast(\'Đã gửi email thông báo trúng tuyển đến sinh viên!\', \'success\')" class="px-3 py-1.5 rounded-lg bg-[#003366] text-white text-xs font-semibold hover:bg-blue-900 transition">Liên hệ SĐT/Zalo</button>';
+        showToast(`✔ Đã duyệt nhận ứng viên ${name}! Hệ thống đã gửi email trúng tuyển.`, "success");
+      }
+    }
+
+    function rejectCandidate(id, name) {
+      const statusEl = document.getElementById(`status-${id}`);
+      const actionsEl = document.getElementById(`actions-${id}`);
+      if (statusEl && actionsEl) {
+        statusEl.innerHTML = '<span class="px-2.5 py-1 rounded-full bg-red-100 text-red-800 text-xs font-bold">ĐÃ TỪ CHỐI</span>';
+        actionsEl.innerHTML = '<span class="text-xs text-gray-400">Đã phản hồi</span>';
+        showToast(`Đã từ chối ứng viên ${name}.`, "warning");
+      }
+    }
+
+    // Admin Moderation Flow
+    function adminApprove(rowId) {
+      const actionsEl = document.getElementById(`admin-actions-${rowId}`);
+      if (actionsEl) {
+        actionsEl.innerHTML = '<span class="text-xs font-bold text-emerald-600">✔ ĐÃ CÔNG KHAI</span>';
+        showToast("✔ Tin tuyển dụng đã được phê duyệt và hiển thị trên Trang chủ sinh viên!", "success");
+        updateAdminPending();
+      }
+    }
+
+    function adminReject(rowId) {
+      const rowEl = document.getElementById(`admin-row-${rowId}`);
+      if (rowEl) {
+        rowEl.style.opacity = '0.4';
+        const actionsEl = document.getElementById(`admin-actions-${rowId}`);
+        if (actionsEl) actionsEl.innerHTML = '<span class="text-xs text-gray-500 font-semibold">Đã từ chối tin</span>';
+        showToast("Đã từ chối tin đăng.", "warning");
+        updateAdminPending();
+      }
+    }
+
+    function adminBlock(rowId) {
+      const rowEl = document.getElementById(`admin-row-${rowId}`);
+      if (rowEl) {
+        rowEl.classList.remove('bg-red-50/70');
+        rowEl.classList.add('bg-gray-100', 'line-through', 'opacity-50');
+        const actionsEl = document.getElementById(`admin-actions-${rowId}`);
+        if (actionsEl) actionsEl.innerHTML = '<span class="text-xs font-bold text-red-700">🚫 ĐÃ KHÓA & BÁC BỎ</span>';
+        showToast("🚫 Đã bác bỏ tin đăng lừa đảo và đưa số điện thoại vào Blacklist!", "danger");
+        updateAdminPending();
+      }
+    }
+
+    function updateAdminPending() {
+      const pendingEl = document.getElementById('admin-pending-count');
+      if (pendingEl) pendingEl.textContent = "1 CẦN DUYỆT";
+    }
+
+    // Filter Jobs logic
+    function filterJobs() {
+      const loc = document.querySelector('input[name="loc"]:checked')?.value || 'all';
+      const searchTxt = document.getElementById('search-input')?.value.toLowerCase().trim() || '';
+      const items = document.querySelectorAll('.job-item');
+      let visibleCount = 0;
+
+      items.forEach(item => {
+        const itemLoc = item.getAttribute('data-loc');
+        const itemTitle = item.getAttribute('data-title') || '';
+        const matchLoc = (loc === 'all' || itemLoc === loc);
+        const matchTxt = (!searchTxt || itemTitle.includes(searchTxt));
+
+        if (matchLoc && matchTxt) {
+          item.classList.remove('hidden');
+          visibleCount++;
+        } else {
+          item.classList.add('hidden');
+        }
+      });
+
+      const countEl = document.getElementById('job-count');
+      if (countEl) countEl.textContent = visibleCount;
+      showToast(`Đã lọc thấy ${visibleCount} việc làm phù hợp.`, "info");
+    }
+
+    function resetFilter() {
+      const allRadio = document.querySelector('input[name="loc"][value="all"]');
+      if (allRadio) allRadio.checked = true;
+      const searchInput = document.getElementById('search-input');
+      if (searchInput) searchInput.value = '';
+      filterJobs();
+    }
+
+    // Toast Notification helper
+    function showToast(message, type = 'info') {
+      const container = document.getElementById('toast-container');
+      if (!container) return;
+
+      const toast = document.createElement('div');
+      toast.className = 'toast-animate px-4 py-3 rounded-xl shadow-lg text-xs font-semibold flex items-center space-x-2 text-white pointer-events-auto transition max-w-sm';
+
+      if (type === 'success') {
+        toast.classList.add('bg-emerald-600');
+        toast.innerHTML = `<span>🎉</span><span>${message}</span>`;
+      } else if (type === 'warning') {
+        toast.classList.add('bg-amber-600');
+        toast.innerHTML = `<span>⚠️</span><span>${message}</span>`;
+      } else if (type === 'danger') {
+        toast.classList.add('bg-red-600');
+        toast.innerHTML = `<span>🚫</span><span>${message}</span>`;
+      } else {
+        toast.classList.add('bg-blue-600');
+        toast.innerHTML = `<span>ℹ️</span><span>${message}</span>`;
+      }
+
+      container.appendChild(toast);
+      setTimeout(() => {
+        toast.style.opacity = '0';
+        toast.style.transform = 'translateY(-10px)';
+        setTimeout(() => toast.remove(), 300);
+      }, 3200);
+    }
+  </script>
+</body>
+</html>

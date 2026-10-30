@@ -1,0 +1,102 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 900" width="1440" height="900">
+  <defs>
+    <filter id="cardShadow" x="-5%" y="-5%" width="110%" height="115%">
+      <feDropShadow dx="0" dy="2" stdDeviation="4" flood-opacity="0.06"/>
+    </filter>
+  </defs>
+  
+  <rect width="1440" height="900" fill="#F3F4F6"/>
+  
+    <!-- Navigation Header -->
+    <rect x="0" y="0" width="1440" height="70" fill="#003366"/>
+    <text x="60" y="44" fill="#FFFFFF" font-size="20" font-weight="bold" font-family="system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif">🎓 VLU FREELANCE</text>
+    
+    
+        <text x="340" y="42" fill="#FFFFFF" font-weight="bold" font-size="14" font-family="system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif">Việc làm mới</text>
+        <text x="470" y="42" fill="#E2E8F0" font-size="14" font-family="system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif">Dành cho NTD</text>
+        <text x="600" y="42" fill="#E2E8F0" font-size="14" font-family="system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif">Cẩm nang sinh viên</text>
+        
+    
+    <!-- User action area -->
+    <rect x="1100" y="18" width="130" height="34" rx="6" fill="#0284C7"/>
+    <text x="1122" y="40" fill="#FFFFFF" font-weight="bold" font-size="13" font-family="system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif">+ Đăng tin NTD</text>
+    
+    <circle cx="1270" cy="35" r="16" fill="#E2E8F0"/>
+    <text x="1263" y="40" font-size="14">👤</text>
+    <text x="1295" y="40" fill="#FFFFFF" font-weight="600" font-size="13" font-family="system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif">Nguyễn Minh Phú</text>
+    
+
+  <!-- Left: Profile Summary Card -->
+  <rect x="60" y="105" width="560" height="660" rx="12" fill="#FFFFFF" stroke="#E5E7EB" filter="url(#cardShadow)"/>
+  <text x="90" y="145" fill="#111827" font-size="18" font-weight="bold" font-family="system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif">HỒ SƠ NĂNG LỰC SINH VIÊN</text>
+
+  <!-- Avatar & Info -->
+  <circle cx="140" cy="210" r="45" fill="#E2E8F0" stroke="#CBD5E1" stroke-width="2"/>
+  <text x="122" y="222" font-size="36">👤</text>
+
+  <text x="210" y="195" fill="#111827" font-size="18" font-weight="bold" font-family="system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif">Nguyễn Minh Phú</text>
+  <rect x="375" y="180" width="135" height="22" rx="4" fill="#DCFCE7"/>
+  <text x="385" y="196" fill="#166534" font-size="11" font-weight="bold" font-family="system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif">✔️ ĐÃ XÁC THỰC VLU</text>
+
+  <text x="210" y="222" fill="#4B5563" font-size="13" font-family="system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif">MSSV: 2374802013447  •  Khoa: CNTT</text>
+  <text x="210" y="244" fill="#4B5563" font-size="13" font-family="system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif">Email: sinhvien.demo@student.vlu.edu.vn</text>
+  <text x="210" y="266" fill="#D97706" font-size="13" font-weight="bold" font-family="system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif">⭐ 5.0 / 5.0 (4 việc hoàn thành xuất sắc)</text>
+
+  <line x1="90" y1="285" x2="590" y2="285" stroke="#E5E7EB"/>
+
+  <!-- Bio -->
+  <text x="90" y="315" fill="#111827" font-size="14" font-weight="bold" font-family="system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif">Giới thiệu bản thân:</text>
+  <rect x="90" y="330" width="500" height="70" rx="8" fill="#F8FAFC" stroke="#E2E8F0"/>
+  <text x="105" y="355" fill="#475569" font-size="13" font-family="system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif">Sinh viên năm cuối ngành CNTT Văn Lang, đam mê lập trình Web Fullstack.</text>
+  <text x="105" y="377" fill="#475569" font-size="13" font-family="system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif">Có kỹ năng tốt với ReactJS, Node.js, MySQL và kinh nghiệm làm trợ giảng.</text>
+
+  <!-- Skill tags -->
+  <text x="90" y="430" fill="#111827" font-size="14" font-weight="bold" font-family="system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif">Kỹ năng chuyên môn (Skill Tags):</text>
+  <rect x="90" y="445" width="75" height="26" rx="13" fill="#E0F2FE"/><text x="102" y="462" fill="#0369A1" font-size="12" font-weight="bold" font-family="system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif">ReactJS</text>
+  <rect x="175" y="445" width="80" height="26" rx="13" fill="#E0F2FE"/><text x="187" y="462" fill="#0369A1" font-size="12" font-weight="bold" font-family="system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif">Node.js</text>
+  <rect x="265" y="445" width="75" height="26" rx="13" fill="#E0F2FE"/><text x="277" y="462" fill="#0369A1" font-size="12" font-weight="bold" font-family="system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif">MySQL</text>
+  <rect x="350" y="445" width="95" height="26" rx="13" fill="#E0F2FE"/><text x="362" y="462" fill="#0369A1" font-size="12" font-weight="bold" font-family="system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif">TailwindCSS</text>
+  <rect x="455" y="445" width="50" height="26" rx="13" fill="#E0F2FE"/><text x="467" y="462" fill="#0369A1" font-size="12" font-weight="bold" font-family="system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif">Git</text>
+  <rect x="515" y="445" width="65" height="26" rx="13" fill="#E0F2FE"/><text x="527" y="462" fill="#0369A1" font-size="12" font-weight="bold" font-family="system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif">Figma</text>
+
+  <!-- CV Box -->
+  <text x="90" y="505" fill="#111827" font-size="14" font-weight="bold" font-family="system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif">Hồ sơ CV đính kèm:</text>
+  <rect x="90" y="520" width="500" height="90" rx="8" fill="#EFF6FF" stroke="#BFDBFE"/>
+  <text x="110" y="550" fill="#1E3A8A" font-size="14" font-weight="bold" font-family="system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif">📄 CV_NguyenMinhPhu_WebDev.pdf (1.8 MB)</text>
+  <text x="110" y="572" fill="#60A5FA" font-size="12" font-family="system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif">Cập nhật ngày 15/10/2026  •  Lưu trữ an toàn Cloudinary</text>
+  <text x="110" y="596" fill="#2563EB" font-size="12" font-weight="bold" font-family="system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif">[👁️ Xem trực tiếp]    [📥 Tải xuống]    [🔄 Tải CV mới]</text>
+
+  <rect x="90" y="635" width="500" height="42" rx="8" fill="#003366"/>
+  <text x="240" y="661" fill="#FFFFFF" font-size="14" font-weight="bold" font-family="system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif">✏️ Chỉnh sửa hồ sơ cá nhân</text>
+
+  <!-- Right: Work History & Reviews -->
+  <rect x="650" y="105" width="730" height="660" rx="12" fill="#FFFFFF" stroke="#E5E7EB" filter="url(#cardShadow)"/>
+  <text x="680" y="145" fill="#111827" font-size="18" font-weight="bold" font-family="system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif">LỊCH SỬ VIỆC LÀM &amp; ĐÁNH GIÁ TỪ NHÀ TUYỂN DỤNG</text>
+
+  <!-- Review 1 -->
+  <rect x="680" y="170" width="670" height="140" rx="8" fill="#F8FAFC" stroke="#E2E8F0"/>
+  <text x="705" y="200" fill="#111827" font-size="15" font-weight="bold" font-family="system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif">1. Thực tập sinh Lập trình Web — Công ty Sáng tạo VLU</text>
+  <text x="705" y="225" fill="#D97706" font-size="13" font-weight="bold" font-family="system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif">⭐⭐⭐⭐⭐ 5.0 / 5.0</text>
+  <text x="860" y="225" fill="#64748B" font-size="12" font-family="system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif">• Hoàn thành tháng 09/2026</text>
+  <text x="705" y="255" fill="#334155" font-size="13" font-style="italic" font-family="system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif">"Phú làm việc rất chăm chỉ, nắm bắt ReactJS nhanh và bàn giao đúng hẹn. Rất khuyến khích các bạn sinh viên học tập!"</text>
+  <text x="705" y="285" fill="#059669" font-size="12" font-weight="bold" font-family="system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif">✔ Doanh nghiệp đã cấp mộc chứng nhận thực tập</text>
+
+  <!-- Review 2 -->
+  <rect x="680" y="330" width="670" height="135" rx="8" fill="#F8FAFC" stroke="#E2E8F0"/>
+  <text x="705" y="360" fill="#111827" font-size="15" font-weight="bold" font-family="system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif">2. Hỗ trợ Sự kiện Chào Tân Sinh viên Khóa 29</text>
+  <text x="705" y="385" fill="#D97706" font-size="13" font-weight="bold" font-family="system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif">⭐⭐⭐⭐⭐ 5.0 / 5.0</text>
+  <text x="860" y="385" fill="#64748B" font-size="12" font-family="system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif">• Hoàn thành tháng 10/2026</text>
+  <text x="705" y="415" fill="#334155" font-size="13" font-style="italic" font-family="system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif">"Nhiệt tình, luôn đúng giờ, điều phối và hỗ trợ các bạn tân sinh viên giải đáp thắc mắc rất chu đáo."</text>
+
+  <!-- Review 3 -->
+  <rect x="680" y="485" width="670" height="135" rx="8" fill="#F8FAFC" stroke="#E2E8F0"/>
+  <text x="705" y="515" fill="#111827" font-size="15" font-weight="bold" font-family="system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif">3. Nhập liệu CSDL Danh mục Shop Chic Fashion</text>
+  <text x="705" y="540" fill="#D97706" font-size="13" font-weight="bold" font-family="system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif">⭐⭐⭐⭐⭐ 5.0 / 5.0</text>
+  <text x="860" y="540" fill="#64748B" font-size="12" font-family="system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif">• Hoàn thành tháng 08/2026</text>
+  <text x="705" y="570" fill="#334155" font-size="13" font-style="italic" font-family="system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif">"Cẩn thận, chính xác, hoàn thành trước hạn bàn giao 2 ngày. Sẽ tiếp tục hợp tác các dự án sau!"</text>
+
+  <!-- Legend -->
+  <rect x="60" y="800" width="1320" height="70" rx="8" fill="#FFFFFF" stroke="#003366" stroke-width="1.5"/>
+  <text x="80" y="825" fill="#003366" font-size="13" font-weight="bold" font-family="system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif">📌 FIGMA SPEC - MÀN HÌNH 04: HỒ SƠ NĂNG LỰC SINH VIÊN VỚI HUY HIỆU XÁC THỰC EMAIL TRƯỜNG</text>
+  <text x="80" y="848" fill="#4B5563" font-size="12" font-family="system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif">• Khớp FR-02 (Xác thực sinh viên) &amp; FR-03 (Profile CV)  •  Huy hiệu xanh #DCFCE7 chống gian lận  •  Lịch sử đánh giá thực tế</text>
+</svg>

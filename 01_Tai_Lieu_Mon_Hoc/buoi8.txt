@@ -1,0 +1,155 @@
+=== Page 1 ===
+T R Ư Ờ N G  Đ Ạ I  H Ọ C
+VĂN LANG
+K H O A  C Ô N G  N G H Ệ  T H Ô N G  T I N
+C H U Y Ê N  Đ Ề  T Ố T  N G H I Ệ P  2
+BUỔI 8
+Kiểm thử và tinh chỉnh sản phẩm
+Giảng Viên Giảng Dạy:
+ThS. Nguyễn Văn Trung
+
+=== Page 2 ===
+Mục tiêu buổi học
+Biết cách viết test case và kiểm thử unit/integration cho 
+sản phẩm CNPM
+Biết cách đánh giá mô hình bằng chỉ số phù hợp và phân 
+tích lỗi cho KHDL/AI
+Sửa được các lỗi phát hiện và tinh chỉnh/tối ưu sản 
+phẩm
+Có bộ kết quả kiểm thử/đánh giá đầy đủ để đưa vào 
+báo cáo
+Văn Lang · Chuyên đề tốt nghiệp 2 · Buổi 8 1
+
+=== Page 3 ===
+Nội dung chính
+Tóm tắt trọng tâm buổi học
+Kiểm thử unit và integration (CNPM): Unit test: kiểm tra từng hàm/phương thức riêng lẻ có hoạt động đúng như mong đợi
+Đánh giá mô hình bằng chỉ số phù hợp (KHDL/AI): KHDL: dùng chỉ số phù hợp với bài toán dự báo (MAE, RMSE...) hoặc so sánh trực quan 
+với baseline đơn giản
+Phân tích lỗi (error analysis): Không chỉ dừng ở việc biết mô hình/sản phẩm sai bao nhiêu %, mà cần hiểu sai ở trường hợp nào
+Tinh chỉnh và tối ưu sản phẩm: Ưu tiên sửa lỗi chặn luồng chính trước, lỗi nhỏ có thể ghi nhận là "hạn chế đã biết" trong báo cáo nếu 
+không đủ thời gian
+Văn Lang · Chuyên đề tốt nghiệp 2 · Buổi 8 2
+
+=== Page 4 ===
+Quy trình thực hiện trong buổi
+1
+Viết test case / thiết lập chỉ số 
+đánh giá
+→
+2
+Chạy kiểm thử/đánh giá trên sản 
+phẩm hiện tại
+→
+3
+Phân tích lỗi, xác định nguyên 
+nhân
+→
+4
+Sửa lỗi và tinh chỉnh sản phẩm
+Văn Lang · Chuyên đề tốt nghiệp 2 · Buổi 8 3
+
+=== Page 5 ===
+Ví dụ áp dụng theo 3 chuyên ngành
+Công nghệ phần mềm
+Nền tảng quản lý freelance/marketplace việc làm part-
+time cho sinh viên
+Test case mẫu: đăng tin với dữ liệu hợp lệ → thành 
+công; đăng tin thiếu tiêu đề → trả lỗi rõ ràng
+Integration test: ứng tuyển vào tin đã đóng → hệ 
+thống từ chối đúng, không cho ứng tuyển
+Khoa học dữ liệu
+Phân tích & dự báo xu hướng tuyển dụng ngành CNTT 
+từ dữ liệu tin đăng việc làm
+Đánh giá: so sánh mô hình dự báo xu hướng với 
+baseline "giữ nguyên giá trị kỳ trước" bằng chỉ số 
+MAE
+Phân tích lỗi: mô hình dự báo sai nhiều ở giai đoạn 
+có ít dữ liệu tin tuyển dụng (tháng lễ Tết) - ghi nhận 
+là hạn chế
+Trí tuệ nhân tạo
+Hệ thống nhận diện khuôn mặt điểm danh tự động
+Đánh giá: chạy nhận diện trên tập test gồm ảnh của 
+toàn bộ thành viên nhóm, tính accuracy và tỷ lệ 
+false positive/negative
+Phân tích lỗi: mô hình nhận nhầm nhiều hơn khi 
+ánh sáng yếu hoặc góc chụp nghiêng - ghi nhận là 
+điều kiện hạn chế
+Văn Lang · Chuyên đề tốt nghiệp 2 · Buổi 8 4
+
+=== Page 6 ===
+HOẠT ĐỘNG NHÓM T ẠI LỚP
+1 Thực hiện kiểm thử/đánh giá có hệ thống
+Viết/chạy ít nhất 5-8 test case cho luồng chính (CNPM) hoặc đánh giá mô 
+hình trên tập test đầy đủ (KHDL/AI)
+Ghi nhận kết quả vào bảng theo dõi (bug log hoặc bảng chỉ số)
+Phân loại lỗi/vấn đề phát hiện theo mức độ nghiêm trọng
+2 Sửa lỗi và tinh chỉnh theo mức độ ưu tiên
+Sửa toàn bộ lỗi mức độ nghiêm trọng cao trước
+Với lỗi nhỏ/không đủ thời gian: ghi nhận rõ vào danh sách "hạn chế đã 
+biết"
+Chạy lại kiểm thử/đánh giá sau khi sửa để xác nhận đã khắc phục
+Văn Lang · Chuyên đề tốt nghiệp 2 · Buổi 8 5
+
+=== Page 7 ===
+Lỗi thường gặp & lưu ý
+Chỉ kiểm thử "đường vui" (happy path) mà bỏ qua các trường hợp dữ liệu sai/thiếu
+Với KHDL/AI: chỉ báo cáo 1 con số accuracy duy nhất mà không phân tích mô hình sai ở đâu, vì sao
+Sửa lỗi này lại phát sinh lỗi khác nhưng không kiểm thử lại toàn bộ, chỉ kiểm tra phần vừa sửa
+Văn Lang · Chuyên đề tốt nghiệp 2 · Buổi 8 6
+
+=== Page 8 ===
+Tự thực hiện ở nhà (10,5 giờ)
+Thực hiện kiểm thử/đánh giá đầy đủ theo hướng dẫn, mở rộng thêm test case/trường hợp kiểm tra
+Sửa lỗi, tinh chỉnh sản phẩm theo thứ tự ưu tiên đã xác định tại lớp
+Chạy lại kiểm thử/đánh giá sau khi sửa để xác nhận kết quả
+Tổng hợp kết quả kiểm thử/đánh giá thành bảng/báo cáo ngắn gọn để dùng cho báo cáo cuối kỳ
+Ghi rõ danh sách "hạn chế đã biết" nếu có lỗi/vấn đề chưa kịp xử lý
+Cập nhật nhật ký thực hiện đề tài với nội dung buổi 8
+Văn Lang · Chuyên đề tốt nghiệp 2 · Buổi 8 7
+
+=== Page 9 ===
+Sản phẩm/tài liệu cần bàn giao cuối buổi
+Bảng/báo cáo kết quả kiểm thử (CNPM) hoặc đánh giá mô hình (KHDL/AI)
+Danh sách lỗi đã sửa và danh sách hạn chế còn tồn tại
+Sản phẩm đã được tinh chỉnh sau kiểm thử
+Văn Lang · Chuyên đề tốt nghiệp 2 · Buổi 8 8
+
+=== Page 10 ===
+Tiêu chí đánh giá áp dụng cho buổi này
+Rubric 1 - Chuyên cần
+10%
+Điểm danh & mức độ tham gia 10 buổi hướng dẫn
+ÁP DỤNG
+Rubric 2 - Đánh giá giữa kỳ
+30%
+GVHD đánh giá sản phẩm theo từng mốc + nhật ký thực 
+hiện đề tài
+Rubric 3 - Báo cáo cuối kỳ
+60%
+Hội đồng đánh giá báo cáo, sản phẩm, demo và phần bảo 
+vệ
+Buổi 8 tính điểm chuyên cần (Rubric 1); kết quả kiểm thử/đánh giá sẽ là minh chứng quan trọng khi hội đồng chấm Rubric 3 ở buổi báo cáo.
+Văn Lang · Chuyên đề tốt nghiệp 2 · Buổi 8 9
+
+=== Page 11 ===
+Câu hỏi thảo luận nhanh
+Dành thời gian cuối buổi để cả lớp cùng trao đổi
+1 Lỗi/vấn đề nào phát hiện ở buổi kiểm thử khiến nhóm bạn bất ngờ nhất so với lúc demo ở buổi 7?
+2 Nếu phải chọn 1 hạn chế để nêu thẳng thắn trong báo cáo, nhóm bạn sẽ chọn hạn chế nào?
+Văn Lang · Chuyên đề tốt nghiệp 2 · Buổi 8 10
+
+=== Page 12 ===
+T Ổ N G  K Ế T  B U Ổ I  8
+Kiểm thử và tinh chỉnh sản phẩm
+Đã chạy kiểm thử/đánh giá có hệ thống trên toàn bộ luồng/mô hình chính
+Toàn bộ lỗi mức độ nghiêm trọng cao đã được sửa và xác nhận lại
+Danh sách hạn chế đã biết (nếu có) đã được ghi nhận rõ ràng
+Kết quả kiểm thử/đánh giá đã được tổng hợp thành tài liệu sẵn sàng đưa vào báo cáo
+Buổi tiếp theo:
+Triển khai sản phẩm và viết báo cáo
+
+=== Page 13 ===
+HỎI - ĐÁP
+Cảm ơn các nhóm - hẹn gặp lại ở buổi tiếp theo
+

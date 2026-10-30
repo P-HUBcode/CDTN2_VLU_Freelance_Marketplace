@@ -1,0 +1,152 @@
+=== Page 1 ===
+T R Ư Ờ N G  Đ Ạ I  H Ọ C
+VĂN LANG
+K H O A  C Ô N G  N G H Ệ  T H Ô N G  T I N
+C H U Y Ê N  Đ Ề  T Ố T  N G H I Ệ P  2
+BUỔI 1
+Giới thiệu môn học, phân nhóm và lựa chọn đề tài
+Giảng Viên Giảng Dạy:
+ThS. Nguyễn Văn Trung
+
+=== Page 2 ===
+Mục tiêu buổi học
+Nắm được toàn bộ lộ trình 10 buổi và quy trình phát 
+triển sản phẩm CNTT sẽ áp dụng xuyên suốt
+Hiểu rõ cách tính điểm theo 3 rubric và cách đạt điểm 
+cao ở từng thành phần
+Được phân vào nhóm 3-4 sinh viên cùng chuyên ngành, 
+có nhóm trưởng
+Chọn/đăng ký được 1 đề tài phù hợp chuyên ngành, sẵn 
+sàng bắt đầu buổi 2
+Văn Lang · Chuyên đề tốt nghiệp 2 · Buổi 1 1
+
+=== Page 3 ===
+Nội dung chính
+Tóm tắt trọng tâm buổi học
+Giới thiệu đề cương môn học: Môn học mô phỏng một dự án CNTT thực tế: từ ý tưởng đến sản phẩm hoàn chỉnh và báo cáo bảo vệ
+Quy trình phát triển sản phẩm CNTT áp dụng xuyên suốt: Discovery (phân tích yêu cầu) → Planning (lập kế hoạch) → Design (thiết kế) → 
+Build (xây dựng) → Test (kiểm thử) → Deploy (triển khai) → Report (báo cáo)
+3 chuyên ngành - 3 hướng đề tài khác nhau: Công nghệ phần mềm (CNPM): xây dựng ứng dụng/hệ thống hoàn chỉnh
+Nguyên tắc làm việc nhóm trong môn học: Mỗi nhóm bầu 1 nhóm trưởng chịu trách nhiệm điều phối và nộp bài đúng hạn
+Văn Lang · Chuyên đề tốt nghiệp 2 · Buổi 1 2
+
+=== Page 4 ===
+Quy trình thực hiện trong buổi
+1
+Giới thiệu đề cương và quy trình 
+môn học
+→
+2
+Phổ biến 3 rubric đánh giá và 
+cách tính điểm
+→
+3
+Phân nhóm 3-4 sinh viên cùng 
+chuyên ngành
+→
+4
+Nhóm chọn/đăng ký đề tài, bầu 
+nhóm trưởng
+Văn Lang · Chuyên đề tốt nghiệp 2 · Buổi 1 3
+
+=== Page 5 ===
+Ví dụ áp dụng theo 3 chuyên ngành
+Công nghệ phần mềm
+Nền tảng quản lý freelance/marketplace việc làm part-
+time cho sinh viên
+Bài toán: sinh viên khó tìm việc part-time phù hợp, 
+nhà tuyển dụng khó tiếp cận ứng viên sinh viên 
+đáng tin cậy
+Sản phẩm kỳ vọng: nền tảng web 2 chiều cho phép 
+đăng tin, ứng tuyển, đánh giá sau công việc
+Khoa học dữ liệu
+Phân tích & dự báo xu hướng tuyển dụng ngành CNTT 
+từ dữ liệu tin đăng việc làm
+Bài toán: sinh viên/khoa thiếu góc nhìn dữ liệu về 
+xu hướng kỹ năng CNTT đang được tuyển dụng
+Sản phẩm kỳ vọng: dashboard phân tích xu hướng 
+kỹ năng, mức lương và dự báo theo thời gian
+Trí tuệ nhân tạo
+Hệ thống nhận diện khuôn mặt điểm danh tự động
+Bài toán: điểm danh thủ công tốn thời gian, dễ gian 
+lận hộ bạn
+Sản phẩm kỳ vọng: hệ thống nhận diện khuôn mặt 
+điểm danh tự động qua camera lớp học
+Văn Lang · Chuyên đề tốt nghiệp 2 · Buổi 1 4
+
+=== Page 6 ===
+HOẠT ĐỘNG NHÓM T ẠI LỚP
+1 Ghép nhóm và thống nhất vai trò
+Cả nhóm giới thiệu ngắn gọn thế mạnh của từng thành viên
+Bầu 1 nhóm trưởng
+Thống nhất kênh liên lạc chính (Zalo/Messenger/Discord) và lịch họp 
+nhóm hàng tuần
+2 Chọn đề tài và phác thảo mục tiêu ban đầu
+Chọn 1 trong các đề tài mẫu hoặc đề xuất đề tài riêng cùng hướng chuyên 
+ngành
+Viết 2-3 câu mô tả bài toán mà sản phẩm sẽ giải quyết
+Liệt kê sơ bộ 3-4 tính năng/kết quả chính mong muốn đạt được
+Văn Lang · Chuyên đề tốt nghiệp 2 · Buổi 1 5
+
+=== Page 7 ===
+Lỗi thường gặp & lưu ý
+Nhóm chọn đề tài theo cảm hứng nhất thời mà không cân nhắc dữ liệu/công nghệ có khả thi trong 10 buổi hay không
+Phân vai trò không rõ ràng ngay từ đầu khiến công việc dồn vào 1-2 thành viên ở các buổi sau
+Không bắt đầu ghi nhật ký thực hiện đề tài từ buổi 1, dẫn đến thiếu minh chứng cho Rubric 2 ở giữa kỳ
+Văn Lang · Chuyên đề tốt nghiệp 2 · Buổi 1 6
+
+=== Page 8 ===
+Tự thực hiện ở nhà (10,5 giờ)
+Nhóm họp thống nhất phân công vai trò cụ thể trong nhóm (ai phụ trách phần nào)
+Tìm hiểu bối cảnh, hiện trạng bài toán của đề tài đã chọn (đọc thêm 2 -3 nguồn tham khảo)
+Lập mẫu nhật ký thực hiện đề tài và ghi nhận buổi 1
+Mỗi thành viên tìm hiểu sơ bộ công nghệ/công cụ dự kiến sẽ dùng cho phần việc của mình
+Nhóm trưởng lập kênh liên lạc chính thức và lịch họp nhóm cố định
+Chuẩn bị câu hỏi (nếu có) để trao đổi với GVHD ở đầu buổi 2
+Văn Lang · Chuyên đề tốt nghiệp 2 · Buổi 1 7
+
+=== Page 9 ===
+Sản phẩm/tài liệu cần bàn giao cuối buổi
+Danh sách nhóm kèm đề tài đã đăng ký
+Bản phác thảo mục tiêu và 3-4 tính năng/kết quả chính dự kiến
+Nhật ký thực hiện đề tài - mục ghi buổi 1
+Văn Lang · Chuyên đề tốt nghiệp 2 · Buổi 1 8
+
+=== Page 10 ===
+Tiêu chí đánh giá áp dụng cho buổi này
+Rubric 1 - Chuyên cần
+10%
+Điểm danh & mức độ tham gia 10 buổi hướng dẫn
+ÁP DỤNG
+Rubric 2 - Đánh giá giữa kỳ
+30%
+GVHD đánh giá sản phẩm theo từng mốc + nhật ký thực 
+hiện đề tài
+Rubric 3 - Báo cáo cuối kỳ
+60%
+Hội đồng đánh giá báo cáo, sản phẩm, demo và phần bảo 
+vệ
+Buổi 1 tính điểm chuyên cần (Rubric 1) qua điểm danh và mức độ tham gia phân nhóm/chọn đề tài.
+Văn Lang · Chuyên đề tốt nghiệp 2 · Buổi 1 9
+
+=== Page 11 ===
+Câu hỏi thảo luận nhanh
+Dành thời gian cuối buổi để cả lớp cùng trao đổi
+1 Đề tài nhóm bạn chọn có điểm gì khác biệt so với đề tài mẫu hoặc đề tài của nhóm khác?
+2 Rủi ro lớn nhất mà nhóm dự đoán sẽ gặp phải trong 10 buổi tới là gì?
+Văn Lang · Chuyên đề tốt nghiệp 2 · Buổi 1 10
+
+=== Page 12 ===
+T Ổ N G  K Ế T  B U Ổ I  1
+Giới thiệu môn học, phân nhóm và lựa chọn đề tài
+Mọi sinh viên đã thuộc về 1 nhóm cụ thể và có nhóm trưởng
+Mỗi nhóm đã đăng ký 1 đề tài rõ ràng, đúng chuyên ngành
+Nhóm đã phác thảo được mục tiêu và các tính năng/kết quả chính dự kiến
+Nhóm đã bắt đầu ghi nhật ký thực hiện đề tài
+Buổi tiếp theo:
+Phân tích yêu cầu đề tài
+
+=== Page 13 ===
+HỎI - ĐÁP
+Cảm ơn các nhóm - hẹn gặp lại ở buổi tiếp theo
+

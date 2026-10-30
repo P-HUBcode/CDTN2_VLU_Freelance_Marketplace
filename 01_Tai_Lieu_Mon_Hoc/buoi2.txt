@@ -1,0 +1,148 @@
+=== Page 1 ===
+T R Ư Ờ N G  Đ Ạ I  H Ọ C
+VĂN LANG
+K H O A  C Ô N G  N G H Ệ  T H Ô N G  T I N
+C H U Y Ê N  Đ Ề  T Ố T  N G H I Ệ P  2
+BUỔI 2
+Phân tích yêu cầu đề tài
+Giảng Viên Giảng Dạy:
+ThS. Nguyễn Văn Trung
+
+=== Page 2 ===
+Mục tiêu buổi học
+Nắm vững kỹ thuật thu thập và phân tích yêu cầu cho 
+sản phẩm CNTT
+Phân biệt được yêu cầu chức năng (functional) và phi 
+chức năng (non-functional)
+Từng nhóm trình bày được bài toán/yêu cầu sơ bộ của 
+đề tài trước lớp
+Có bản đặc tả yêu cầu (SRS rút gọn) làm nền tảng cho 
+buổi lập kế hoạch
+Văn Lang · Chuyên đề tốt nghiệp 2 · Buổi 2 1
+
+=== Page 3 ===
+Nội dung chính
+Tóm tắt trọng tâm buổi học
+Yêu cầu chức năng và phi chức năng: Yêu cầu chức năng (functional): hệ thống phải LÀM ĐƯỢC gì - ví dụ đăng tin, tìm kiếm, dự báo, nhận 
+diện
+Kỹ thuật thu thập yêu cầu: Phỏng vấn/khảo sát người dùng mục tiêu (sinh viên, nhà tuyển dụng, giảng viên...) nếu có thể tiếp cận
+Đặc thù phân tích yêu cầu theo chuyên ngành: CNPM: xác định actor (người dùng), use case chính, luồng nghiệp vụ đầu-cuối
+Cấu trúc bản đặc tả yêu cầu rút gọn (SRS): Mục 1: Mô tả bài toán và mục tiêu sản phẩm
+Văn Lang · Chuyên đề tốt nghiệp 2 · Buổi 2 2
+
+=== Page 4 ===
+Quy trình thực hiện trong buổi
+1
+Đặt câu hỏi 5W1H làm rõ bài 
+toán
+→
+2
+Xác định người dùng/actor chính
+→
+3
+Liệt kê yêu cầu chức năng & phi 
+chức năng
+→
+4
+Trình bày trước lớp, nhận góp ý 
+từ GVHD
+Văn Lang · Chuyên đề tốt nghiệp 2 · Buổi 2 3
+
+=== Page 5 ===
+Ví dụ áp dụng theo 3 chuyên ngành
+Công nghệ phần mềm
+Nền tảng quản lý freelance/marketplace việc làm part-
+time cho sinh viên
+Actor: Sinh viên (tìm việc), Nhà tuyển dụng (đăng 
+tin), Quản trị viên
+Yêu cầu chức năng chính: đăng tin, tìm kiếm/lọc, 
+ứng tuyển, duyệt hồ sơ, đánh giá sau công việc
+Khoa học dữ liệu
+Phân tích & dự báo xu hướng tuyển dụng ngành CNTT 
+từ dữ liệu tin đăng việc làm
+Nguồn dữ liệu dự kiến: tin tuyển dụng CNTT công 
+khai hoặc dataset có sẵn (Kaggle)
+Bài toán phân tích: kỹ năng/công nghệ nào đang có 
+nhu cầu cao, xu hướng thay đổi theo thời gian
+Trí tuệ nhân tạo
+Hệ thống nhận diện khuôn mặt điểm danh tự động
+Bài toán học máy: nhận diện khuôn mặt sinh viên 
+trong ảnh/video từ camera lớp học
+Dữ liệu cần có: ảnh khuôn mặt của từng sinh viên 
+trong lớp (thu thập ở bước enrollment)
+Văn Lang · Chuyên đề tốt nghiệp 2 · Buổi 2 4
+
+=== Page 6 ===
+HOẠT ĐỘNG NHÓM T ẠI LỚP
+1 Khai thác yêu cầu bằng 5W1H
+Trả lời đầy đủ 6 câu hỏi 5W1H cho đề tài của nhóm
+Từ câu trả lời, rút ra ít nhất 5 yêu cầu chức năng cụ thể
+Ghi lại 2-3 yêu cầu phi chức năng quan trọng nhất
+2 Soạn bản đặc tả yêu cầu rút gọn
+Điền đầy đủ 4 mục của khung SRS rút gọn cho đề tài của nhóm
+Đánh số từng yêu cầu chức năng (FR-01, FR-02...) để dễ tham chiếu về sau
+Chuẩn bị trình bày miệng bản đặc tả trong 2-3 phút
+Văn Lang · Chuyên đề tốt nghiệp 2 · Buổi 2 5
+
+=== Page 7 ===
+Lỗi thường gặp & lưu ý
+Liệt kê yêu cầu quá chung chung ("hệ thống phải tốt", "dễ sử dụng") mà không đo lường được
+Chỉ tập trung yêu cầu chức năng, bỏ hoàn toàn yêu cầu phi chức năng
+Với đề tài KHDL/AI: chưa xác định rõ nguồn dữ liệu đã vội lên danh sách tính năng, dẫn đến rủi ro không có dữ liệu để làm
+Văn Lang · Chuyên đề tốt nghiệp 2 · Buổi 2 6
+
+=== Page 8 ===
+Tự thực hiện ở nhà (10,5 giờ)
+Hoàn thiện bản đặc tả yêu cầu (SRS rút gọn) hoặc mô tả bài toán dữ liệu/mô hình dựa trên góp ý tại lớp
+Rà soát lại danh sách yêu cầu chức năng, loại bỏ yêu cầu không thực sự cần thiết cho phạm vi 10 buổi
+Với KHDL/AI: xác nhận lại nguồn dữ liệu có thực sự truy cập được không
+Mỗi thành viên đọc lại toàn bộ bản đặc tả để đảm bảo cả nhóm hiểu yêu cầu như nhau
+Ghi các yêu cầu còn mơ hồ cần hỏi thêm GVHD vào đầu buổi 3
+Cập nhật nhật ký thực hiện đề tài với nội dung buổi 2
+Văn Lang · Chuyên đề tốt nghiệp 2 · Buổi 2 7
+
+=== Page 9 ===
+Sản phẩm/tài liệu cần bàn giao cuối buổi
+Bản đặc tả yêu cầu (SRS rút gọn) hoàn chỉnh
+Danh sách yêu cầu chức năng đã đánh số
+Nhật ký thực hiện đề tài - mục ghi buổi 2
+Văn Lang · Chuyên đề tốt nghiệp 2 · Buổi 2 8
+
+=== Page 10 ===
+Tiêu chí đánh giá áp dụng cho buổi này
+Rubric 1 - Chuyên cần
+10%
+Điểm danh & mức độ tham gia 10 buổi hướng dẫn
+ÁP DỤNG
+Rubric 2 - Đánh giá giữa kỳ
+30%
+GVHD đánh giá sản phẩm theo từng mốc + nhật ký thực 
+hiện đề tài
+Rubric 3 - Báo cáo cuối kỳ
+60%
+Hội đồng đánh giá báo cáo, sản phẩm, demo và phần bảo 
+vệ
+Buổi 2 vẫn tính điểm chuyên cần (Rubric 1); chất lượng SRS sẽ được nhìn lại khi chấm mốc giữa kỳ ở buổi 5.
+Văn Lang · Chuyên đề tốt nghiệp 2 · Buổi 2 9
+
+=== Page 11 ===
+Câu hỏi thảo luận nhanh
+Dành thời gian cuối buổi để cả lớp cùng trao đổi
+1 Yêu cầu nào của nhóm bạn có khả năng thay đổi nhiều nhất khi bắt tay vào làm thực tế? Vì sao?
+2 Nếu chỉ được chọn 3 yêu cầu chức năng quan trọng nhất để làm trước, nhóm bạn sẽ chọn gì?
+Văn Lang · Chuyên đề tốt nghiệp 2 · Buổi 2 10
+
+=== Page 12 ===
+T Ổ N G  K Ế T  B U Ổ I  2
+Phân tích yêu cầu đề tài
+Mỗi nhóm có bản đặc tả yêu cầu đầy đủ 4 mục (SRS rút gọn)
+Yêu cầu chức năng đã được đánh số, đủ chi tiết để lập backlog ở buổi 3
+Ít nhất 2-3 yêu cầu phi chức năng đo lường được đã được xác định
+Với KHDL/AI: nguồn dữ liệu dự kiến đã được xác nhận khả thi
+Buổi tiếp theo:
+Lập kế hoạch dự án theo Agile/Scrum rút gọn
+
+=== Page 13 ===
+HỎI - ĐÁP
+Cảm ơn các nhóm - hẹn gặp lại ở buổi tiếp theo
+

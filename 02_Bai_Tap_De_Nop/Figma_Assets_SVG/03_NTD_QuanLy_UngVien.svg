@@ -1,0 +1,111 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 900" width="1440" height="900">
+  <defs>
+    <filter id="cardShadow" x="-5%" y="-5%" width="110%" height="115%">
+      <feDropShadow dx="0" dy="2" stdDeviation="4" flood-opacity="0.06"/>
+    </filter>
+  </defs>
+  
+  <rect width="1440" height="900" fill="#F3F4F6"/>
+  
+    <!-- Navigation Header -->
+    <rect x="0" y="0" width="1440" height="70" fill="#003366"/>
+    <text x="60" y="44" fill="#FFFFFF" font-size="20" font-weight="bold" font-family="system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif">🎓 VLU FREELANCE</text>
+    <text x="210" y="44" fill="#38BDF8" font-size="13" font-weight="bold" font-family="system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif">| EMPLOYER PORTAL</text>
+    
+        <text x="360" y="42" fill="#E2E8F0" font-size="14" font-family="system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif">Quản lý tin đăng</text>
+        <rect x="500" y="24" width="160" height="34" rx="6" fill="#0369A1"/>
+        <text x="520" y="46" fill="#FFFFFF" font-weight="bold" font-size="14" font-family="system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif">Danh sách ứng viên</text>
+        <text x="700" y="42" fill="#E2E8F0" font-size="14" font-family="system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif">Hồ sơ công ty</text>
+        
+    
+    <!-- User action area -->
+    <rect x="1100" y="18" width="130" height="34" rx="6" fill="#0284C7"/>
+    <text x="1122" y="40" fill="#FFFFFF" font-weight="bold" font-size="13" font-family="system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif">+ Đăng tin NTD</text>
+    
+    <circle cx="1270" cy="35" r="16" fill="#E2E8F0"/>
+    <text x="1263" y="40" font-size="14">👤</text>
+    <text x="1295" y="40" fill="#FFFFFF" font-weight="600" font-size="13" font-family="system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif">Nguyễn Minh Phú</text>
+    
+
+  <!-- Status Bar -->
+  <rect x="60" y="95" width="1320" height="55" rx="8" fill="#FFFFFF" stroke="#E5E7EB" filter="url(#cardShadow)"/>
+  <text x="90" y="128" fill="#111827" font-size="15" font-weight="bold" font-family="system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif">Tin tuyển dụng: Tuyển Thực Tập Sinh Lập Trình Frontend ReactJS</text>
+  <rect x="630" y="110" width="95" height="26" rx="13" fill="#DCFCE7"/>
+  <text x="645" y="127" fill="#166534" font-size="12" font-weight="bold" font-family="system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif">● Đang mở</text>
+  <text x="750" y="128" fill="#6B7280" font-size="13" font-family="system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif">• 4 hồ sơ ứng tuyển mới nhận</text>
+  
+  <!-- Data Table Box -->
+  <rect x="60" y="170" width="1320" height="600" rx="12" fill="#FFFFFF" stroke="#E5E7EB" filter="url(#cardShadow)"/>
+  <text x="90" y="210" fill="#111827" font-size="16" font-weight="bold" font-family="system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif">BẢNG QUẢN LÝ HỒ SƠ ỨNG VIÊN NỘP ĐƠN</text>
+  
+  <!-- Table Header -->
+  <rect x="90" y="235" width="1260" height="42" fill="#F1F5F9" rx="6"/>
+  <text x="110" y="261" fill="#475569" font-size="13" font-weight="bold" font-family="system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif">Ứng viên</text>
+  <text x="360" y="261" fill="#475569" font-size="13" font-weight="bold" font-family="system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif">Thời gian nộp</text>
+  <text x="500" y="261" fill="#475569" font-size="13" font-weight="bold" font-family="system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif">Hồ sơ CV</text>
+  <text x="640" y="261" fill="#475569" font-size="13" font-weight="bold" font-family="system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif">Điểm uy tín</text>
+  <text x="780" y="261" fill="#475569" font-size="13" font-weight="bold" font-family="system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif">Trạng thái hiện tại</text>
+  <text x="980" y="261" fill="#475569" font-size="13" font-weight="bold" font-family="system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif">Hành động của NTD</text>
+
+  <!-- Row 1 (Nguyễn Minh Phú - Đã nhận) -->
+  <line x1="90" y1="280" x2="1350" y2="280" stroke="#E2E8F0"/>
+  <text x="110" y="315" fill="#111827" font-size="14" font-weight="bold" font-family="system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif">Nguyễn Minh Phú</text>
+  <text x="110" y="335" fill="#64748B" font-size="12" font-family="system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif">MSSV: 2374802013447 (Khoa CNTT)</text>
+  <text x="360" y="325" fill="#475569" font-size="13" font-family="system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif">20/10/2026 - 09:30</text>
+  
+  <rect x="500" y="307" width="105" height="28" rx="6" fill="#EFF6FF"/>
+  <text x="515" y="326" fill="#1D4ED8" font-size="12" font-weight="bold" font-family="system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif">📄 Xem CV PDF</text>
+
+  <text x="640" y="325" fill="#D97706" font-size="13" font-weight="bold" font-family="system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif">⭐ 5.0 (4 việc)</text>
+
+  <rect x="780" y="307" width="130" height="28" rx="14" fill="#DCFCE7"/>
+  <text x="798" y="326" fill="#166534" font-size="12" font-weight="bold" font-family="system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif">ĐÃ DUYỆT NHẬN</text>
+
+  <rect x="980" y="305" width="140" height="32" rx="6" fill="#003366"/>
+  <text x="1000" y="326" fill="#FFFFFF" font-size="12" font-weight="bold" font-family="system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif">Liên hệ SĐT/Zalo</text>
+  <rect x="1135" y="305" width="130" height="32" rx="6" fill="#E2E8F0"/>
+  <text x="1155" y="326" fill="#334155" font-size="12" font-weight="bold" font-family="system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif">Đánh giá sau việc</text>
+
+  <!-- Row 2 (Trần Văn B - Chờ duyệt) -->
+  <line x1="90" y1="365" x2="1350" y2="365" stroke="#E2E8F0"/>
+  <text x="110" y="400" fill="#111827" font-size="14" font-weight="bold" font-family="system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif">Trần Văn B</text>
+  <text x="110" y="420" fill="#64748B" font-size="12" font-family="system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif">MSSV: 2374802010111 (Khoa KTPM)</text>
+  <text x="360" y="410" fill="#475569" font-size="13" font-family="system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif">21/10/2026 - 14:15</text>
+  
+  <rect x="500" y="392" width="105" height="28" rx="6" fill="#EFF6FF"/>
+  <text x="515" y="411" fill="#1D4ED8" font-size="12" font-weight="bold" font-family="system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif">📄 Xem CV PDF</text>
+
+  <text x="640" y="410" fill="#D97706" font-size="13" font-weight="bold" font-family="system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif">⭐ 4.8 (2 việc)</text>
+
+  <rect x="780" y="392" width="110" height="28" rx="14" fill="#FEF3C7"/>
+  <text x="803" y="411" fill="#92400E" font-size="12" font-weight="bold" font-family="system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif">Chờ duyệt</text>
+
+  <rect x="980" y="390" width="115" height="32" rx="6" fill="#059669"/>
+  <text x="1008" y="411" fill="#FFFFFF" font-size="12" font-weight="bold" font-family="system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif">Duyệt nhận</text>
+  <rect x="1110" y="390" width="100" height="32" rx="6" fill="#DC2626"/>
+  <text x="1138" y="411" fill="#FFFFFF" font-size="12" font-weight="bold" font-family="system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif">Từ chối</text>
+
+  <!-- Row 3 (Lê Thị C - Chờ duyệt) -->
+  <line x1="90" y1="450" x2="1350" y2="450" stroke="#E2E8F0"/>
+  <text x="110" y="485" fill="#111827" font-size="14" font-weight="bold" font-family="system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif">Lê Thị C</text>
+  <text x="110" y="505" fill="#64748B" font-size="12" font-family="system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif">MSSV: 2374802010222 (Khoa CNTT)</text>
+  <text x="360" y="495" fill="#475569" font-size="13" font-family="system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif">22/10/2026 - 10:00</text>
+  
+  <rect x="500" y="477" width="105" height="28" rx="6" fill="#EFF6FF"/>
+  <text x="515" y="496" fill="#1D4ED8" font-size="12" font-weight="bold" font-family="system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif">📄 Xem CV PDF</text>
+
+  <text x="640" y="495" fill="#D97706" font-size="13" font-weight="bold" font-family="system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif">⭐ 5.0 (1 việc)</text>
+
+  <rect x="780" y="477" width="110" height="28" rx="14" fill="#FEF3C7"/>
+  <text x="803" y="496" fill="#92400E" font-size="12" font-weight="bold" font-family="system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif">Chờ duyệt</text>
+
+  <rect x="980" y="475" width="115" height="32" rx="6" fill="#059669"/>
+  <text x="1008" y="496" fill="#FFFFFF" font-size="12" font-weight="bold" font-family="system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif">Duyệt nhận</text>
+  <rect x="1110" y="475" width="100" height="32" rx="6" fill="#DC2626"/>
+  <text x="1138" y="496" fill="#FFFFFF" font-size="12" font-weight="bold" font-family="system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif">Từ chối</text>
+
+  <!-- Legend -->
+  <rect x="60" y="800" width="1320" height="70" rx="8" fill="#FFFFFF" stroke="#003366" stroke-width="1.5"/>
+  <text x="80" y="825" fill="#003366" font-size="13" font-weight="bold" font-family="system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif">📌 FIGMA SPEC - MÀN HÌNH 03: PORTAL NHÀ TUYỂN DỤNG — QUẢN LÝ ỨNG VIÊN</text>
+  <text x="80" y="848" fill="#4B5563" font-size="12" font-family="system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif">• Khớp API-06 (PUT /api/applications/:id/status)  •  Hỗ trợ xem trực tuyến CV PDF và phân loại trạng thái thời gian thực</text>
+</svg>

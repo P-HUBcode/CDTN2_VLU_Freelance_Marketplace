@@ -1,0 +1,367 @@
+<?xml version='1.0' encoding='utf-8'?>
+<mxfile host="app.diagrams.net" modified="2026-10-23" version="24.0.0" type="device">
+  <diagram id="page_home" name="1. Trang Chủ &amp; Bộ Lọc Việc">
+    <mxGraphModel dx="1400" dy="900" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1169" pageHeight="850" background="#ffffff">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="h_frame" value="🌐 VLU Freelance Marketplace — https://freelance.vlu.edu.vn/jobs" style="swimlane;startSize=30;html=1;whiteSpace=wrap;collapsible=0;fillColor=#F3F4F6;strokeColor=#9CA3AF;strokeWidth=1.5;fontColor=#374151;fontSize=11;fontStyle=1;rounded=1;shadow=1;" parent="1" vertex="1">
+          <mxGeometry x="40" y="20" width="1080" height="710" as="geometry" />
+        </mxCell>
+        <mxCell id="h_nav" value="&lt;b&gt;🎓 VLU FREELANCE&lt;/b&gt;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;[Việc làm mới]&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;[Dành cho NTD]&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;[Cẩm nang sinh viên]" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#003366;fontColor=#ffffff;fontSize=11;fontStyle=1;strokeColor=#002244;align=left;spacingLeft=15;" parent="1" vertex="1">
+          <mxGeometry x="40" y="50" width="1080" height="45" as="geometry" />
+        </mxCell>
+        <mxCell id="h_nav_r" value="[🔍 Tìm kiếm]&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;[Đăng tin NTD]&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&lt;b&gt;[👤 Nguyễn Minh Phú (SV)]&lt;/b&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=none;strokeColor=none;fontColor=#ffffff;fontSize=10;align=right;spacingRight=15;" parent="1" vertex="1">
+          <mxGeometry x="700" y="50" width="405" height="45" as="geometry" />
+        </mxCell>
+        <mxCell id="h_hero" value="&lt;b&gt;TÌM VIỆC LÀM PART-TIME &amp; FREELANCE CHO SINH VIÊN VĂN LANG&lt;/b&gt;&lt;br&gt;&lt;span style=&quot;font-size:10px;color:#666;&quot;&gt;Hơn 500+ công việc uy tín được xác thực bởi nhà trường&lt;/span&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#E8F1F5;strokeColor=#B6D4E5;align=center;verticalAlign=top;spacingTop=6;" parent="1" vertex="1">
+          <mxGeometry x="60" y="105" width="1040" height="65" as="geometry" />
+        </mxCell>
+        <mxCell id="h_search_input" value="🔍 Nhập chức danh công việc, kỹ năng (vd: Pha chế, Lập trình React, Gia sư...)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#F9FAFB;strokeColor=#D1D5DB;fontSize=10;fontColor=#6B7280;align=left;spacingLeft=8;" parent="1" vertex="1">
+          <mxGeometry x="180" y="133" width="560" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="h_btn_search" value="Tìm kiếm" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#003366;fontColor=#FFFFFF;fontSize=10;fontStyle=1;strokeColor=#002244;align=center;" parent="1" vertex="1">
+          <mxGeometry x="750" y="133" width="100" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="h_filter_panel" value="&lt;b&gt;⚙️ BỘ LỌC TÌM KIẾM&lt;/b&gt;&lt;hr size=&quot;1&quot;&gt;&lt;b&gt;Khu vực (Quận/Huyện):&lt;/b&gt;&lt;br&gt;[x] Tất cả TP.HCM&lt;br&gt;[ ] Bình Thạnh (Cơ sở 3)&lt;br&gt;[ ] Gò Vấp (Cơ sở 2)&lt;br&gt;[ ] Quận 1 (Cơ sở 1)&lt;br&gt;[ ] Làm Online / Remote&lt;br&gt;&lt;br&gt;&lt;b&gt;Mức lương (VNĐ/giờ):&lt;/b&gt;&lt;br&gt;[x] 25.000đ - 35.000đ/h&lt;br&gt;[ ] 35.000đ - 50.000đ/h&lt;br&gt;[ ] &gt; 50.000đ/h hoặc theo Dự án&lt;br&gt;&lt;br&gt;&lt;b&gt;Khung ca làm việc:&lt;/b&gt;&lt;br&gt;[ ] Ca sáng (8h - 12h)&lt;br&gt;[ ] Ca chiều (13h - 17h)&lt;br&gt;[x] Ca tối (18h - 22h)&lt;br&gt;[ ] Cuối tuần (T7 - CN)&lt;br&gt;&lt;br&gt;&lt;b&gt;Loại hình:&lt;/b&gt;&lt;br&gt;[x] Part-time&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;[ ] Freelance" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#E5E7EB;strokeWidth=1.5;shadow=1;align=left;verticalAlign=top;spacingTop=10;spacingLeft=12;" parent="1" vertex="1">
+          <mxGeometry x="60" y="180" width="260" height="460" as="geometry" />
+        </mxCell>
+        <mxCell id="h_btn_apply_filter" value="Áp dụng bộ lọc" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#003366;fontColor=#FFFFFF;fontSize=10;fontStyle=1;strokeColor=#002244;align=center;" parent="1" vertex="1">
+          <mxGeometry x="75" y="595" width="230" height="32" as="geometry" />
+        </mxCell>
+        <mxCell id="h_list_header" value="&lt;b&gt;Tìm thấy 28 công việc phù hợp&lt;/b&gt; &amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;Sắp xếp: [Mới nhất ▼]" style="rounded=0;whiteSpace=wrap;html=1;fillColor=none;strokeColor=none;fontSize=11;fontColor=#374151;" parent="1" vertex="1">
+          <mxGeometry x="340" y="180" width="760" height="25" as="geometry" />
+        </mxCell>
+        <mxCell id="c1" value="&lt;b&gt;Tuyển Thực Tập Sinh Lập Trình Frontend ReactJS (Part-time)&lt;/b&gt;&lt;br&gt;&lt;span style=&quot;color:#4B5563;&quot;&gt;Công ty TNHH Truyền thông Sáng tạo VLU &amp;nbsp;•&amp;nbsp; 📍 Bình Thạnh, TP.HCM&lt;/span&gt;&lt;br&gt;&lt;span style=&quot;color:#059669;font-weight:bold;&quot;&gt;💰 45.000đ / giờ&lt;/span&gt; &amp;nbsp;•&amp;nbsp; ⏰ Sáng T2-T4-T6 &amp;nbsp;•&amp;nbsp; ⏳ Hạn nộp: 30/11/2026&lt;br&gt;&lt;span style=&quot;color:#6B7280;font-size:9px;&quot;&gt;Yêu cầu: Biết HTML/CSS, React cơ bản. Ưu tiên sinh viên CNTT Văn Lang. Hỗ trợ dấu thực tập.&lt;/span&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#E5E7EB;strokeWidth=1.5;shadow=1;align=left;verticalAlign=top;spacingTop=10;spacingLeft=12;" parent="1" vertex="1">
+          <mxGeometry x="340" y="210" width="760" height="95" as="geometry" />
+        </mxCell>
+        <mxCell id="c1_tag1" value="ReactJS" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#E0F2FE;strokeColor=#BAE6FD;fontSize=9;fontColor=#0369A1;align=center;" parent="1" vertex="1">
+          <mxGeometry x="355" y="273" width="70" height="22" as="geometry" />
+        </mxCell>
+        <mxCell id="c1_tag2" value="Part-time" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#E0F2FE;strokeColor=#BAE6FD;fontSize=9;fontColor=#0369A1;align=center;" parent="1" vertex="1">
+          <mxGeometry x="435" y="273" width="75" height="22" as="geometry" />
+        </mxCell>
+        <mxCell id="c1_tag3" value="Bình Thạnh" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#E0F2FE;strokeColor=#BAE6FD;fontSize=9;fontColor=#0369A1;align=center;" parent="1" vertex="1">
+          <mxGeometry x="520" y="273" width="80" height="22" as="geometry" />
+        </mxCell>
+        <mxCell id="c1_btn" value="Ứng tuyển ngay" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#003366;fontColor=#FFFFFF;fontSize=10;fontStyle=1;strokeColor=#002244;align=center;" parent="1" vertex="1">
+          <mxGeometry x="975" y="242" width="110" height="32" as="geometry" />
+        </mxCell>
+        <mxCell id="c2" value="&lt;b&gt;Nhân Viên Phục Vụ Quán Cafe Sách (Linh hoạt theo ca học)&lt;/b&gt;&lt;br&gt;&lt;span style=&quot;color:#4B5563;&quot;&gt;The Book Cafe VLU &amp;nbsp;•&amp;nbsp; 📍 Gò Vấp (gần Cơ sở 2)&lt;/span&gt;&lt;br&gt;&lt;span style=&quot;color:#059669;font-weight:bold;&quot;&gt;💰 30.000đ / giờ + Thưởng&lt;/span&gt; &amp;nbsp;•&amp;nbsp; ⏰ Ca tối 18h - 22h &amp;nbsp;•&amp;nbsp; ⏳ Hạn nộp: 25/11/2026&lt;br&gt;&lt;span style=&quot;color:#6B7280;font-size:9px;&quot;&gt;Mô tả: Order nước, phục vụ khách. Không cần kinh nghiệm, môi trường thân thiện cho sinh viên.&lt;/span&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#E5E7EB;strokeWidth=1.5;shadow=1;align=left;verticalAlign=top;spacingTop=10;spacingLeft=12;" parent="1" vertex="1">
+          <mxGeometry x="340" y="315" width="760" height="95" as="geometry" />
+        </mxCell>
+        <mxCell id="c2_tag1" value="Phục vụ" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#E0F2FE;strokeColor=#BAE6FD;fontSize=9;fontColor=#0369A1;align=center;" parent="1" vertex="1">
+          <mxGeometry x="355" y="378" width="75" height="22" as="geometry" />
+        </mxCell>
+        <mxCell id="c2_tag2" value="Linh hoạt ca" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#E0F2FE;strokeColor=#BAE6FD;fontSize=9;fontColor=#0369A1;align=center;" parent="1" vertex="1">
+          <mxGeometry x="440" y="378" width="85" height="22" as="geometry" />
+        </mxCell>
+        <mxCell id="c2_tag3" value="Gò Vấp" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#E0F2FE;strokeColor=#BAE6FD;fontSize=9;fontColor=#0369A1;align=center;" parent="1" vertex="1">
+          <mxGeometry x="535" y="378" width="75" height="22" as="geometry" />
+        </mxCell>
+        <mxCell id="c2_btn" value="Ứng tuyển ngay" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#003366;fontColor=#FFFFFF;fontSize=10;fontStyle=1;strokeColor=#002244;align=center;" parent="1" vertex="1">
+          <mxGeometry x="975" y="347" width="110" height="32" as="geometry" />
+        </mxCell>
+        <mxCell id="c3" value="&lt;b&gt;Thiết Kế Banner &amp; Edit Video TikTok Cho Shop Thời Trang (Freelance)&lt;/b&gt;&lt;br&gt;&lt;span style=&quot;color:#4B5563;&quot;&gt;Chic Studio &amp;nbsp;•&amp;nbsp; 📍 Làm việc từ xa (Online)&lt;/span&gt;&lt;br&gt;&lt;span style=&quot;color:#059669;font-weight:bold;&quot;&gt;💰 1.500.000đ / Dự án (4 video/tuần)&lt;/span&gt; &amp;nbsp;•&amp;nbsp; ⏳ Hạn nộp: 20/11/2026&lt;br&gt;&lt;span style=&quot;color:#6B7280;font-size:9px;&quot;&gt;Yêu cầu: Có laptop riêng, biết dùng CapCut hoặc Premiere. Trả lương đều đặn theo tuần.&lt;/span&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#E5E7EB;strokeWidth=1.5;shadow=1;align=left;verticalAlign=top;spacingTop=10;spacingLeft=12;" parent="1" vertex="1">
+          <mxGeometry x="340" y="420" width="760" height="95" as="geometry" />
+        </mxCell>
+        <mxCell id="c3_tag1" value="Freelance" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#E0F2FE;strokeColor=#BAE6FD;fontSize=9;fontColor=#0369A1;align=center;" parent="1" vertex="1">
+          <mxGeometry x="355" y="483" width="75" height="22" as="geometry" />
+        </mxCell>
+        <mxCell id="c3_tag2" value="Remote/Online" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#E0F2FE;strokeColor=#BAE6FD;fontSize=9;fontColor=#0369A1;align=center;" parent="1" vertex="1">
+          <mxGeometry x="440" y="483" width="95" height="22" as="geometry" />
+        </mxCell>
+        <mxCell id="c3_btn" value="Ứng tuyển ngay" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#003366;fontColor=#FFFFFF;fontSize=10;fontStyle=1;strokeColor=#002244;align=center;" parent="1" vertex="1">
+          <mxGeometry x="975" y="452" width="110" height="32" as="geometry" />
+        </mxCell>
+        <mxCell id="c4" value="&lt;b&gt;Gia Sư Dạy Kèm Tiếng Anh Lớp 8 (Giao tiếp cơ bản)&lt;/b&gt;&lt;br&gt;&lt;span style=&quot;color:#4B5563;&quot;&gt;Phụ huynh học sinh &amp;nbsp;•&amp;nbsp; 📍 Quận 1 (gần Cơ sở 1)&lt;/span&gt;&lt;br&gt;&lt;span style=&quot;color:#059669;font-weight:bold;&quot;&gt;💰 150.000đ / buổi (90 phút)&lt;/span&gt; &amp;nbsp;•&amp;nbsp; ⏰ Tối T3 - T5 (19h - 20h30)&lt;br&gt;&lt;span style=&quot;color:#6B7280;font-size:9px;&quot;&gt;Yêu cầu: Phát âm chuẩn, kiên nhẫn với học sinh, ưu tiên sinh viên có chứng chỉ IELTS hoặc TOEIC.&lt;/span&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#E5E7EB;strokeWidth=1.5;shadow=1;align=left;verticalAlign=top;spacingTop=10;spacingLeft=12;" parent="1" vertex="1">
+          <mxGeometry x="340" y="525" width="760" height="95" as="geometry" />
+        </mxCell>
+        <mxCell id="c4_tag1" value="Gia sư" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#E0F2FE;strokeColor=#BAE6FD;fontSize=9;fontColor=#0369A1;align=center;" parent="1" vertex="1">
+          <mxGeometry x="355" y="588" width="70" height="22" as="geometry" />
+        </mxCell>
+        <mxCell id="c4_tag2" value="Quận 1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#E0F2FE;strokeColor=#BAE6FD;fontSize=9;fontColor=#0369A1;align=center;" parent="1" vertex="1">
+          <mxGeometry x="435" y="588" width="80" height="22" as="geometry" />
+        </mxCell>
+        <mxCell id="c4_btn" value="Ứng tuyển ngay" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#003366;fontColor=#FFFFFF;fontSize=10;fontStyle=1;strokeColor=#002244;align=center;" parent="1" vertex="1">
+          <mxGeometry x="975" y="557" width="110" height="32" as="geometry" />
+        </mxCell>
+        <mxCell id="lg1" value="BẢNG CHÚ THÍCH WIREFRAME: MÀN HÌNH TRANG CHỦ &amp; BỘ LỌC TÌM KIẾM (DESKTOP)" style="swimlane;startSize=24;horizontal=1;rounded=1;arcSize=6;html=1;whiteSpace=wrap;collapsible=0;fillColor=#F8F9FA;strokeColor=#003366;strokeWidth=1.5;fontColor=#003366;fontSize=10;fontStyle=1;" parent="1" vertex="1">
+          <mxGeometry x="40" y="740" width="1080" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="lg1_t" value="&lt;b&gt;• Quy cách thiết kế Figma:&lt;/b&gt; Frame 1440x900px, Grid 12 cột, Margin 24px, Gutter 16px.&lt;br&gt;&lt;b&gt;• Phân bổ vùng:&lt;/b&gt; Header Navbar (Logo, Tìm kiếm, Đăng tin) -&gt; Hero Banner -&gt; Cột trái Bộ lọc thông minh (Quận, Lương, Ca rảnh) -&gt; Danh sách Job Cards.&lt;br&gt;&lt;b&gt;• Người thiết kế Figma Specs:&lt;/b&gt; Hà Đại Vĩ (MSSV: 2374802010551) &amp;nbsp;•&amp;nbsp; &lt;b&gt;Đề tài:&lt;/b&gt; Marketplace việc làm part-time sinh viên ĐH Văn Lang" style="text;html=1;whiteSpace=wrap;fillColor=none;strokeColor=none;fontSize=10;fontColor=#222;align=left;spacingLeft=10;spacingTop=6;" parent="1" vertex="1">
+          <mxGeometry x="50" y="765" width="1060" height="50" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+  <diagram id="page_detail" name="2. Chi Tiết Việc &amp; Nộp Đơn">
+    <mxGraphModel dx="1400" dy="900" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1169" pageHeight="850" background="#ffffff">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="d_frame" value="🌐 VLU Freelance Marketplace — Chi tiết việc làm &amp; Nộp hồ sơ" style="swimlane;startSize=30;html=1;whiteSpace=wrap;collapsible=0;fillColor=#F3F4F6;strokeColor=#9CA3AF;strokeWidth=1.5;fontColor=#374151;fontSize=11;fontStyle=1;rounded=1;shadow=1;" parent="1" vertex="1">
+          <mxGeometry x="40" y="20" width="1080" height="710" as="geometry" />
+        </mxCell>
+        <mxCell id="d_nav" value="&lt;b&gt;🎓 VLU FREELANCE&lt;/b&gt;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;Trang chủ &amp;gt; Lập trình &amp; CNTT &amp;gt; &lt;b&gt;Tuyển Thực Tập Sinh ReactJS&lt;/b&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#003366;fontColor=#ffffff;fontSize=11;fontStyle=1;strokeColor=#002244;align=left;spacingLeft=15;" parent="1" vertex="1">
+          <mxGeometry x="40" y="50" width="1080" height="45" as="geometry" />
+        </mxCell>
+        <mxCell id="d_main" value="&lt;b&gt;TUYỂN THỰC TẬP SINH LẬP TRÌNH FRONTEND REACTJS&lt;/b&gt;&lt;br&gt;&lt;span style=&quot;color:#003366;font-weight:bold;&quot;&gt;Công ty TNHH Truyền thông Sáng tạo VLU&lt;/span&gt; (⭐ 4.9/5 - 18 đánh giá)&lt;br&gt;📍 Địa chỉ: 69/68 Đặng Thùy Trâm, P. 13, Bình Thạnh, TP.HCM &amp;nbsp;•&amp;nbsp; 💰 Mức lương: &lt;b&gt;45.000đ / giờ&lt;/b&gt;&lt;hr size=&quot;1&quot;&gt;&lt;b&gt;1. Mô tả công việc:&lt;/b&gt;&lt;br&gt;- Phối hợp cùng team xây dựng giao diện người dùng bằng ReactJS và TailwindCSS.&lt;br&gt;- Tối ưu hóa hiển thị trên thiết bị di động (Mobile Responsive).&lt;br&gt;- Hỗ trợ ghép nối RESTful API với Backend server.&lt;br&gt;&lt;br&gt;&lt;b&gt;2. Yêu cầu ứng viên:&lt;/b&gt;&lt;br&gt;- Là sinh viên năm 3 hoặc năm cuối chuyên ngành CNTT trường Đại học Văn Lang.&lt;br&gt;- Nắm vững kiến thức HTML5, CSS3, JavaScript ES6 và React cơ bản.&lt;br&gt;- Có thái độ chủ động, tinh thần học hỏi cao.&lt;br&gt;&lt;br&gt;&lt;b&gt;3. Quyền lợi:&lt;/b&gt;&lt;br&gt;- Thù lao theo giờ rõ ràng, nhận lương định kỳ theo tuần hoặc theo tháng.&lt;br&gt;- Hỗ trợ mộc và đóng dấu báo cáo thực tập tốt nghiệp.&lt;br&gt;- Lịch làm việc linh hoạt, được đăng ký ca làm theo thời khóa biểu học tập." style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#E5E7EB;strokeWidth=1.5;shadow=1;align=left;verticalAlign=top;spacingTop=10;spacingLeft=12;" parent="1" vertex="1">
+          <mxGeometry x="60" y="105" width="560" height="535" as="geometry" />
+        </mxCell>
+        <mxCell id="d_modal" value="&lt;b&gt;📝 FORM NỘP HỒ SƠ ỨNG TUYỂN (MODAL 1-CHẠM)&lt;/b&gt;&lt;hr size=&quot;1&quot;&gt;&lt;b&gt;Thông tin ứng viên (Tự động điền từ Profile):&lt;/b&gt;&lt;br&gt;• Họ và tên: &lt;b&gt;Nguyễn Minh Phú&lt;/b&gt;&lt;br&gt;• MSSV: &lt;b&gt;2374802013447&lt;/b&gt; &amp;nbsp;•&amp;nbsp; Ngành: Công nghệ Thông tin&lt;br&gt;• Email: &lt;i&gt;sinhvien.demo@student.vlu.edu.vn&lt;/i&gt; (Đã xác thực)&lt;br&gt;• Điểm uy tín sinh viên: ⭐ &lt;b&gt;5.0 / 5.0&lt;/b&gt;&lt;br&gt;&lt;br&gt;&lt;b&gt;Chọn CV ứng tuyển:&lt;/b&gt;&lt;br&gt;(o) Sử dụng CV PDF đã có trong Profile: &lt;u&gt;CV_NguyenMinhPhu_WebDev.pdf&lt;/u&gt;&lt;br&gt;( ) Tải lên CV mới từ máy tính (.pdf, max 5MB)&lt;br&gt;&lt;br&gt;&lt;b&gt;Lời nhắn gửi Nhà tuyển dụng (Cover Letter):&lt;/b&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#E5E7EB;strokeWidth=1.5;shadow=1;align=left;verticalAlign=top;spacingTop=10;spacingLeft=12;" parent="1" vertex="1">
+          <mxGeometry x="640" y="105" width="460" height="535" as="geometry" />
+        </mxCell>
+        <mxCell id="d_textarea" value="Kính gửi Quý công ty, em là sinh viên năm cuối ngành CNTT Văn Lang, đã hoàn thành môn Web và có kinh nghiệm làm việc với ReactJS, Git. Em rất mong có cơ hội thực tập tại công ty..." style="rounded=1;whiteSpace=wrap;html=1;fillColor=#F9FAFB;strokeColor=#D1D5DB;fontSize=10;fontColor=#6B7280;align=left;spacingLeft=8;" parent="1" vertex="1">
+          <mxGeometry x="660" y="375" width="420" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="d_btn_cancel" value="Hủy bỏ" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#E5E7EB;fontColor=#374151;fontSize=10;fontStyle=1;align=center;" parent="1" vertex="1">
+          <mxGeometry x="660" y="470" width="110" height="35" as="geometry" />
+        </mxCell>
+        <mxCell id="d_btn_submit" value="🚀 Gửi hồ sơ ứng tuyển" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#059669;fontColor=#FFFFFF;fontSize=10;fontStyle=1;strokeColor=#047857;align=center;" parent="1" vertex="1">
+          <mxGeometry x="785" y="470" width="295" height="35" as="geometry" />
+        </mxCell>
+        <mxCell id="d_note" value="💡 Hệ thống sẽ tự động gửi thông báo đến NTD và cập nhật trạng thái đơn ứng tuyển của bạn trong mục Hồ sơ." style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FEF3C7;strokeColor=#FDE68A;fontSize=9;fontColor=#92400E;align=left;spacingLeft=8;" parent="1" vertex="1">
+          <mxGeometry x="660" y="520" width="420" height="45" as="geometry" />
+        </mxCell>
+        <mxCell id="lg2" value="BẢNG CHÚ THÍCH WIREFRAME: MÀN HÌNH CHI TIẾT VIỆC LÀM &amp; MODAL NỘP CV 1-CHẠM" style="swimlane;startSize=24;horizontal=1;rounded=1;arcSize=6;html=1;whiteSpace=wrap;collapsible=0;fillColor=#F8F9FA;strokeColor=#003366;strokeWidth=1.5;fontColor=#003366;fontSize=10;fontStyle=1;" parent="1" vertex="1">
+          <mxGeometry x="40" y="740" width="1080" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="lg2_t" value="&lt;b&gt;• Điểm nổi bật UI/UX:&lt;/b&gt; Sinh viên nộp đơn 1-chạm không cần upload lại CV nếu đã lưu sẵn trong Profile; thông tin sinh viên liên kết chặt chẽ với email @student.vlu.edu.vn.&lt;br&gt;&lt;b&gt;• Trách nhiệm thiết kế:&lt;/b&gt; Hà Đại Vĩ (MSSV: 2374802010551) — Khớp với Yêu cầu chức năng FR-08 (Nộp đơn ứng tuyển)." style="text;html=1;whiteSpace=wrap;fillColor=none;strokeColor=none;fontSize=10;fontColor=#222;align=left;spacingLeft=10;spacingTop=6;" parent="1" vertex="1">
+          <mxGeometry x="50" y="765" width="1060" height="50" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+  <diagram id="page_emp_dash" name="3. NTD - Quản Lý Ứng Viên">
+    <mxGraphModel dx="1400" dy="900" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1169" pageHeight="850" background="#ffffff">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="e_frame" value="🌐 VLU Freelance Marketplace — Portal Nhà Tuyển Dụng" style="swimlane;startSize=30;html=1;whiteSpace=wrap;collapsible=0;fillColor=#F3F4F6;strokeColor=#9CA3AF;strokeWidth=1.5;fontColor=#374151;fontSize=11;fontStyle=1;rounded=1;shadow=1;" parent="1" vertex="1">
+          <mxGeometry x="40" y="20" width="1080" height="710" as="geometry" />
+        </mxCell>
+        <mxCell id="e_nav" value="&lt;b&gt;🎓 VLU FREELANCE | EMPLOYER PORTAL&lt;/b&gt;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;[Quản lý tin đăng]&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&lt;b&gt;[Danh sách ứng viên]&lt;/b&gt;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;[Hồ sơ công ty]" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#003366;fontColor=#ffffff;fontSize=11;fontStyle=1;strokeColor=#002244;align=left;spacingLeft=15;" parent="1" vertex="1">
+          <mxGeometry x="40" y="50" width="1080" height="45" as="geometry" />
+        </mxCell>
+        <mxCell id="e_top" value="&lt;b&gt;Tin tuyển dụng: Tuyển Thực Tập Sinh Lập Trình Frontend ReactJS&lt;/b&gt; &amp;nbsp;•&amp;nbsp; Trạng thái: &lt;span style=&quot;color:#059669;font-weight:bold;&quot;&gt;Đang mở&lt;/span&gt; &amp;nbsp;•&amp;nbsp; 4 ứng viên" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#E5E7EB;fontSize=11;align=left;spacingLeft=15;" parent="1" vertex="1">
+          <mxGeometry x="60" y="105" width="1040" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="e_tbl" value="&lt;b&gt;BẢNG DANH SÁCH ỨNG VIÊN NỘP ĐƠN&lt;/b&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#E5E7EB;strokeWidth=1.5;shadow=1;align=left;verticalAlign=top;spacingTop=10;spacingLeft=12;" parent="1" vertex="1">
+          <mxGeometry x="60" y="155" width="1040" height="485" as="geometry" />
+        </mxCell>
+        <mxCell id="th1" value="Ứng viên" style="rounded=0;fillColor=#E5E7EB;fontStyle=1;fontSize=10;align=center;" parent="1" vertex="1">
+          <mxGeometry x="80" y="195" width="200" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="th2" value="Thời gian nộp" style="rounded=0;fillColor=#E5E7EB;fontStyle=1;fontSize=10;align=center;" parent="1" vertex="1">
+          <mxGeometry x="280" y="195" width="120" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="th3" value="Xem CV" style="rounded=0;fillColor=#E5E7EB;fontStyle=1;fontSize=10;align=center;" parent="1" vertex="1">
+          <mxGeometry x="400" y="195" width="110" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="th4" value="Điểm uy tín" style="rounded=0;fillColor=#E5E7EB;fontStyle=1;fontSize=10;align=center;" parent="1" vertex="1">
+          <mxGeometry x="510" y="195" width="110" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="th5" value="Trạng thái hiện tại" style="rounded=0;fillColor=#E5E7EB;fontStyle=1;fontSize=10;align=center;" parent="1" vertex="1">
+          <mxGeometry x="620" y="195" width="150" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="th6" value="Hành động duyệt" style="rounded=0;fillColor=#E5E7EB;fontStyle=1;fontSize=10;align=center;" parent="1" vertex="1">
+          <mxGeometry x="770" y="195" width="310" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="r1_c1" value="&lt;b&gt;Nguyễn Minh Phú&lt;/b&gt;&lt;br&gt;&lt;span style=&quot;font-size:9px;color:#666;&quot;&gt;MSSV: 2374802013447 (CNTT)&lt;/span&gt;" style="rounded=0;fillColor=#FFFFFF;strokeColor=#E5E7EB;fontSize=10;align=left;spacingLeft=8;" parent="1" vertex="1">
+          <mxGeometry x="80" y="225" width="200" height="55" as="geometry" />
+        </mxCell>
+        <mxCell id="r1_c2" value="20/10/2026&lt;br&gt;09:30" style="rounded=0;fillColor=#FFFFFF;strokeColor=#E5E7EB;fontSize=9;align=center;" parent="1" vertex="1">
+          <mxGeometry x="280" y="225" width="120" height="55" as="geometry" />
+        </mxCell>
+        <mxCell id="r1_c3" value="📄 [Xem CV PDF]" style="rounded=0;fillColor=#FFFFFF;strokeColor=#E5E7EB;fontSize=10;fontColor=#003366;fontStyle=1;align=center;" parent="1" vertex="1">
+          <mxGeometry x="400" y="225" width="110" height="55" as="geometry" />
+        </mxCell>
+        <mxCell id="r1_c4" value="⭐ 5.0 (4 việc)" style="rounded=0;fillColor=#FFFFFF;strokeColor=#E5E7EB;fontSize=10;align=center;" parent="1" vertex="1">
+          <mxGeometry x="510" y="225" width="110" height="55" as="geometry" />
+        </mxCell>
+        <mxCell id="r1_c5" value="&lt;span style=&quot;color:#059669;font-weight:bold;&quot;&gt;ĐÃ DUYỆT NHẬN&lt;/span&gt;" style="rounded=0;fillColor=#FFFFFF;strokeColor=#E5E7EB;fontSize=10;align=center;" parent="1" vertex="1">
+          <mxGeometry x="620" y="225" width="150" height="55" as="geometry" />
+        </mxCell>
+        <mxCell id="r1_c6" value="[Liên hệ SĐT/Zalo]&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;[Đánh giá sau việc]" style="rounded=0;fillColor=#FFFFFF;strokeColor=#E5E7EB;fontSize=9;align=center;" parent="1" vertex="1">
+          <mxGeometry x="770" y="225" width="310" height="55" as="geometry" />
+        </mxCell>
+        <mxCell id="r2_c1" value="&lt;b&gt;Trần Văn B&lt;/b&gt;&lt;br&gt;&lt;span style=&quot;font-size:9px;color:#666;&quot;&gt;MSSV: 2374802010111 (Kỹ thuật PM)&lt;/span&gt;" style="rounded=0;fillColor=#FFFFFF;strokeColor=#E5E7EB;fontSize=10;align=left;spacingLeft=8;" parent="1" vertex="1">
+          <mxGeometry x="80" y="280" width="200" height="55" as="geometry" />
+        </mxCell>
+        <mxCell id="r2_c2" value="21/10/2026&lt;br&gt;14:15" style="rounded=0;fillColor=#FFFFFF;strokeColor=#E5E7EB;fontSize=9;align=center;" parent="1" vertex="1">
+          <mxGeometry x="280" y="280" width="120" height="55" as="geometry" />
+        </mxCell>
+        <mxCell id="r2_c3" value="📄 [Xem CV PDF]" style="rounded=0;fillColor=#FFFFFF;strokeColor=#E5E7EB;fontSize=10;fontColor=#003366;fontStyle=1;align=center;" parent="1" vertex="1">
+          <mxGeometry x="400" y="280" width="110" height="55" as="geometry" />
+        </mxCell>
+        <mxCell id="r2_c4" value="⭐ 4.8 (2 việc)" style="rounded=0;fillColor=#FFFFFF;strokeColor=#E5E7EB;fontSize=10;align=center;" parent="1" vertex="1">
+          <mxGeometry x="510" y="280" width="110" height="55" as="geometry" />
+        </mxCell>
+        <mxCell id="r2_c5" value="&lt;span style=&quot;color:#D97706;font-weight:bold;&quot;&gt;Chờ duyệt&lt;/span&gt;" style="rounded=0;fillColor=#FFFFFF;strokeColor=#E5E7EB;fontSize=10;align=center;" parent="1" vertex="1">
+          <mxGeometry x="620" y="280" width="150" height="55" as="geometry" />
+        </mxCell>
+        <mxCell id="r2_btn1" value="Duyệt nhận" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#059669;fontColor=#FFFFFF;fontSize=10;fontStyle=1;strokeColor=#047857;align=center;" parent="1" vertex="1">
+          <mxGeometry x="790" y="292" width="95" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="r2_btn2" value="Từ chối" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#DC2626;fontColor=#FFFFFF;fontSize=10;fontStyle=1;strokeColor=#B91C1C;align=center;" parent="1" vertex="1">
+          <mxGeometry x="895" y="292" width="85" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="r3_c1" value="&lt;b&gt;Lê Thị C&lt;/b&gt;&lt;br&gt;&lt;span style=&quot;font-size:9px;color:#666;&quot;&gt;MSSV: 2374802010222 (CNTT)&lt;/span&gt;" style="rounded=0;fillColor=#FFFFFF;strokeColor=#E5E7EB;fontSize=10;align=left;spacingLeft=8;" parent="1" vertex="1">
+          <mxGeometry x="80" y="335" width="200" height="55" as="geometry" />
+        </mxCell>
+        <mxCell id="r3_c2" value="22/10/2026&lt;br&gt;10:00" style="rounded=0;fillColor=#FFFFFF;strokeColor=#E5E7EB;fontSize=9;align=center;" parent="1" vertex="1">
+          <mxGeometry x="280" y="335" width="120" height="55" as="geometry" />
+        </mxCell>
+        <mxCell id="r3_c3" value="📄 [Xem CV PDF]" style="rounded=0;fillColor=#FFFFFF;strokeColor=#E5E7EB;fontSize=10;fontColor=#003366;fontStyle=1;align=center;" parent="1" vertex="1">
+          <mxGeometry x="400" y="335" width="110" height="55" as="geometry" />
+        </mxCell>
+        <mxCell id="r3_c4" value="⭐ 5.0 (1 việc)" style="rounded=0;fillColor=#FFFFFF;strokeColor=#E5E7EB;fontSize=10;align=center;" parent="1" vertex="1">
+          <mxGeometry x="510" y="335" width="110" height="55" as="geometry" />
+        </mxCell>
+        <mxCell id="r3_c5" value="&lt;span style=&quot;color:#D97706;font-weight:bold;&quot;&gt;Chờ duyệt&lt;/span&gt;" style="rounded=0;fillColor=#FFFFFF;strokeColor=#E5E7EB;fontSize=10;align=center;" parent="1" vertex="1">
+          <mxGeometry x="620" y="335" width="150" height="55" as="geometry" />
+        </mxCell>
+        <mxCell id="r3_btn1" value="Duyệt nhận" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#059669;fontColor=#FFFFFF;fontSize=10;fontStyle=1;strokeColor=#047857;align=center;" parent="1" vertex="1">
+          <mxGeometry x="790" y="347" width="95" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="r3_btn2" value="Từ chối" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#DC2626;fontColor=#FFFFFF;fontSize=10;fontStyle=1;strokeColor=#B91C1C;align=center;" parent="1" vertex="1">
+          <mxGeometry x="895" y="347" width="85" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="lg3" value="BẢNG CHÚ THÍCH WIREFRAME: PHÂN HỆ QUẢN LÝ ỨNG VIÊN CỦA NHÀ TUYỂN DỤNG" style="swimlane;startSize=24;horizontal=1;rounded=1;arcSize=6;html=1;whiteSpace=wrap;collapsible=0;fillColor=#F8F9FA;strokeColor=#003366;strokeWidth=1.5;fontColor=#003366;fontSize=10;fontStyle=1;" parent="1" vertex="1">
+          <mxGeometry x="40" y="740" width="1080" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="lg3_t" value="&lt;b&gt;• Nghiệp vụ cốt lõi:&lt;/b&gt; NTD xem trực tuyến CV PDF của sinh viên, xem số sao uy tín trước đó, và bấm 1 nút [Duyệt nhận] hoặc [Từ chối] -&gt; Trạng thái được đồng bộ thời gian thực.&lt;br&gt;&lt;b&gt;• Người thiết kế:&lt;/b&gt; Hà Đại Vĩ — Khớp với FR-09 (Duyệt hồ sơ ứng viên) và API-06 (PUT /api/applications/:id/status)." style="text;html=1;whiteSpace=wrap;fillColor=none;strokeColor=none;fontSize=10;fontColor=#222;align=left;spacingLeft=10;spacingTop=6;" parent="1" vertex="1">
+          <mxGeometry x="50" y="765" width="1060" height="50" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+  <diagram id="page_profile" name="4. Profile Sinh Viên &amp; CV">
+    <mxGraphModel dx="1400" dy="900" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1169" pageHeight="850" background="#ffffff">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="p_frame" value="🌐 VLU Freelance Marketplace — Hồ Sơ Sinh Viên Cá Nhân" style="swimlane;startSize=30;html=1;whiteSpace=wrap;collapsible=0;fillColor=#F3F4F6;strokeColor=#9CA3AF;strokeWidth=1.5;fontColor=#374151;fontSize=11;fontStyle=1;rounded=1;shadow=1;" parent="1" vertex="1">
+          <mxGeometry x="40" y="20" width="1080" height="710" as="geometry" />
+        </mxCell>
+        <mxCell id="p_nav" value="&lt;b&gt;🎓 VLU FREELANCE&lt;/b&gt;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;[Việc làm]&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&lt;b&gt;[Hồ sơ cá nhân &amp; CV]&lt;/b&gt;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;[Lịch sử ứng tuyển (3)]" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#003366;fontColor=#ffffff;fontSize=11;fontStyle=1;strokeColor=#002244;align=left;spacingLeft=15;" parent="1" vertex="1">
+          <mxGeometry x="40" y="50" width="1080" height="45" as="geometry" />
+        </mxCell>
+        <mxCell id="p_card" value="&lt;b&gt;HỒ SƠ NĂNG LỰC SINH VIÊN&lt;/b&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#E5E7EB;strokeWidth=1.5;shadow=1;align=left;verticalAlign=top;spacingTop=10;spacingLeft=12;" parent="1" vertex="1">
+          <mxGeometry x="60" y="105" width="460" height="535" as="geometry" />
+        </mxCell>
+        <mxCell id="p_avatar" value="👤&lt;br&gt;ẢNH THẺ SV" style="shape=ellipse;fillColor=#E5E7EB;strokeColor=#9CA3AF;fontSize=10;align=center;" parent="1" vertex="1">
+          <mxGeometry x="80" y="145" width="80" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="p_info" value="&lt;b&gt;Nguyễn Minh Phú&lt;/b&gt; &amp;nbsp;&lt;span style=&quot;background-color:#DCFCE7;color:#166534;font-size:9px;padding:3px;border-radius:3px;&quot;&gt;✔️ ĐÃ XÁC THỰC VLU&lt;/span&gt;&lt;br&gt;MSSV: &lt;b&gt;2374802013447&lt;/b&gt;&lt;br&gt;Trường: &lt;b&gt;Đại học Văn Lang&lt;/b&gt; &amp;nbsp;•&amp;nbsp; Khoa: CNTT&lt;br&gt;Email: &lt;i&gt;sinhvien.demo@student.vlu.edu.vn&lt;/i&gt;&lt;br&gt;SĐT: 0911223344&lt;br&gt;Đánh giá uy tín: ⭐⭐⭐⭐⭐ &lt;b&gt;5.0 / 5.0&lt;/b&gt; (4 việc làm thành công)" style="rounded=0;fillColor=none;strokeColor=none;fontSize=10;align=left;" parent="1" vertex="1">
+          <mxGeometry x="175" y="145" width="330" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="p_bio" value="&lt;b&gt;Giới thiệu bản thân:&lt;/b&gt;&lt;br&gt;Sinh viên năm cuối ngành CNTT, có đam mê và kinh nghiệm phát triển Web với ReactJS, Node.js, MySQL. Đã từng làm trợ giảng và tham gia 2 dự án freelance ngắn hạn." style="rounded=1;fillColor=#F9FAFB;strokeColor=#E5E7EB;fontSize=10;align=left;spacingLeft=8;" parent="1" vertex="1">
+          <mxGeometry x="80" y="240" width="420" height="65" as="geometry" />
+        </mxCell>
+        <mxCell id="p_skills" value="&lt;b&gt;Kỹ năng chuyên môn (Skills Tags):&lt;/b&gt;&lt;br&gt;[ ReactJS ] &amp;nbsp; [ Node.js ] &amp;nbsp; [ MySQL ] &amp;nbsp; [ TailwindCSS ] &amp;nbsp; [ Git ] &amp;nbsp; [ Figma ]" style="rounded=0;fillColor=none;strokeColor=none;fontSize=10;align=left;" parent="1" vertex="1">
+          <mxGeometry x="80" y="315" width="420" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="p_cv_box" value="&lt;b&gt;📄 File CV PDF đính kèm:&lt;/b&gt;&lt;br&gt;Tên tệp: &lt;b&gt;CV_NguyenMinhPhu_WebDev.pdf&lt;/b&gt; (1.8 MB)&lt;br&gt;Cập nhật: 15/10/2026 &amp;nbsp;•&amp;nbsp; Đã lưu trữ an toàn trên Cloudinary&lt;br&gt;[👁️ Xem CV online]&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;[📥 Tải xuống]&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;[🔄 Tải CV mới]" style="rounded=1;fillColor=#EFF6FF;strokeColor=#BFDBFE;fontSize=10;align=left;spacingLeft=10;" parent="1" vertex="1">
+          <mxGeometry x="80" y="365" width="420" height="85" as="geometry" />
+        </mxCell>
+        <mxCell id="p_btn_update" value="✏️ Chỉnh sửa hồ sơ cá nhân" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#003366;fontColor=#FFFFFF;fontSize=10;fontStyle=1;strokeColor=#002244;align=center;" parent="1" vertex="1">
+          <mxGeometry x="80" y="465" width="420" height="35" as="geometry" />
+        </mxCell>
+        <mxCell id="p_hist" value="&lt;b&gt;LỊCH SỬ VIỆC LÀM &amp; ĐÁNH GIÁ TỪ NHÀ TUYỂN DỤNG&lt;/b&gt;&lt;hr size=&quot;1&quot;&gt;&lt;b&gt;1. Thực tập sinh Lập trình Web — Công ty Sáng tạo VLU&lt;/b&gt;&lt;br&gt;⭐ 5.0/5 &amp;nbsp;•&amp;nbsp; &lt;i&gt;&quot;Phú làm việc rất chăm chỉ, nắm bắt React nhanh và bàn giao code đúng hẹn!&quot;&lt;/i&gt;&lt;br&gt;&lt;br&gt;&lt;b&gt;2. Nhân viên Hỗ trợ Sự kiện Chào Tân Sinh viên VLU&lt;/b&gt;&lt;br&gt;⭐ 5.0/5 &amp;nbsp;•&amp;nbsp; &lt;i&gt;&quot;Nhiệt tình, đúng giờ, giao tiếp tốt với các bạn sinh viên mới.&quot;&lt;/i&gt;&lt;br&gt;&lt;br&gt;&lt;b&gt;3. Hỗ trợ nhập liệu CSDL Shop Thời trang Chic&lt;/b&gt;&lt;br&gt;⭐ 5.0/5 &amp;nbsp;•&amp;nbsp; &lt;i&gt;&quot;Cẩn thận, chính xác, hoàn thành trước hạn bàn giao.&quot;&lt;/i&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#E5E7EB;strokeWidth=1.5;shadow=1;align=left;verticalAlign=top;spacingTop=10;spacingLeft=12;" parent="1" vertex="1">
+          <mxGeometry x="540" y="105" width="560" height="535" as="geometry" />
+        </mxCell>
+        <mxCell id="lg4" value="BẢNG CHÚ THÍCH WIREFRAME: HỒ SƠ SINH VIÊN VỚI HUY HIỆU XÁC THỰC EMAIL TRƯỜNG" style="swimlane;startSize=24;horizontal=1;rounded=1;arcSize=6;html=1;whiteSpace=wrap;collapsible=0;fillColor=#F8F9FA;strokeColor=#003366;strokeWidth=1.5;fontColor=#003366;fontSize=10;fontStyle=1;" parent="1" vertex="1">
+          <mxGeometry x="40" y="740" width="1080" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="lg4_t" value="&lt;b&gt;• Cơ chế chống gian lận:&lt;/b&gt; Huy hiệu xanh &quot;ĐÃ XÁC THỰC VLU&quot; chỉ cấp khi sinh viên kích hoạt tài khoản qua email @student.vlu.edu.vn và khớp MSSV.&lt;br&gt;&lt;b&gt;• Người thiết kế:&lt;/b&gt; Hà Đại Vĩ — Khớp với FR-02 (Xác thực sinh viên) và FR-03 (Quản lý Profile &amp; CV)." style="text;html=1;whiteSpace=wrap;fillColor=none;strokeColor=none;fontSize=10;fontColor=#222;align=left;spacingLeft=10;spacingTop=6;" parent="1" vertex="1">
+          <mxGeometry x="50" y="765" width="1060" height="50" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+  <diagram id="page_admin_dash" name="5. Admin - Kiểm Duyệt Tin">
+    <mxGraphModel dx="1400" dy="900" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1169" pageHeight="850" background="#ffffff">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="a_frame" value="🌐 VLU Freelance Marketplace — Admin Management Portal" style="swimlane;startSize=30;html=1;whiteSpace=wrap;collapsible=0;fillColor=#F3F4F6;strokeColor=#9CA3AF;strokeWidth=1.5;fontColor=#374151;fontSize=11;fontStyle=1;rounded=1;shadow=1;" parent="1" vertex="1">
+          <mxGeometry x="40" y="20" width="1080" height="710" as="geometry" />
+        </mxCell>
+        <mxCell id="a_nav" value="&lt;b&gt;🎓 VLU FREELANCE | SYSTEM ADMIN&lt;/b&gt;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;[Dashboard Thống Kê]&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&lt;b&gt;[Duyệt Tin Việc Làm (3 chờ)]&lt;/b&gt;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;[Quản Lý Users]&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;[Báo Cáo Vi Phạm]" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#003366;fontColor=#ffffff;fontSize=11;fontStyle=1;strokeColor=#002244;align=left;spacingLeft=15;" parent="1" vertex="1">
+          <mxGeometry x="40" y="50" width="1080" height="45" as="geometry" />
+        </mxCell>
+        <mxCell id="kpi1" value="Tổng số Sinh viên&lt;br&gt;&lt;b&gt;1,240&lt;/b&gt;" style="rounded=1;fillColor=#EFF6FF;strokeColor=#BFDBFE;align=center;fontSize=11;" parent="1" vertex="1">
+          <mxGeometry x="60" y="105" width="245" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="kpi2" value="Nhà tuyển dụng đã duyệt&lt;br&gt;&lt;b&gt;158&lt;/b&gt;" style="rounded=1;fillColor=#ECFDF5;strokeColor=#A7F3D0;align=center;fontSize=11;" parent="1" vertex="1">
+          <mxGeometry x="325" y="105" width="245" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="kpi3" value="Tin việc làm đang chạy&lt;br&gt;&lt;b&gt;84&lt;/b&gt;" style="rounded=1;fillColor=#FEF3C7;strokeColor=#FDE68A;align=center;fontSize=11;" parent="1" vertex="1">
+          <mxGeometry x="590" y="105" width="245" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="kpi4" value="Tin tuyển dụng chờ duyệt&lt;br&gt;&lt;b style=&quot;color:#DC2626;&quot;&gt;3 CẦN DUYỆT&lt;/b&gt;" style="rounded=1;fillColor=#FEE2E2;strokeColor=#FECACA;align=center;fontSize=11;" parent="1" vertex="1">
+          <mxGeometry x="855" y="105" width="245" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="a_tbl" value="&lt;b&gt;DANH SÁCH TIN TUYỂN DỤNG CHỜ KIỂM DUYỆT TRƯỚC KHI HIỂN THỊ&lt;/b&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#E5E7EB;strokeWidth=1.5;shadow=1;align=left;verticalAlign=top;spacingTop=10;spacingLeft=12;" parent="1" vertex="1">
+          <mxGeometry x="60" y="165" width="1040" height="475" as="geometry" />
+        </mxCell>
+        <mxCell id="ath1" value="Tiêu đề tin đăng" style="rounded=0;fillColor=#E5E7EB;fontStyle=1;fontSize=10;align=center;" parent="1" vertex="1">
+          <mxGeometry x="80" y="205" width="280" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="ath2" value="Doanh nghiệp / NTD" style="rounded=0;fillColor=#E5E7EB;fontStyle=1;fontSize=10;align=center;" parent="1" vertex="1">
+          <mxGeometry x="360" y="205" width="220" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="ath3" value="Mức lương &amp; Ca làm" style="rounded=0;fillColor=#E5E7EB;fontStyle=1;fontSize=10;align=center;" parent="1" vertex="1">
+          <mxGeometry x="580" y="205" width="180" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="ath4" value="Mã số thuế / Uy tín" style="rounded=0;fillColor=#E5E7EB;fontStyle=1;fontSize=10;align=center;" parent="1" vertex="1">
+          <mxGeometry x="760" y="205" width="150" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="ath5" value="Kiểm duyệt" style="rounded=0;fillColor=#E5E7EB;fontStyle=1;fontSize=10;align=center;" parent="1" vertex="1">
+          <mxGeometry x="910" y="205" width="170" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="ar1_1" value="Tuyển Nhân viên Phục vụ Cafe Sách" style="rounded=0;fillColor=#FFFFFF;strokeColor=#E5E7EB;fontSize=10;align=left;spacingLeft=8;" parent="1" vertex="1">
+          <mxGeometry x="80" y="235" width="280" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="ar1_2" value="The Book Cafe VLU" style="rounded=0;fillColor=#FFFFFF;strokeColor=#E5E7EB;fontSize=10;align=left;spacingLeft=8;" parent="1" vertex="1">
+          <mxGeometry x="360" y="235" width="220" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="ar1_3" value="30.000đ/h &amp;nbsp;•&amp;nbsp; Tối T3-T5-T7" style="rounded=0;fillColor=#FFFFFF;strokeColor=#E5E7EB;fontSize=10;align=center;" parent="1" vertex="1">
+          <mxGeometry x="580" y="235" width="180" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="ar1_4" value="MST: 0319887766 (Hợp lệ)" style="rounded=0;fillColor=#FFFFFF;strokeColor=#E5E7EB;fontSize=10;align=center;" parent="1" vertex="1">
+          <mxGeometry x="760" y="235" width="150" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="ar1_btn1" value="Duyệt tin" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#059669;fontColor=#FFFFFF;fontSize=10;fontStyle=1;strokeColor=#047857;align=center;" parent="1" vertex="1">
+          <mxGeometry x="920" y="245" width="70" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="ar1_btn2" value="Từ chối" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#DC2626;fontColor=#FFFFFF;fontSize=10;fontStyle=1;strokeColor=#B91C1C;align=center;" parent="1" vertex="1">
+          <mxGeometry x="1000" y="245" width="70" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="ar2_1" value="Việc nhẹ lương cao 500k/ngày gõ captcha online" style="rounded=0;fillColor=#FEF2F2;strokeColor=#FCA5A5;fontSize=10;fontColor=#B91C1C;align=left;spacingLeft=8;" parent="1" vertex="1">
+          <mxGeometry x="80" y="285" width="280" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="ar2_2" value="Cá nhân tự do (SĐT rác không rõ nguồn gốc)" style="rounded=0;fillColor=#FEF2F2;strokeColor=#FCA5A5;fontSize=10;align=left;spacingLeft=8;" parent="1" vertex="1">
+          <mxGeometry x="360" y="285" width="220" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="ar2_3" value="500.000đ/ngày (Bất thường)" style="rounded=0;fillColor=#FEF2F2;strokeColor=#FCA5A5;fontSize=10;align=center;" parent="1" vertex="1">
+          <mxGeometry x="580" y="285" width="180" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="ar2_4" value="&lt;span style=&quot;color:#DC2626;font-weight:bold;&quot;&gt;Không có MST&lt;/span&gt;" style="rounded=0;fillColor=#FEF2F2;strokeColor=#FCA5A5;fontSize=10;align=center;" parent="1" vertex="1">
+          <mxGeometry x="760" y="285" width="150" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="ar2_btn" value="🚫 Bác bỏ &amp; Khóa" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#DC2626;fontColor=#FFFFFF;fontSize=10;fontStyle=1;strokeColor=#B91C1C;align=center;" parent="1" vertex="1">
+          <mxGeometry x="920" y="295" width="150" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="lg5" value="BẢNG CHÚ THÍCH WIREFRAME: CỔNG QUẢN TRỊ ADMIN KIỂM DUYỆT CHỐNG LỪA ĐẢO" style="swimlane;startSize=24;horizontal=1;rounded=1;arcSize=6;html=1;whiteSpace=wrap;collapsible=0;fillColor=#F8F9FA;strokeColor=#003366;strokeWidth=1.5;fontColor=#003366;fontSize=10;fontStyle=1;" parent="1" vertex="1">
+          <mxGeometry x="40" y="740" width="1080" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="lg5_t" value="&lt;b&gt;• Mục tiêu giải quyết bài toán đề tài:&lt;/b&gt; Admin trực tiếp kiểm tra tính xác thực của tin tuyển dụng và pháp nhân doanh nghiệp trước khi tin xuất hiện công khai trên trang chủ của sinh viên.&lt;br&gt;&lt;b&gt;• Người thiết kế:&lt;/b&gt; Hà Đại Vĩ — Khớp với FR-13 (Kiểm duyệt tin đăng) và FR-14 (Quản lý người dùng)." style="text;html=1;whiteSpace=wrap;fillColor=none;strokeColor=none;fontSize=10;fontColor=#222;align=left;spacingLeft=10;spacingTop=6;" parent="1" vertex="1">
+          <mxGeometry x="50" y="765" width="1060" height="50" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

@@ -1,0 +1,136 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 900" width="1440" height="900">
+  <defs>
+    <filter id="cardShadow" x="-5%" y="-5%" width="110%" height="115%">
+      <feDropShadow dx="0" dy="2" stdDeviation="4" flood-opacity="0.06"/>
+    </filter>
+  </defs>
+  
+  <!-- Canvas BG -->
+  <rect width="1440" height="900" fill="#F3F4F6"/>
+  
+  
+    <!-- Navigation Header -->
+    <rect x="0" y="0" width="1440" height="70" fill="#003366"/>
+    <text x="60" y="44" fill="#FFFFFF" font-size="20" font-weight="bold" font-family="system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif">🎓 VLU FREELANCE</text>
+    
+    
+        <text x="340" y="42" fill="#FFFFFF" font-weight="bold" font-size="14" font-family="system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif">Việc làm mới</text>
+        <text x="470" y="42" fill="#E2E8F0" font-size="14" font-family="system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif">Dành cho NTD</text>
+        <text x="600" y="42" fill="#E2E8F0" font-size="14" font-family="system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif">Cẩm nang sinh viên</text>
+        
+    
+    <!-- User action area -->
+    <rect x="1100" y="18" width="130" height="34" rx="6" fill="#0284C7"/>
+    <text x="1122" y="40" fill="#FFFFFF" font-weight="bold" font-size="13" font-family="system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif">+ Đăng tin NTD</text>
+    
+    <circle cx="1270" cy="35" r="16" fill="#E2E8F0"/>
+    <text x="1263" y="40" font-size="14">👤</text>
+    <text x="1295" y="40" fill="#FFFFFF" font-weight="600" font-size="13" font-family="system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif">Nguyễn Minh Phú</text>
+    
+  
+  <!-- Hero Search Banner -->
+  <rect x="60" y="90" width="1320" height="90" rx="12" fill="#E0F2FE" stroke="#BAE6FD" stroke-width="1"/>
+  <text x="100" y="125" fill="#003366" font-size="18" font-weight="bold" font-family="system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif">TÌM VIỆC LÀM PART-TIME &amp; FREELANCE CHO SINH VIÊN VĂN LANG</text>
+  <text x="100" y="150" fill="#4B5563" font-size="13" font-family="system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif">Hơn 500+ công việc minh bạch, đối soát thông tin pháp nhân và hỗ trợ mộc thực tập</text>
+  
+  <rect x="760" y="112" width="430" height="42" rx="8" fill="#FFFFFF" stroke="#D1D5DB" stroke-width="1"/>
+  <text x="780" y="138" fill="#9CA3AF" font-size="13" font-family="system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif">🔍 Nhập chức danh, kỹ năng (Pha chế, ReactJS...)</text>
+  <rect x="1200" y="112" width="140" height="42" rx="8" fill="#003366"/>
+  <text x="1242" y="138" fill="#FFFFFF" font-size="14" font-weight="bold" font-family="system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif">Tìm kiếm</text>
+
+  <!-- Left Sidebar Filter -->
+  <rect x="60" y="200" width="300" height="570" rx="12" fill="#FFFFFF" stroke="#E5E7EB" filter="url(#cardShadow)"/>
+  <text x="85" y="235" fill="#111827" font-size="16" font-weight="bold" font-family="system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif">⚙️ BỘ LỌC TÌM KIẾM</text>
+  <line x1="85" y1="250" x2="335" y2="250" stroke="#E5E7EB" stroke-width="1"/>
+
+  <text x="85" y="280" fill="#1F2937" font-size="13" font-weight="bold" font-family="system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif">Khu vực Cơ sở Văn Lang:</text>
+  <text x="85" y="308" fill="#374151" font-size="13" font-family="system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif">☑ Tất cả địa điểm</text>
+  <text x="85" y="334" fill="#374151" font-size="13" font-family="system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif">☐ Bình Thạnh (Cơ sở 3 VLU)</text>
+  <text x="85" y="360" fill="#374151" font-size="13" font-family="system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif">☐ Gò Vấp (Cơ sở 2 VLU)</text>
+  <text x="85" y="386" fill="#374151" font-size="13" font-family="system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif">☐ Quận 1 (Cơ sở 1 VLU)</text>
+  <text x="85" y="412" fill="#374151" font-size="13" font-family="system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif">☐ Làm Online / Từ xa</text>
+
+  <text x="85" y="450" fill="#1F2937" font-size="13" font-weight="bold" font-family="system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif">Mức lương (VNĐ/giờ):</text>
+  <text x="85" y="476" fill="#374151" font-size="13" font-family="system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif">☑ 25.000đ - 35.000đ / giờ</text>
+  <text x="85" y="502" fill="#374151" font-size="13" font-family="system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif">☐ 35.000đ - 50.000đ / giờ</text>
+  <text x="85" y="528" fill="#374151" font-size="13" font-family="system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif">☐ &gt; 50.000đ / giờ hoặc Dự án</text>
+
+  <text x="85" y="565" fill="#1F2937" font-size="13" font-weight="bold" font-family="system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif">Khung ca làm việc rảnh:</text>
+  <text x="85" y="591" fill="#374151" font-size="13" font-family="system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif">☐ Ca sáng (8h - 12h)</text>
+  <text x="85" y="617" fill="#374151" font-size="13" font-family="system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif">☑ Ca tối (18h - 22h)</text>
+  <text x="85" y="643" fill="#374151" font-size="13" font-family="system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif">☐ Thứ 7 - Chủ Nhật</text>
+
+  <rect x="85" y="700" width="250" height="40" rx="8" fill="#003366"/>
+  <text x="150" y="725" fill="#FFFFFF" font-size="14" font-weight="bold" font-family="system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif">Áp dụng bộ lọc</text>
+
+  <!-- Right Job Cards List -->
+  <text x="390" y="225" fill="#374151" font-size="14" font-weight="bold" font-family="system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif">Tìm thấy 28 công việc phù hợp sinh viên</text>
+  <text x="1270" y="225" fill="#4B5563" font-size="13" font-family="system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif">Sắp xếp: Mới nhất ▼</text>
+
+  <!-- Card 1 -->
+  <g id="card-1">
+    <rect x="390" y="245" width="990" height="115" rx="12" fill="#FFFFFF" stroke="#E5E7EB" filter="url(#cardShadow)"/>
+    <text x="420" y="275" fill="#111827" font-size="16" font-weight="bold" font-family="system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif">Tuyển Thực Tập Sinh Lập Trình Frontend ReactJS (Part-time)</text>
+    <text x="420" y="298" fill="#4B5563" font-size="13" font-family="system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif">Công ty TNHH Truyền thông Sáng tạo VLU  •  📍 69/68 Đặng Thùy Trâm, Bình Thạnh</text>
+    <text x="420" y="322" fill="#059669" font-size="14" font-weight="bold" font-family="system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif">💰 45.000đ / giờ</text>
+    <text x="560" y="322" fill="#6B7280" font-size="12" font-family="system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif">⏰ Ca sáng T2-T4-T6  •  ⏳ Hạn: 30/11/2026</text>
+    <!-- Tags -->
+    <rect x="420" y="333" width="70" height="20" rx="10" fill="#E0F2FE"/><text x="432" y="347" fill="#0369A1" font-size="11" font-weight="bold" font-family="system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif">ReactJS</text>
+    <rect x="500" y="333" width="75" height="20" rx="10" fill="#E0F2FE"/><text x="512" y="347" fill="#0369A1" font-size="11" font-weight="bold" font-family="system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif">Part-time</text>
+    <rect x="585" y="333" width="85" height="20" rx="10" fill="#E0F2FE"/><text x="597" y="347" fill="#0369A1" font-size="11" font-weight="bold" font-family="system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif">Bình Thạnh</text>
+    <!-- Button -->
+    <rect x="1230" y="282" width="130" height="38" rx="8" fill="#003366"/>
+    <text x="1252" y="306" fill="#FFFFFF" font-size="13" font-weight="bold" font-family="system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif">Ứng tuyển ngay</text>
+  </g>
+
+  <!-- Card 2 -->
+  <g id="card-2">
+    <rect x="390" y="375" width="990" height="115" rx="12" fill="#FFFFFF" stroke="#E5E7EB" filter="url(#cardShadow)"/>
+    <text x="420" y="405" fill="#111827" font-size="16" font-weight="bold" font-family="system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif">Nhân Viên Phục Vụ Quán Cafe Sách (Linh hoạt theo ca học)</text>
+    <text x="420" y="428" fill="#4B5563" font-size="13" font-family="system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif">The Book Cafe VLU  •  📍 128 Nguyễn Thái Sơn, Gò Vấp (gần Cơ sở 2)</text>
+    <text x="420" y="452" fill="#059669" font-size="14" font-weight="bold" font-family="system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif">💰 30.000đ / giờ + Thưởng</text>
+    <text x="630" y="452" fill="#6B7280" font-size="12" font-family="system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif">⏰ Ca tối 18h - 22h  •  ⏳ Hạn: 25/11/2026</text>
+    <!-- Tags -->
+    <rect x="420" y="463" width="75" height="20" rx="10" fill="#E0F2FE"/><text x="432" y="477" fill="#0369A1" font-size="11" font-weight="bold" font-family="system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif">Phục vụ</text>
+    <rect x="505" y="463" width="90" height="20" rx="10" fill="#E0F2FE"/><text x="517" y="477" fill="#0369A1" font-size="11" font-weight="bold" font-family="system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif">Linh hoạt ca</text>
+    <rect x="605" y="463" width="75" height="20" rx="10" fill="#E0F2FE"/><text x="617" y="477" fill="#0369A1" font-size="11" font-weight="bold" font-family="system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif">Gò Vấp</text>
+    <!-- Button -->
+    <rect x="1230" y="412" width="130" height="38" rx="8" fill="#003366"/>
+    <text x="1252" y="436" fill="#FFFFFF" font-size="13" font-weight="bold" font-family="system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif">Ứng tuyển ngay</text>
+  </g>
+
+  <!-- Card 3 -->
+  <g id="card-3">
+    <rect x="390" y="505" width="990" height="115" rx="12" fill="#FFFFFF" stroke="#E5E7EB" filter="url(#cardShadow)"/>
+    <text x="420" y="535" fill="#111827" font-size="16" font-weight="bold" font-family="system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif">Thiết Kế Banner &amp; Edit Video TikTok Cho Shop Thời Trang (Freelance)</text>
+    <text x="420" y="558" fill="#4B5563" font-size="13" font-family="system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif">Chic Fashion Studio  •  📍 Làm việc Online / Từ xa</text>
+    <text x="420" y="582" fill="#059669" font-size="14" font-weight="bold" font-family="system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif">💰 1.500.000đ / Dự án (4 video/tuần)</text>
+    <text x="700" y="582" fill="#6B7280" font-size="12" font-family="system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif">⏳ Hạn: 20/11/2026</text>
+    <!-- Tags -->
+    <rect x="420" y="593" width="80" height="20" rx="10" fill="#E0F2FE"/><text x="432" y="607" fill="#0369A1" font-size="11" font-weight="bold" font-family="system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif">Freelance</text>
+    <rect x="510" y="593" width="95" height="20" rx="10" fill="#E0F2FE"/><text x="522" y="607" fill="#0369A1" font-size="11" font-weight="bold" font-family="system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif">Online/Remote</text>
+    <!-- Button -->
+    <rect x="1230" y="542" width="130" height="38" rx="8" fill="#003366"/>
+    <text x="1252" y="566" fill="#FFFFFF" font-size="13" font-weight="bold" font-family="system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif">Ứng tuyển ngay</text>
+  </g>
+
+  <!-- Card 4 -->
+  <g id="card-4">
+    <rect x="390" y="635" width="990" height="115" rx="12" fill="#FFFFFF" stroke="#E5E7EB" filter="url(#cardShadow)"/>
+    <text x="420" y="665" fill="#111827" font-size="16" font-weight="bold" font-family="system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif">Gia Sư Dạy Kèm Tiếng Anh Lớp 8 (Giao tiếp &amp; Ngữ pháp)</text>
+    <text x="420" y="688" fill="#4B5563" font-size="13" font-family="system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif">Phụ huynh học sinh  •  📍 45 Nguyễn Thị Minh Khai, Quận 1 (gần Cơ sở 1)</text>
+    <text x="420" y="712" fill="#059669" font-size="14" font-weight="bold" font-family="system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif">💰 150.000đ / buổi (90 phút)</text>
+    <text x="640" y="712" fill="#6B7280" font-size="12" font-family="system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif">⏰ Tối T3 - T5 (19h - 20h30)</text>
+    <!-- Tags -->
+    <rect x="420" y="723" width="70" height="20" rx="10" fill="#E0F2FE"/><text x="432" y="737" fill="#0369A1" font-size="11" font-weight="bold" font-family="system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif">Gia sư</text>
+    <rect x="500" y="723" width="75" height="20" rx="10" fill="#E0F2FE"/><text x="512" y="737" fill="#0369A1" font-size="11" font-weight="bold" font-family="system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif">Quận 1</text>
+    <!-- Button -->
+    <rect x="1230" y="672" width="130" height="38" rx="8" fill="#003366"/>
+    <text x="1252" y="696" fill="#FFFFFF" font-size="13" font-weight="bold" font-family="system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif">Ứng tuyển ngay</text>
+  </g>
+
+  <!-- Legend bar at bottom -->
+  <rect x="60" y="800" width="1320" height="70" rx="8" fill="#FFFFFF" stroke="#003366" stroke-width="1.5"/>
+  <text x="80" y="825" fill="#003366" font-size="13" font-weight="bold" font-family="system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif">📌 FIGMA SPEC - MÀN HÌNH 01: TRANG CHỦ &amp; BỘ LỌC TÌM VIỆC LÀM SINH VIÊN (DESKTOP 1440x900)</text>
+  <text x="80" y="848" fill="#4B5563" font-size="12" font-family="system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif">• Phụ trách: Hà Đại Vĩ (MSSV: 2374802010551)  •  Hệ màu: VLU Navy #003366, Accent Sky #0284C7, Success Emerald #059669  •  Grid 12 Cột Auto Layout</text>
+</svg>
