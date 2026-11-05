@@ -16,6 +16,9 @@ D:\CDTN2\
 ├── 📁 01_Tai_Lieu_Mon_Hoc/           <- Toàn bộ slide bài giảng 10 buổi & biểu mẫu gốc từ trường
 ├── 📁 02_Bai_Tap_De_Nop/             <- Toàn bộ file Word/Excel/draw.io/SQL bài tập từ Buổi 2 đến Buổi 10
 ├── 📁 03_Tai_Lieu_Huong_Dan_MD/      <- Các cẩm nang hướng dẫn chi tiết, kịch bản, bảng phân chia (.md)
+├── 📁 server/                        <- Backend RESTful API (Node.js/Express, JWT, MySQL Pool, Auth, CRUD)
+├── 📁 client/                        <- Frontend Web App (ReactJS + TailwindCSS, Axios, Vite)
+├── ⚡ run_dev.bat                    <- File 1-click nhấp đúp chuột để tự động khởi chạy cả Frontend và Backend
 └── 📄 README.md                      <- Mục lục và hướng dẫn tổng quan toàn khóa học
 ```
 
