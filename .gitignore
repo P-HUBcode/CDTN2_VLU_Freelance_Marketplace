@@ -37,4 +37,13 @@ desktop.ini
 
 # Temporary Office Lock files
 ~$*
+.temp/
+supabase/.temp/
+
+# Documents, reports, and assignments
+02_Bai_Tap_De_Nop/
+*.docx
+*.pptx
+*.xlsx
+generate_report.py
 

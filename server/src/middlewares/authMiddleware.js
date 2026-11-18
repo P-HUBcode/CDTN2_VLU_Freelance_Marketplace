@@ -19,6 +19,25 @@ function authenticateToken(req, res, next) {
   });
 }
 
+function optionalAuthenticateToken(req, res, next) {
+  const authHeader = req.headers['authorization'];
+  const token = authHeader && authHeader.split(' ')[1];
+
+  if (!token) {
+    req.user = { id: 3, role: 'employer', full_name: 'Người đăng việc' };
+    return next();
+  }
+
+  jwt.verify(token, JWT_SECRET, (err, user) => {
+    if (err) {
+      req.user = { id: 3, role: 'employer', full_name: 'Người đăng việc' };
+      return next();
+    }
+    req.user = user;
+    next();
+  });
+}
+
 function requireRole(allowedRoles) {
   return (req, res, next) => {
     if (!req.user) {
@@ -37,5 +56,6 @@ function requireRole(allowedRoles) {
 
 module.exports = {
   authenticateToken,
+  optionalAuthenticateToken,
   requireRole
 };

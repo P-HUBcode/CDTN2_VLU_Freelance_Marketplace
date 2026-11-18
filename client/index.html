@@ -3,18 +3,43 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>VLU Freelance Marketplace — Đại học Văn Lang</title>
-    <!-- Tailwind CSS CDN -->
+    <title>StudentHub — Find work. Build skills. Grow your career.</title>
+    <meta name="description" content="Nền tảng việc làm freelance, part-time & internship chất lượng cao dành riêng cho sinh viên Việt Nam." />
+    <!-- Tailwind CSS CDN with custom config -->
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
       tailwind.config = {
         theme: {
           extend: {
             colors: {
-              vluNavy: '#003366',
-              vluDark: '#002244',
-              vluSky: '#0284C7',
-              vluEmerald: '#059669'
+              brand: {
+                50: '#EFF6FF',
+                100: '#DBEAFE',
+                200: '#BFDBFE',
+                300: '#93C5FD',
+                400: '#60A5FA',
+                500: '#3B82F6',
+                600: '#2563EB', // Primary
+                700: '#1D4ED8', // Primary Hover
+                800: '#1E40AF',
+                900: '#1E3A8A',
+              },
+              surface: '#F8FAFC',
+              slateText: '#0F172A',
+              subText: '#64748B',
+              customBorder: '#E2E8F0',
+              success: '#16A34A',
+              warning: '#F59E0B',
+              danger: '#DC2626',
+            },
+            fontFamily: {
+              sans: ['Inter', 'system-ui', '-apple-system', 'sans-serif'],
+            },
+            boxShadow: {
+              subtle: '0 1px 3px 0 rgba(0, 0, 0, 0.04), 0 1px 2px 0 rgba(0, 0, 0, 0.02)',
+              card: '0 4px 6px -1px rgba(0, 0, 0, 0.04), 0 2px 4px -1px rgba(0, 0, 0, 0.02)',
+              cardHover: '0 10px 25px -5px rgba(37, 99, 235, 0.08), 0 8px 10px -6px rgba(0, 0, 0, 0.03)',
+              dropdown: '0 10px 25px -3px rgba(0, 0, 0, 0.08), 0 4px 6px -2px rgba(0, 0, 0, 0.03)',
             }
           }
         }
@@ -22,12 +47,31 @@
     </script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
-      body { font-family: 'Inter', system-ui, sans-serif; }
+      body {
+        font-family: 'Inter', system-ui, -apple-system, sans-serif;
+        background-color: #F8FAFC;
+        color: #0F172A;
+      }
+      /* Custom scrollbar for modern feel */
+      ::-webkit-scrollbar {
+        width: 6px;
+        height: 6px;
+      }
+      ::-webkit-scrollbar-track {
+        background: transparent;
+      }
+      ::-webkit-scrollbar-thumb {
+        background: #CBD5E1;
+        border-radius: 9999px;
+      }
+      ::-webkit-scrollbar-thumb:hover {
+        background: #94A3B8;
+      }
     </style>
   </head>
-  <body class="bg-gray-50 text-gray-800 antialiased min-h-screen">
+  <body class="bg-[#F8FAFC] text-[#0F172A] antialiased min-h-screen flex flex-col">
     <div id="root"></div>
     <script type="module" src="/src/main.jsx"></script>
   </body>
