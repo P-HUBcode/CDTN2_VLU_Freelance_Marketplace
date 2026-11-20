@@ -60,17 +60,12 @@ import {
 } from './lib/applicationService';
 import { isSupabaseConfigured } from './lib/supabase';
 
-// Mock Data (Initial data for fallback and instant experience)
+// Shared Public Data & Catalogs (Việc làm và dịch vụ công khai)
 import {
   currentUser as initialCurrentUser,
   initialJobs,
   initialServices,
-  initialAppliedJobs,
-  initialProjects,
-  initialTransactions,
-  monthlyEarningsChart,
-  initialConversations,
-  initialApplicantsForEmployer
+  monthlyEarningsChart
 } from './data/mockData';
 
 export default function App() {
@@ -163,19 +158,33 @@ export default function App() {
 
     // 2. Nếu profile hợp lệ và không phải Admin
     if (profile && profile.full_name && !profile.full_name.includes('Admin') && !profile.full_name.includes('Quản trị viên')) {
+      const isDemo = profile.email?.includes('demo') || profile.id?.startsWith('demo_');
       setCurrentUser((prev) => ({
         ...prev,
+        id: profile.id || user?.id,
         name: profile.full_name,
         email: profile.email || prev.email,
         role: profile.role || role || 'student',
-        university: profile.university || prev.university || 'Đại học Kinh tế TP.HCM (UEH)'
+        university: profile.university || prev.university || 'Trường Đại học',
+        projectsCompleted: isDemo ? (prev.projectsCompleted || 12) : 0,
+        reviewsCount: isDemo ? (prev.reviewsCount || 18) : 0,
+        totalEarnings: isDemo ? (prev.totalEarnings || '18.500.000đ') : '0đ',
+        earningsMonth: isDemo ? (prev.earningsMonth || '4.800.000đ') : '0đ',
+        availableBalance: isDemo ? (prev.availableBalance ?? 12500000) : 0
       }));
     } else if (user?.user_metadata?.full_name && !user.user_metadata.full_name.includes('Admin') && !user.user_metadata.full_name.includes('Quản trị viên')) {
+      const isDemo = user.email?.includes('demo') || user.id?.startsWith('demo_');
       setCurrentUser((prev) => ({
         ...prev,
+        id: user.id,
         name: user.user_metadata.full_name,
         email: user.email || prev.email,
-        role: role || 'student'
+        role: role || 'student',
+        projectsCompleted: isDemo ? (prev.projectsCompleted || 12) : 0,
+        reviewsCount: isDemo ? (prev.reviewsCount || 18) : 0,
+        totalEarnings: isDemo ? (prev.totalEarnings || '18.500.000đ') : '0đ',
+        earningsMonth: isDemo ? (prev.earningsMonth || '4.800.000đ') : '0đ',
+        availableBalance: isDemo ? (prev.availableBalance ?? 12500000) : 0
       }));
     } else {
       setCurrentUser((prev) => {
@@ -245,13 +254,22 @@ export default function App() {
     }
   }, [currentView]);
 
-  // Helper lấy key lưu trữ tin nhắn phân tách theo từng tài khoản (User ID hoặc Role)
+  // Helper lấy key lưu trữ tin nhắn phân tách theo từng tài khoản (chỉ lưu theo User ID hoặc Email riêng biệt)
   const getChatStorageKey = (currentUserObj, currentRole) => {
     if (currentUserObj?.id) return `studenthub_conversations_${currentUserObj.id}`;
     if (currentUserObj?.email) return `studenthub_conversations_${currentUserObj.email.replace(/[^a-zA-Z0-9]/g, '_')}`;
-    if (currentRole) return `studenthub_conversations_role_${currentRole}`;
-    return 'studenthub_conversations_default';
+    return null; // Không dùng key dùng chung để tránh rò rỉ dữ liệu giữa các tài khoản
   };
+
+  // Dọn dẹp triệt để các key localStorage dùng chung cũ gây rò rỉ dữ liệu giữa các tài khoản
+  useEffect(() => {
+    try {
+      localStorage.removeItem('studenthub_conversations');
+      localStorage.removeItem('studenthub_conversations_default');
+      localStorage.removeItem('studenthub_conversations_role_student');
+      localStorage.removeItem('studenthub_conversations_role_employer');
+    } catch (e) {}
+  }, []);
 
   // Lắng nghe tin nhắn real-time giữa các tab qua BroadcastChannel
   useEffect(() => {
@@ -309,7 +327,7 @@ export default function App() {
 
             try {
               const key = getChatStorageKey(user, role);
-              localStorage.setItem(key, JSON.stringify(updated));
+              if (key) localStorage.setItem(key, JSON.stringify(updated));
             } catch (e) {}
 
             return updated;
@@ -323,11 +341,16 @@ export default function App() {
   // Lắng nghe và đồng bộ tin nhắn xuyên trình duyệt (Edge <-> Cốc Cốc) qua Backend API
   useEffect(() => {
     const fetchServerMessages = async () => {
+      const currentUserId = user?.id || profile?.id;
+      const currentUserEmail = user?.email || profile?.email;
+      if (!currentUserId && !currentUserEmail) return;
+
       try {
-        const res = await fetch('http://localhost:5000/api/chat/messages');
+        const queryParam = currentUserId ? `userId=${encodeURIComponent(currentUserId)}` : `email=${encodeURIComponent(currentUserEmail)}`;
+        const res = await fetch(`http://localhost:5000/api/chat/messages?${queryParam}`);
         if (!res.ok) return;
         const json = await res.json();
-        if (json && json.success && Array.isArray(json.data) && json.data.length > 0) {
+        if (json && json.success && Array.isArray(json.data)) {
           setConversations((prev) => {
             let changed = false;
             const updated = [...prev];
@@ -354,7 +377,7 @@ export default function App() {
             if (changed) {
               try {
                 const key = getChatStorageKey(user, role);
-                localStorage.setItem(key, JSON.stringify(updated));
+                if (key) localStorage.setItem(key, JSON.stringify(updated));
               } catch (e) {}
               return updated;
             }
@@ -366,11 +389,11 @@ export default function App() {
 
     const chatPollTimer = setInterval(fetchServerMessages, 2500);
     return () => clearInterval(chatPollTimer);
-  }, [user?.id, role]);
+  }, [user?.id, user?.email, profile?.id, role]);
 
   const [selectedJob, setSelectedJob] = useState(initialJobs[0]);
   const [selectedService, setSelectedService] = useState(null);
-  const [appliedJobs, setAppliedJobs] = useState(initialAppliedJobs);
+  const [appliedJobs, setAppliedJobs] = useState([]);
 
   const [projects, setProjects] = useState(() => {
     try {
@@ -379,7 +402,7 @@ export default function App() {
     } catch (e) {
       console.warn('Lỗi đọc projects từ localStorage:', e);
     }
-    return initialProjects;
+    return [];
   });
 
   const [transactions, setTransactions] = useState(() => {
@@ -389,30 +412,28 @@ export default function App() {
     } catch (e) {
       console.warn('Lỗi đọc transactions từ localStorage:', e);
     }
-    return initialTransactions;
+    return [];
   });
 
   const [conversations, setConversations] = useState(() => {
     try {
       let currentSessionUser = null;
-      let currentSessionRole = 'student';
       const savedMockAuth = localStorage.getItem('studenthub_mock_session');
       if (savedMockAuth) {
         try {
           const parsed = JSON.parse(savedMockAuth);
           currentSessionUser = parsed.user;
-          currentSessionRole = parsed.role || 'student';
         } catch (e) {}
       }
-      const key = getChatStorageKey(currentSessionUser, currentSessionRole);
-      const saved = localStorage.getItem(key);
-      if (saved) return JSON.parse(saved);
-      const legacySaved = localStorage.getItem('studenthub_conversations');
-      if (legacySaved) return JSON.parse(legacySaved);
+      const key = getChatStorageKey(currentSessionUser, null);
+      if (key) {
+        const saved = localStorage.getItem(key);
+        if (saved) return JSON.parse(saved);
+      }
     } catch (e) {
       console.warn('Lỗi đọc conversations từ localStorage:', e);
     }
-    return initialConversations;
+    return [];
   });
 
   const [applicants, setApplicants] = useState(() => {
@@ -422,7 +443,7 @@ export default function App() {
     } catch (e) {
       console.warn('Lỗi đọc applicants từ localStorage:', e);
     }
-    return initialApplicantsForEmployer;
+    return [];
   });
 
   const [bookmarkedIds, setBookmarkedIds] = useState(() => {
@@ -430,7 +451,7 @@ export default function App() {
       const saved = localStorage.getItem('studenthub_bookmarked_ids');
       if (saved) return new Set(JSON.parse(saved));
     } catch (e) {}
-    return new Set(['job_01', 'job_03']);
+    return new Set();
   });
 
   // Persist State to LocalStorage on changes
@@ -562,34 +583,33 @@ export default function App() {
   // Đồng bộ hòm thư tin nhắn khi tài khoản (User / Role) thay đổi (đăng nhập / đăng xuất)
   useEffect(() => {
     const key = getChatStorageKey(user, role);
+    if (!key) {
+      setConversations([]);
+      return;
+    }
     try {
       const saved = localStorage.getItem(key);
       if (saved) {
         setConversations(JSON.parse(saved));
       } else {
-        if (user?.id) {
-          // Tài khoản mới đăng nhập -> hòm thư ban đầu rỗng
-          setConversations([]);
-        } else {
-          // Tài khoản demo khách ban đầu
-          const legacy = localStorage.getItem('studenthub_conversations');
-          setConversations(legacy ? JSON.parse(legacy) : initialConversations);
-        }
+        setConversations([]);
       }
     } catch (e) {
       console.warn('Lỗi load conversations theo tài khoản:', e);
+      setConversations([]);
     }
-  }, [user?.id, role]);
+  }, [user?.id, user?.email, role]);
 
   // Tự động lưu tin nhắn vào phân vùng riêng của tài khoản hiện tại
   useEffect(() => {
     const key = getChatStorageKey(user, role);
+    if (!key) return;
     try {
       localStorage.setItem(key, JSON.stringify(conversations));
     } catch (e) {
       console.warn('Lỗi lưu conversations:', e);
     }
-  }, [conversations, user?.id, role]);
+  }, [conversations, user?.id, user?.email, role]);
 
   // Modals State
   const [showApplyModal, setShowApplyModal] = useState(false);
@@ -661,13 +681,16 @@ export default function App() {
   const [loadingApplications, setLoadingApplications] = useState(false);
   useEffect(() => {
     async function loadApplications() {
-      const currentId = user?.id || (role === 'student' ? 'demo_student_01' : null);
-      if (currentId) {
-        setLoadingApplications(true);
-        try {
-          const apps = await getStudentApplications(currentId);
-          if (Array.isArray(apps)) {
-            setAppliedJobs(apps);
+      const currentId = user?.id;
+      if (!currentId) {
+        setAppliedJobs([]);
+        return;
+      }
+      setLoadingApplications(true);
+      try {
+        const apps = await getStudentApplications(currentId);
+        if (Array.isArray(apps)) {
+          setAppliedJobs(apps);
 
             // Tự động tạo Project trong "Công việc của tôi" cho các đơn đã trúng tuyển (accepted / hired)
             const hiredApps = apps.filter((a) => a.status === 'accepted' || a.status === 'hired');
@@ -707,7 +730,6 @@ export default function App() {
           setLoadingApplications(false);
         }
       }
-    }
     loadApplications();
   }, [user?.id, role, currentView]);
 
@@ -974,6 +996,9 @@ export default function App() {
           });
         }
 
+        const otherMsg = currentConv?.messages?.find((m) => m.senderId && m.senderId !== myId);
+        const recipientId = currentConv?.employerId || currentConv?.studentId || otherMsg?.senderId || '';
+
         // Đồng thời gửi lên Backend Express Server (http://localhost:5000/api/chat/messages)
         // để Edge <-> Cốc Cốc <-> Chrome nhắn tin xuyên trình duyệt không bị rào cản!
         fetch('http://localhost:5000/api/chat/messages', {
@@ -984,6 +1009,7 @@ export default function App() {
             senderName: myName,
             senderAvatar: myAvatar,
             senderRole: role || 'student',
+            receiverId: recipientId,
             targetName: currentConv?.name,
             conversationId,
             message: newMsg
@@ -1108,6 +1134,9 @@ export default function App() {
             jobTitle: partnerJobTitle,
             avatar: partnerAvatar,
             online: true,
+            participantIds: [user?.id, partnerRole === 'employer' ? 'role_employer' : 'role_student'].filter(Boolean),
+            studentId: role === 'student' ? user?.id : null,
+            employerId: role === 'employer' ? user?.id : null,
             messages: [
               {
                 id: `msg_init_${Date.now()}`,

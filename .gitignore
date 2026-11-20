@@ -39,6 +39,7 @@ desktop.ini
 ~$*
 .temp/
 supabase/.temp/
+server/src/config/user_passwords.json
 
 # Documents, reports, and assignments
 02_Bai_Tap_De_Nop/

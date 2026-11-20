@@ -1,5 +1,3 @@
-import { initialProjects } from '../data/mockData';
-
 // ==============================================================================
 // STUDENTHUB - PROJECT SERVICE
 // Quản lý hợp đồng & dự án freelance, đồng bộ thời gian thực đa trình duyệt
@@ -24,12 +22,12 @@ export function getLocalProjects() {
     const raw = localStorage.getItem(LOCAL_STORAGE_KEY);
     if (raw) {
       const parsed = JSON.parse(raw);
-      if (Array.isArray(parsed) && parsed.length > 0) return parsed;
+      if (Array.isArray(parsed)) return parsed;
     }
   } catch (e) {
     console.warn('Lỗi đọc local projects:', e);
   }
-  return initialProjects;
+  return [];
 }
 
 // 2. Lưu projects vào LocalStorage & phát tín hiệu Broadcast
@@ -44,7 +42,7 @@ export function saveLocalProjects(projectsList) {
   }
 }
 
-// 3. Lấy tất cả projects từ Server API + Local + Initial
+// 3. Lấy tất cả projects từ Server API + Local
 export async function getProjects() {
   const localList = getLocalProjects();
   let serverProjects = [];
@@ -61,8 +59,8 @@ export async function getProjects() {
     // Backend offline fallback
   }
 
-  // Kết hợp và khử trùng lặp
-  const combined = [...serverProjects, ...localList, ...initialProjects];
+  // Kết hợp và khử trùng lặp (không nhồi mock projects dùng chung)
+  const combined = [...serverProjects, ...localList];
   const map = new Map();
   combined.forEach((p) => {
     if (p && p.id && !map.has(String(p.id))) {

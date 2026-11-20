@@ -2,90 +2,16 @@ const { memoryStore } = require('../config/db');
 
 // Khởi tạo danh sách dự án mặc định nếu chưa có trong memoryStore
 if (!memoryStore.projects) {
-  memoryStore.projects = [
-    {
-      id: 'proj_01',
-      title: 'Thiết kế 20 bài Social Media cho Chuỗi F&B',
-      client: 'ABC Coffee',
-      clientAvatar: 'https://images.unsplash.com/photo-1501339847302-ac426a4a7cbb?w=120&auto=format&fit=crop&q=80',
-      employerName: 'ABC Coffee',
-      employerEmail: 'tuyendung.demo@gmail.com',
-      studentName: 'Nguyễn Minh Anh',
-      studentEmail: 'student.a@test.vn',
-      studentUniversity: 'UEH',
-      budget: '2.500.000đ',
-      deadline: '15/11/2026',
-      remainingDays: 4,
-      progress: 70,
-      status: 'in_progress',
-      nextTask: 'Thiết kế 10 bài còn lại theo theme Khai trương cơ sở mới',
-      tasks: [
-        { id: 1, name: 'Nhận brief & tone giọng thương hiệu từ Client', completed: true },
-        { id: 2, name: 'Thiết kế Moodboard màu sắc & Font chữ', completed: true },
-        { id: 3, name: 'Thiết kế đợt 1 (10 bài concept đầu tiên)', completed: true },
-        { id: 4, name: 'Thiết kế đợt 2 (10 bài khuyến mãi & khai trương)', completed: false },
-        { id: 5, name: 'Client phản hồi chỉnh sửa đợt cuối', completed: false },
-        { id: 6, name: 'Nghiệm thu toàn bộ file và giải ngân qua StudentHub', completed: false }
-      ],
-      files: [
-        { name: 'Brand_Guidelines_ABCCoffee.pdf', size: '4.2 MB', date: '02/11/2026' },
-        { name: 'Batch1_Designs_10Posts.zip', size: '18.5 MB', date: '05/11/2026' }
-      ],
-      deliveryFile: '',
-      deliveryNote: '',
-      createdAt: '2026-11-01T10:00:00.000Z'
-    },
-    {
-      id: 'proj_02',
-      title: 'Kịch bản & Quay dựng 4 Video TikTok Lookbook',
-      client: 'Local Brand Chic Studio',
-      clientAvatar: 'https://images.unsplash.com/photo-1560179707-f14e90ef3623?w=120&auto=format&fit=crop&q=80',
-      employerName: 'Local Brand Chic Studio',
-      employerEmail: 'chic.fashion@gmail.com',
-      studentName: 'Trần Hoàng Nam',
-      studentEmail: 'nam.tran@student.vlu.edu.vn',
-      studentUniversity: 'ĐH Văn Lang',
-      budget: '1.800.000đ',
-      deadline: '22/11/2026',
-      remainingDays: 11,
-      progress: 40,
-      status: 'in_progress',
-      nextTask: 'Dựng thô video số 3 và phối nhạc nền',
-      tasks: [
-        { id: 1, name: 'Lên 4 kịch bản video TikTok trendy', completed: true },
-        { id: 2, name: 'Quay dựng hoàn chỉnh Video 1 & Video 2', completed: true },
-        { id: 3, name: 'Quay dựng Video 3 & Video 4', completed: false },
-        { id: 4, name: 'Chèn phụ đề động & Xuất file 4K', completed: false }
-      ],
-      files: [
-        { name: 'KichBan_Lookbook_Chic_V1.docx', size: '1.1 MB', date: '04/11/2026' }
-      ],
-      deliveryFile: '',
-      deliveryNote: '',
-      createdAt: '2026-11-05T08:30:00.000Z'
-    }
-  ];
+  memoryStore.projects = [];
 }
 
 // Khởi tạo danh sách thông báo nếu chưa có
 if (!memoryStore.notifications) {
-  memoryStore.notifications = [
-    {
-      id: 'notif_init_01',
-      userId: 'student.a@test.vn',
-      userEmail: 'student.a@test.vn',
-      recipientName: 'Nguyễn Minh Anh',
-      type: 'new_application',
-      title: 'Chào mừng bạn đến với StudentHub Freelance!',
-      message: 'Bạn có thể đăng gói kỹ năng hoặc ứng tuyển các việc làm part-time hấp dẫn.',
-      isRead: false,
-      createdAt: new Date(Date.now() - 3600000).toISOString()
-    }
-  ];
+  memoryStore.notifications = [];
 }
 
 // 1. LẤY DANH SÁCH DỰ ÁN (GET /api/projects)
-// Cho phép lọc theo user hoặc trả về toàn bộ để đồng bộ thời gian thực giữa Cốc Cốc, Edge, Chrome
+// Lọc dự án theo quyền sở hữu của user (student hoặc employer)
 exports.getProjects = async (req, res) => {
   try {
     const { userId, email, role, status } = req.query;
@@ -95,8 +21,8 @@ exports.getProjects = async (req, res) => {
       list = list.filter((p) => p.status === status);
     }
 
-    // Nếu có chỉ định user/email cụ thể và không yêu cầu all=true
-    if (req.query.filtered === 'true' && (userId || email)) {
+    // Nếu có chỉ định user/email cụ thể: lọc theo studentId hoặc employerId
+    if (userId || email) {
       const qId = (userId || '').toLowerCase();
       const qEmail = (email || '').toLowerCase();
       list = list.filter((p) => {

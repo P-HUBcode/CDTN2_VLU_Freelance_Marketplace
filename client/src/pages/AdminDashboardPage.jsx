@@ -25,6 +25,10 @@ import {
   Plus,
   Trash2,
   Eye,
+  EyeOff,
+  Key,
+  Copy,
+  Check,
   Calendar,
   LayoutDashboard,
   LogOut,
@@ -36,7 +40,8 @@ import {
   getAllJobsForAdmin,
   updateJobStatusByAdmin,
   getAllUsersForAdmin,
-  toggleUserActiveStatus
+  toggleUserActiveStatus,
+  adminChangeUserPassword
 } from '../lib/adminService';
 import {
   getStoredArticles,
@@ -72,6 +77,15 @@ export default function AdminDashboardPage({ onNavigate }) {
   const [loadingUsers, setLoadingUsers] = useState(false);
   const [userRoleFilter, setUserRoleFilter] = useState('all');
   const [userSearch, setUserSearch] = useState('');
+
+  // Password Management state (Xem & Đổi mật khẩu người dùng cho Admin)
+  const [showPasswordMap, setShowPasswordMap] = useState({});
+  const [passwordModalUser, setPasswordModalUser] = useState(null);
+  const [newPasswordInput, setNewPasswordInput] = useState('');
+  const [showNewPassword, setShowNewPassword] = useState(false);
+  const [passwordChangeLoading, setPasswordChangeLoading] = useState(false);
+  const [copiedId, setCopiedId] = useState(null);
+  const [passwordToast, setPasswordToast] = useState(null);
 
   // Articles (CMS) state
   const [articles, setArticles] = useState([]);
@@ -718,8 +732,9 @@ export default function AdminDashboardPage({ onNavigate }) {
                         <th className="py-3 px-4">Tài khoản & Email</th>
                         <th className="py-3 px-4">Vai trò</th>
                         <th className="py-3 px-4">Đơn vị / Trường học</th>
+                        <th className="py-3 px-4">Mật khẩu (Admin)</th>
                         <th className="py-3 px-4">Trạng thái</th>
-                        <th className="py-3 px-4 text-right">Khóa / Mở khóa</th>
+                        <th className="py-3 px-4 text-right">Thao tác & Đổi MK</th>
                       </tr>
                     </thead>
                     <tbody className="divide-y divide-slate-100 text-slate-700">
@@ -742,6 +757,47 @@ export default function AdminDashboardPage({ onNavigate }) {
                             {u.role === 'employer' ? u.companyName || 'Công ty' : u.university || 'Đại học'}
                           </td>
 
+                          {/* CỘT MẬT KHẨU (XEM / ẨN MẬT KHẨU CHO ADMIN) */}
+                          <td className="py-3.5 px-4">
+                            <div className="flex items-center gap-1.5">
+                              <span className={`font-mono text-xs px-2 py-1 rounded-lg border transition select-all ${
+                                showPasswordMap[u.id]
+                                  ? 'bg-amber-50 text-amber-900 border-amber-300 font-bold shadow-xs'
+                                  : 'bg-slate-50 text-slate-400 border-slate-200'
+                              }`}>
+                                {showPasswordMap[u.id] ? (u.password || 'Password123!') : '••••••••'}
+                              </span>
+
+                              {/* Nút Xem / Ẩn */}
+                              <button
+                                type="button"
+                                onClick={() => setShowPasswordMap(prev => ({ ...prev, [u.id]: !prev[u.id] }))}
+                                className={`p-1.5 rounded-lg border transition ${
+                                  showPasswordMap[u.id]
+                                    ? 'bg-blue-50 text-blue-600 border-blue-200'
+                                    : 'bg-slate-50 text-slate-400 border-slate-200 hover:text-slate-700 hover:bg-slate-100'
+                                }`}
+                                title={showPasswordMap[u.id] ? "Ẩn mật khẩu" : "Xem mật khẩu"}
+                              >
+                                {showPasswordMap[u.id] ? <EyeOff className="w-3.5 h-3.5 text-blue-600" /> : <Eye className="w-3.5 h-3.5" />}
+                              </button>
+
+                              {/* Nút Sao chép */}
+                              <button
+                                type="button"
+                                onClick={() => {
+                                  navigator.clipboard.writeText(u.password || 'Password123!');
+                                  setCopiedId(u.id);
+                                  setTimeout(() => setCopiedId(null), 2000);
+                                }}
+                                className="p-1.5 rounded-lg bg-slate-50 text-slate-400 border border-slate-200 hover:text-slate-700 hover:bg-slate-100 transition"
+                                title="Sao chép mật khẩu"
+                              >
+                                {copiedId === u.id ? <Check className="w-3.5 h-3.5 text-emerald-600" /> : <Copy className="w-3.5 h-3.5" />}
+                              </button>
+                            </div>
+                          </td>
+
                           <td className="py-3.5 px-4">
                             {u.isActive ? (
                               <span className="inline-flex items-center gap-1 text-[11px] text-emerald-600 font-semibold">
@@ -757,27 +813,45 @@ export default function AdminDashboardPage({ onNavigate }) {
                           </td>
 
                           <td className="py-3.5 px-4 text-right">
-                            <button
-                              onClick={() => handleToggleUser(u.id, u.isActive)}
-                              disabled={actionLoadingId === u.id}
-                              className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition inline-flex items-center gap-1 ${
-                                u.isActive
-                                  ? 'bg-rose-50 text-rose-700 hover:bg-rose-100 border border-rose-200'
-                                  : 'bg-emerald-50 text-emerald-700 hover:bg-emerald-100 border border-emerald-200'
-                              }`}
-                            >
-                              {u.isActive ? (
-                                <>
-                                  <Lock className="w-3.5 h-3.5" />
-                                  <span>Khóa</span>
-                                </>
-                              ) : (
-                                <>
-                                  <Unlock className="w-3.5 h-3.5" />
-                                  <span>Mở khóa</span>
-                                </>
-                              )}
-                            </button>
+                            <div className="flex items-center justify-end gap-1.5">
+                              {/* Nút Đổi mật khẩu của Admin */}
+                              <button
+                                type="button"
+                                onClick={() => {
+                                  setPasswordModalUser(u);
+                                  setNewPasswordInput('');
+                                  setShowNewPassword(false);
+                                }}
+                                className="px-2.5 py-1.5 rounded-lg text-xs font-semibold transition inline-flex items-center gap-1 bg-blue-50 text-blue-700 hover:bg-blue-100 border border-blue-200 shadow-2xs"
+                                title="Admin trực tiếp đổi mật khẩu cho người dùng này"
+                              >
+                                <Key className="w-3.5 h-3.5 text-blue-600" />
+                                <span>Đổi MK</span>
+                              </button>
+
+                              {/* Nút Khóa / Mở khóa */}
+                              <button
+                                onClick={() => handleToggleUser(u.id, u.isActive)}
+                                disabled={actionLoadingId === u.id}
+                                className={`px-2.5 py-1.5 rounded-lg text-xs font-semibold transition inline-flex items-center gap-1 ${
+                                  u.isActive
+                                    ? 'bg-rose-50 text-rose-700 hover:bg-rose-100 border border-rose-200'
+                                    : 'bg-emerald-50 text-emerald-700 hover:bg-emerald-100 border border-emerald-200'
+                                }`}
+                              >
+                                {u.isActive ? (
+                                  <>
+                                    <Lock className="w-3.5 h-3.5" />
+                                    <span>Khóa</span>
+                                  </>
+                                ) : (
+                                  <>
+                                    <Unlock className="w-3.5 h-3.5" />
+                                    <span>Mở</span>
+                                  </>
+                                )}
+                              </button>
+                            </div>
                           </td>
                         </tr>
                       ))}
@@ -1082,6 +1156,153 @@ export default function AdminDashboardPage({ onNavigate }) {
         onClose={() => setPreviewArticle(null)}
         article={previewArticle}
       />
+
+      {/* ===================================================================== */}
+      {/* MODAL ADMIN ĐỔI MẬT KHẨU NGƯỜI DÙNG                                  */}
+      {/* ===================================================================== */}
+      {passwordModalUser && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-xs animate-fadeIn">
+          <div className="bg-white rounded-2xl max-w-md w-full shadow-2xl border border-slate-200 overflow-hidden">
+            <div className="p-5 border-b border-slate-100 flex items-center justify-between bg-slate-50/70">
+              <div className="flex items-center gap-3">
+                <div className="p-2.5 bg-blue-100 text-blue-600 rounded-xl shadow-xs">
+                  <Key className="w-5 h-5" />
+                </div>
+                <div>
+                  <h3 className="font-bold text-slate-900 text-sm">Đổi Mật Khẩu Người Dùng</h3>
+                  <p className="text-xs text-slate-500 font-medium">{passwordModalUser.fullName} ({passwordModalUser.email})</p>
+                </div>
+              </div>
+              <button
+                type="button"
+                onClick={() => setPasswordModalUser(null)}
+                className="p-1.5 rounded-lg text-slate-400 hover:text-slate-600 hover:bg-slate-100 transition"
+              >
+                <XCircle className="w-5 h-5" />
+              </button>
+            </div>
+
+            <form
+              onSubmit={async (e) => {
+                e.preventDefault();
+                if (!newPasswordInput || newPasswordInput.trim().length < 6) {
+                  alert('Mật khẩu mới phải có tối thiểu 6 ký tự.');
+                  return;
+                }
+                setPasswordChangeLoading(true);
+                try {
+                  await adminChangeUserPassword(passwordModalUser.id, newPasswordInput, passwordModalUser.email);
+                  // Cập nhật ngay lập tức vào state users để bảng đổi ngay
+                  setUsers(prev => prev.map(u => (u.id === passwordModalUser.id || u.email === passwordModalUser.email) ? { ...u, password: newPasswordInput.trim() } : u));
+                  setPasswordToast({
+                    name: passwordModalUser.fullName,
+                    pass: newPasswordInput.trim()
+                  });
+                  setPasswordModalUser(null);
+                  setTimeout(() => setPasswordToast(null), 6000);
+                } catch (err) {
+                  alert(`Đổi mật khẩu thất bại: ${err.message}`);
+                } finally {
+                  setPasswordChangeLoading(false);
+                }
+              }}
+              className="p-5 space-y-4"
+            >
+              <div className="bg-slate-50 p-3.5 rounded-xl border border-slate-200 space-y-2 text-xs">
+                <div className="flex items-center justify-between text-slate-600">
+                  <span>Mật khẩu hiện tại:</span>
+                  <span className="font-mono font-bold text-blue-700 bg-white px-2 py-0.5 rounded-md border border-slate-200">
+                    {passwordModalUser.password || 'Password123!'}
+                  </span>
+                </div>
+                <div className="flex items-center justify-between text-slate-600">
+                  <span>Vai trò tài khoản:</span>
+                  <span className="font-semibold text-slate-800">
+                    {passwordModalUser.role === 'employer' ? 'Nhà tuyển dụng' : 'Sinh viên'}
+                  </span>
+                </div>
+              </div>
+
+              <div>
+                <label className="block text-xs font-bold text-slate-800 mb-1.5">
+                  Mật khẩu mới <span className="text-rose-500">*</span>
+                </label>
+                <div className="relative">
+                  <input
+                    type={showNewPassword ? 'text' : 'password'}
+                    value={newPasswordInput}
+                    onChange={(e) => setNewPasswordInput(e.target.value)}
+                    placeholder="Nhập mật khẩu mới (tối thiểu 6 ký tự)..."
+                    required
+                    minLength={6}
+                    className="w-full pl-3 pr-10 py-2.5 text-xs bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 font-mono text-slate-900"
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setShowNewPassword(!showNewPassword)}
+                    className="absolute right-3 top-2.5 text-slate-400 hover:text-slate-600 transition"
+                  >
+                    {showNewPassword ? <EyeOff className="w-4 h-4 text-blue-600" /> : <Eye className="w-4 h-4" />}
+                  </button>
+                </div>
+              </div>
+
+              <div className="flex items-center justify-between">
+                <button
+                  type="button"
+                  onClick={() => {
+                    const randPass = `Pass@${Math.floor(1000 + Math.random() * 9000)}!`;
+                    setNewPasswordInput(randPass);
+                    setShowNewPassword(true);
+                  }}
+                  className="text-xs text-blue-600 hover:text-blue-700 font-bold inline-flex items-center gap-1.5 hover:underline"
+                >
+                  <Sparkles className="w-3.5 h-3.5 text-blue-500" />
+                  <span>Tạo mật khẩu ngẫu nhiên an toàn</span>
+                </button>
+              </div>
+
+              <div className="flex items-center justify-end gap-2 pt-3 border-t border-slate-100">
+                <button
+                  type="button"
+                  onClick={() => setPasswordModalUser(null)}
+                  className="px-4 py-2 rounded-xl text-xs font-semibold text-slate-600 hover:bg-slate-100 transition"
+                >
+                  Hủy
+                </button>
+                <button
+                  type="submit"
+                  disabled={passwordChangeLoading}
+                  className="px-4 py-2 rounded-xl text-xs font-bold text-white bg-blue-600 hover:bg-blue-700 shadow-md shadow-blue-500/20 transition disabled:opacity-50"
+                >
+                  {passwordChangeLoading ? 'Đang cập nhật...' : 'Xác nhận đổi mật khẩu'}
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
+
+      {/* TOAST THÔNG BÁO KHI ĐỔI MẬT KHẨU THÀNH CÔNG */}
+      {passwordToast && (
+        <div className="fixed bottom-6 right-6 z-50 flex items-center gap-3 bg-slate-900 text-white px-4 py-3 rounded-2xl shadow-2xl border border-slate-700 animate-slideUp">
+          <div className="p-1.5 bg-emerald-500/20 text-emerald-400 rounded-lg">
+            <Check className="w-4 h-4 stroke-[3]" />
+          </div>
+          <div className="text-xs">
+            <p className="font-bold">Đã đổi mật khẩu thành công!</p>
+            <p className="text-slate-300">
+              Người dùng: <span className="font-semibold text-white">{passwordToast.name}</span> | Mật khẩu mới: <span className="font-mono font-bold text-amber-300">{passwordToast.pass}</span>
+            </p>
+          </div>
+          <button
+            onClick={() => setPasswordToast(null)}
+            className="ml-2 text-slate-400 hover:text-white"
+          >
+            <XCircle className="w-4 h-4" />
+          </button>
+        </div>
+      )}
     </div>
   );
 }

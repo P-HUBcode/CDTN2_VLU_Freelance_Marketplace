@@ -80,12 +80,20 @@ export default function Topbar({
     }, 180);
   };
 
-  // 1. Load Notifications từ Backend Server & Supabase
+  // 1. Load Notifications từ Backend Server & Supabase (Chỉ tải khi người dùng đã đăng nhập)
   const loadUserNotifications = async () => {
-    const userIdentifier = user || {
-      id: profile?.id || 'demo_student',
-      email: profile?.email || user?.email || (role === 'employer' ? 'employer.a@test.vn' : 'student.a@test.vn'),
-      name: profile?.full_name || 'Nguyễn Minh Anh'
+    const currentUserId = user?.id || profile?.id;
+    const currentUserEmail = user?.email || profile?.email;
+    if (!currentUserId && !currentUserEmail) {
+      setNotifications([]);
+      setUnreadCount(0);
+      return;
+    }
+
+    const userIdentifier = {
+      id: currentUserId,
+      email: currentUserEmail,
+      name: profile?.full_name || user?.user_metadata?.full_name || ''
     };
 
     try {
@@ -101,11 +109,19 @@ export default function Topbar({
   };
 
   useEffect(() => {
+    const currentUserId = user?.id || profile?.id;
+    const currentUserEmail = user?.email || profile?.email;
+    if (!currentUserId && !currentUserEmail) {
+      setNotifications([]);
+      setUnreadCount(0);
+      return;
+    }
+
     loadUserNotifications();
 
-    const userIdentifier = user || {
-      id: profile?.id || 'demo_student',
-      email: profile?.email || user?.email || (role === 'employer' ? 'employer.a@test.vn' : 'student.a@test.vn')
+    const userIdentifier = {
+      id: currentUserId,
+      email: currentUserEmail
     };
 
     // Đăng ký nhận Realtime qua BroadcastChannel & Supabase
@@ -120,11 +136,13 @@ export default function Topbar({
     }, 4000);
 
     return () => {
-      sub.unsubscribe();
+      if (sub && typeof sub.unsubscribe === 'function') {
+        sub.unsubscribe();
+      }
       clearInterval(timer);
       if (hoverTimeoutRef.current) clearTimeout(hoverTimeoutRef.current);
     };
-  }, [user?.id, profile?.id, role]);
+  }, [user?.id, user?.email, profile?.id]);
 
   // Đánh dấu 1 thông báo là đã đọc
   const handleItemClick = async (item) => {

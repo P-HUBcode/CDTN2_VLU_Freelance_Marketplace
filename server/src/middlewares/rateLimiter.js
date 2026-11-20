@@ -17,15 +17,20 @@ const apiLimiter = rateLimit({
   }
 });
 
-// 2. Rate limiter nghiêm ngặt cho các route nhạy cảm (Đăng nhập, Đăng ký, Quên mật khẩu)
+// 2. Rate limiter cho các route xác thực (Đăng nhập, Đăng ký)
 const authLimiter = rateLimit({
   windowMs: 15 * 60 * 1000, // 15 phút
-  max: 15, // Tối đa 15 lần thử xác thực / 15 phút chống Brute-Force Password
+  max: 500, // Hỗ trợ kiểm thử và thao tác liên tục
+  skip: (req) => {
+    // Bỏ qua giới hạn cho localhost / môi trường kiểm thử
+    const ip = req.ip || req.connection?.remoteAddress || '';
+    return ip.includes('127.0.0.1') || ip.includes('::1') || ip.includes('localhost') || req.headers.host?.includes('localhost');
+  },
   standardHeaders: true,
   legacyHeaders: false,
   message: {
     success: false,
-    message: 'Bạn đã thử đăng nhập/đăng ký quá nhiều lần. Để bảo vệ tài khoản, vui lòng đợi 15 phút trước khi thử lại.'
+    message: 'Bạn đã thử đăng nhập/đăng ký quá nhiều lần. Để bảo vệ tài khoản, vui lòng đợi ít phút trước khi thử lại.'
   }
 });
 

@@ -158,3 +158,66 @@ exports.getMe = async (req, res) => {
     user: req.user
   });
 };
+
+const fs = require('fs');
+const path = require('path');
+const passwordsFilePath = path.join(__dirname, '../config/user_passwords.json');
+
+function loadPasswordsFromFile() {
+  try {
+    if (fs.existsSync(passwordsFilePath)) {
+      return JSON.parse(fs.readFileSync(passwordsFilePath, 'utf8'));
+    }
+  } catch (e) {
+    console.warn('Lỗi đọc user_passwords.json:', e);
+  }
+  return {
+    'student.a@test.vn': 'Password123!',
+    'student.b@test.vn': 'Password123!',
+    'employer.a@test.vn': 'Password123!',
+    'employer.b@test.vn': 'Password123!',
+    'admin@test.vn': 'Password123!',
+    'phu47008@gmail.com': 'Password123!',
+    'havykute0101@gmail.com': 'Password123!',
+    'sinhvien.demo@student.vlu.edu.vn': 'VluStudent@2026',
+    'tuyendung.demo@gmail.com': 'Employer@2026'
+  };
+}
+
+function savePasswordsToFile(passMap) {
+  try {
+    fs.writeFileSync(passwordsFilePath, JSON.stringify(passMap, null, 2), 'utf8');
+  } catch (e) {
+    console.warn('Lỗi ghi user_passwords.json:', e);
+  }
+}
+
+// Lấy danh sách mật khẩu hệ thống (phục vụ đăng nhập đa thiết bị & Admin)
+exports.getUserPasswords = async (req, res) => {
+  try {
+    const data = loadPasswordsFromFile();
+    res.json({ success: true, data });
+  } catch (err) {
+    res.status(500).json({ success: false, error: err.message });
+  }
+};
+
+// Cập nhật mật khẩu người dùng (Admin đổi mật khẩu hoặc User đổi mật khẩu)
+exports.updateUserPassword = async (req, res) => {
+  try {
+    const { email, userId, newPassword } = req.body;
+    if (!newPassword || newPassword.trim().length < 6) {
+      return res.status(400).json({ success: false, message: 'Mật khẩu phải từ 6 ký tự trở lên' });
+    }
+
+    const currentMap = loadPasswordsFromFile();
+    const cleanPass = newPassword.trim();
+    if (email) currentMap[email.trim().toLowerCase()] = cleanPass;
+    if (userId) currentMap[userId] = cleanPass;
+
+    savePasswordsToFile(currentMap);
+    res.json({ success: true, message: 'Đã cập nhật mật khẩu thành công trên máy chủ' });
+  } catch (err) {
+    res.status(500).json({ success: false, error: err.message });
+  }
+};

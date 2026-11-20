@@ -9,21 +9,27 @@ if (!memoryStore.notifications) {
 exports.getNotifications = async (req, res) => {
   try {
     const { userId, email, name } = req.query;
-    let list = [...memoryStore.notifications];
 
-    if (userId || email || name) {
-      const qId = (userId || '').toLowerCase();
-      const qEmail = (email || '').toLowerCase();
-      const qName = (name || '').toLowerCase();
-
-      list = list.filter((n) => {
-        const matchId = qId && n.userId && n.userId.toLowerCase() === qId;
-        const matchEmail = qEmail && n.userEmail && n.userEmail.toLowerCase() === qEmail;
-        const matchName = qName && n.recipientName && n.recipientName.toLowerCase().includes(qName);
-        // Nếu thông báo chung hoặc trùng khớp user
-        return matchId || matchEmail || matchName || !n.userId;
+    if (!userId && !email && !name) {
+      return res.json({
+        success: true,
+        unreadCount: 0,
+        count: 0,
+        data: []
       });
     }
+
+    let list = [...memoryStore.notifications];
+    const qId = (userId || '').trim().toLowerCase();
+    const qEmail = (email || '').trim().toLowerCase();
+    const qName = (name || '').trim().toLowerCase();
+
+    list = list.filter((n) => {
+      const matchId = qId && n.userId && n.userId.toLowerCase() === qId;
+      const matchEmail = qEmail && n.userEmail && n.userEmail.toLowerCase() === qEmail;
+      const matchName = qName && n.recipientName && n.recipientName.toLowerCase().includes(qName);
+      return matchId || matchEmail || matchName;
+    });
 
     const unreadCount = list.filter((n) => !n.isRead).length;
 

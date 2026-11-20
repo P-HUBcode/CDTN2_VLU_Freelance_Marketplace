@@ -2001,3 +2001,137 @@ DROP TRIGGER IF EXISTS set_reviews_updated_at ON public.reviews;
 CREATE TRIGGER set_reviews_updated_at
 BEFORE UPDATE ON public.reviews
 FOR EACH ROW EXECUTE FUNCTION public.handle_updated_at();
+
+-- ==============================================================================
+-- 7. MESSAGING & CHAT SYSTEM (CONVERSATIONS & MESSAGES) - SPRINT 3.5
+-- ==============================================================================
+CREATE TABLE IF NOT EXISTS public.conversations (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    student_id UUID NOT NULL REFERENCES auth.users(id) ON DELETE CASCADE,
+    employer_id UUID NOT NULL REFERENCES auth.users(id) ON DELETE CASCADE,
+    job_id UUID REFERENCES public.jobs(id) ON DELETE SET NULL,
+    last_message TEXT,
+    last_message_at TIMESTAMPTZ DEFAULT NOW(),
+    created_at TIMESTAMPTZ DEFAULT NOW(),
+    updated_at TIMESTAMPTZ DEFAULT NOW(),
+    CONSTRAINT unique_student_employer_job UNIQUE (student_id, employer_id, job_id)
+);
+
+CREATE INDEX IF NOT EXISTS idx_conversations_student_id ON public.conversations(student_id);
+CREATE INDEX IF NOT EXISTS idx_conversations_employer_id ON public.conversations(employer_id);
+CREATE INDEX IF NOT EXISTS idx_conversations_last_msg_at ON public.conversations(last_message_at DESC);
+
+CREATE TABLE IF NOT EXISTS public.messages (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    conversation_id UUID NOT NULL REFERENCES public.conversations(id) ON DELETE CASCADE,
+    sender_id UUID NOT NULL REFERENCES auth.users(id) ON DELETE CASCADE,
+    receiver_id UUID NOT NULL REFERENCES auth.users(id) ON DELETE CASCADE,
+    text TEXT NOT NULL,
+    is_read BOOLEAN DEFAULT false,
+    created_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+CREATE INDEX IF NOT EXISTS idx_messages_conversation_id ON public.messages(conversation_id);
+CREATE INDEX IF NOT EXISTS idx_messages_sender_id ON public.messages(sender_id);
+CREATE INDEX IF NOT EXISTS idx_messages_receiver_id ON public.messages(receiver_id);
+CREATE INDEX IF NOT EXISTS idx_messages_created_at ON public.messages(created_at ASC);
+
+ALTER TABLE public.conversations ENABLE ROW LEVEL SECURITY;
+ALTER TABLE public.messages ENABLE ROW LEVEL SECURITY;
+
+DROP POLICY IF EXISTS "conversations_select_policy" ON public.conversations;
+CREATE POLICY "conversations_select_policy"
+ON public.conversations FOR SELECT
+TO authenticated
+USING (
+    auth.uid() = student_id
+    OR auth.uid() = employer_id
+    OR public.is_admin()
+);
+
+DROP POLICY IF EXISTS "conversations_insert_policy" ON public.conversations;
+CREATE POLICY "conversations_insert_policy"
+ON public.conversations FOR INSERT
+TO authenticated
+WITH CHECK (
+    auth.uid() = student_id
+    OR auth.uid() = employer_id
+    OR public.is_admin()
+);
+
+DROP POLICY IF EXISTS "conversations_update_policy" ON public.conversations;
+CREATE POLICY "conversations_update_policy"
+ON public.conversations FOR UPDATE
+TO authenticated
+USING (
+    auth.uid() = student_id
+    OR auth.uid() = employer_id
+    OR public.is_admin()
+)
+WITH CHECK (
+    auth.uid() = student_id
+    OR auth.uid() = employer_id
+    OR public.is_admin()
+);
+
+DROP POLICY IF EXISTS "conversations_delete_policy" ON public.conversations;
+CREATE POLICY "conversations_delete_policy"
+ON public.conversations FOR DELETE
+TO authenticated
+USING (
+    auth.uid() = student_id
+    OR auth.uid() = employer_id
+    OR public.is_admin()
+);
+
+DROP POLICY IF EXISTS "messages_select_policy" ON public.messages;
+CREATE POLICY "messages_select_policy"
+ON public.messages FOR SELECT
+TO authenticated
+USING (
+    auth.uid() = sender_id
+    OR auth.uid() = receiver_id
+    OR EXISTS (
+        SELECT 1 FROM public.conversations c
+        WHERE c.id = messages.conversation_id
+          AND (c.student_id = auth.uid() OR c.employer_id = auth.uid())
+    )
+    OR public.is_admin()
+);
+
+DROP POLICY IF EXISTS "messages_insert_policy" ON public.messages;
+CREATE POLICY "messages_insert_policy"
+ON public.messages FOR INSERT
+TO authenticated
+WITH CHECK (
+    auth.uid() = sender_id
+    AND EXISTS (
+        SELECT 1 FROM public.conversations c
+        WHERE c.id = messages.conversation_id
+          AND (c.student_id = auth.uid() OR c.employer_id = auth.uid())
+    )
+);
+
+DROP POLICY IF EXISTS "messages_update_policy" ON public.messages;
+CREATE POLICY "messages_update_policy"
+ON public.messages FOR UPDATE
+TO authenticated
+USING (
+    auth.uid() = receiver_id
+    OR auth.uid() = sender_id
+    OR public.is_admin()
+)
+WITH CHECK (
+    auth.uid() = receiver_id
+    OR auth.uid() = sender_id
+    OR public.is_admin()
+);
+
+DROP POLICY IF EXISTS "messages_delete_policy" ON public.messages;
+CREATE POLICY "messages_delete_policy"
+ON public.messages FOR DELETE
+TO authenticated
+USING (
+    auth.uid() = sender_id
+    OR public.is_admin()
+);

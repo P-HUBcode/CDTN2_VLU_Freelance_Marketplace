@@ -784,100 +784,14 @@ export const monthlyEarningsChart = [
 ];
 
 // ==============================================================================
-// TIN NHẮN CHAT VỚI NHÀ TUYỂN DỤNG & CLIENT
+// TIN NHẮN CHAT VỚI NHÀ TUYỂN DỤNG & CLIENT (Rỗng mặc định cho tài khoản mới)
 // ==============================================================================
-export const initialConversations = [
-  {
-    id: 'conv_ai_gemini',
-    name: 'Trợ lý AI StudentHub (Google Gemini)',
-    avatar: 'https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=100&auto=format&fit=crop&q=80',
-    jobTitle: 'Trợ lý AI tự động • Hỏi đáp 24/7 ✨',
-    online: true,
-    unread: false,
-    isAI: true,
-    messages: [
-      {
-        id: 1,
-        sender: 'them',
-        text: 'Xin chào bạn! Mình là Trợ lý AI tự động của sàn StudentHub, được tiếp sức bởi công nghệ Google Gemini. Mình có thể hỗ trợ bạn tìm việc, viết CV, hướng dẫn ký quỹ Escrow và bắt đầu nhận job freelance. Bạn cần hỗ trợ điều gì hôm nay? ✨',
-        time: 'Vừa xong'
-      }
-    ]
-  },
-  {
-    id: 'conv_01',
-    name: 'Chị Mai - HR ABC Media',
-    avatar: 'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=100&auto=format&fit=crop&q=80',
-    jobTitle: 'Social Media Content Creator',
-    online: true,
-    unread: false,
-    messages: [
-      { id: 1, sender: 'them', text: 'Chào Minh Anh, chị đã xem portfolio Canva của em trên StudentHub, bên chị thấy gu thiết kế rất hợp với phong cách GenZ bên chị.', time: '09:15' },
-      { id: 2, sender: 'me', text: 'Em chào chị Mai ạ! Em cảm ơn chị và team ABC Media đã quan tâm đến hồ sơ của em ạ.', time: '09:18' },
-      { id: 3, sender: 'them', text: 'Thứ Năm này khoảng 14h em có rảnh họp online 15 phút để trao đổi thêm về lịch làm việc part-time không em?', time: '09:20' },
-      { id: 4, sender: 'me', text: 'Dạ được ạ, thứ Năm em không có tiết học ở UEH nên có thể tham gia đúng 14h ạ. Em cảm ơn chị nhiều!', time: '09:22' }
-    ]
-  },
-  {
-    id: 'conv_02',
-    name: 'Anh Tuấn - Quản lý ABC Coffee',
-    avatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100&auto=format&fit=crop&q=80',
-    jobTitle: 'Thiết kế 20 bài Social Media',
-    online: false,
-    unread: true,
-    messages: [
-      { id: 1, sender: 'them', text: 'Minh Anh ơi, đợt 1 em gửi 10 bài concept rất đẹp nhé. Quán đã đăng thử 2 bài và tương tác tăng gấp đôi luôn.', time: 'Hôm qua' },
-      { id: 2, sender: 'me', text: 'Dạ em cảm ơn anh Tuấn ạ! Em đang triển khai tiếp 10 bài tiếp theo theo chủ đề khai trương chi nhánh mới ạ.', time: 'Hôm qua' },
-      { id: 3, sender: 'them', text: 'Ok em cứ làm nhé, xong đợt này anh sẽ ký thêm hợp đồng dài hạn theo tháng với em.', time: '18:40' }
-    ]
-  }
-];
+export const initialConversations = [];
 
 // ==============================================================================
-// VIỆC ĐÃ ỨNG TUYỂN (APPLICATION TRACKING & TIMELINE)
+// VIỆC ĐÃ ỨNG TUYỂN (Rỗng mặc định cho tài khoản mới)
 // ==============================================================================
-export const initialAppliedJobs = [
-  {
-    id: 'app_01',
-    jobId: 'job_01',
-    jobTitle: 'Social Media Content Creator',
-    company: 'ABC Media',
-    companyLogo: 'https://images.unsplash.com/photo-1560179707-f14e90ef3623?w=120&auto=format&fit=crop&q=80',
-    appliedDate: '03/11/2026',
-    salary: '3.000.000 – 5.000.000đ/tháng',
-    status: 'interview', // 'submitted' | 'reviewing' | 'interview' | 'accepted' | 'rejected'
-    statusText: 'Hẹn phỏng vấn online',
-    interviewSchedule: '14:00 - Thứ Năm, 12/11/2026 (Google Meet)',
-    expectedSalary: '4.500.000đ/tháng',
-    coverLetter: 'Em là sinh viên Marketing UEH, đã có kinh nghiệm thiết kế Canva và quản trị Fanpage thực tế.'
-  },
-  {
-    id: 'app_02',
-    jobId: 'job_03',
-    jobTitle: 'Thiết kế Menu & Banner Canva Part-time',
-    company: 'Green Coffee',
-    companyLogo: 'https://images.unsplash.com/photo-1501339847302-ac426a4a7cbb?w=120&auto=format&fit=crop&q=80',
-    appliedDate: '01/11/2026',
-    salary: '2.500.000 – 4.000.000đ/tháng',
-    status: 'accepted',
-    statusText: 'Đã nhận việc & Đang ký quỹ hợp đồng',
-    expectedSalary: '3.500.000đ/tháng',
-    coverLetter: 'Rất mong được đồng hành cùng chuỗi cà phê specialty Green Coffee để tạo ra những ấn phẩm hình ảnh đẹp mắt.'
-  },
-  {
-    id: 'app_03',
-    jobId: 'job_05',
-    jobTitle: 'Marketing & PR Intern (Hỗ trợ Thực tập)',
-    company: 'Creative Hub',
-    companyLogo: 'https://images.unsplash.com/photo-1522071820081-009f0129c71c?w=120&auto=format&fit=crop&q=80',
-    appliedDate: '29/10/2026',
-    salary: '3.500.000 – 5.000.000đ/tháng',
-    status: 'reviewing',
-    statusText: 'Nhà tuyển dụng đang xem xét CV',
-    expectedSalary: '4.000.000đ/tháng',
-    coverLetter: 'Em mong muốn có cơ hội cọ xát với môi trường Agency và nhận dấu mộc thực tập cho học kỳ tới.'
-  }
-];
+export const initialAppliedJobs = [];
 
 // ==============================================================================
 // DÀNH CHO NHÀ TUYỂN DỤNG (EMPLOYER DASHBOARD & KANBAN APPLICANTS)

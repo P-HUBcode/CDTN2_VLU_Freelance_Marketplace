@@ -248,7 +248,7 @@ export default function AuthModal({ isOpen, onClose, initialMode = 'login', onSh
 
     if (mode === 'login') {
       setIsLoading(true);
-      const res = await signIn({ email, password });
+      const res = await signIn({ email: email.trim(), password });
       setIsLoading(false);
       if (res.success) {
         onClose();
