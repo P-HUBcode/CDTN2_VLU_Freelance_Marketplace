@@ -289,7 +289,11 @@ export default function JobDetailPage({
               {onOpenChatWithEmployer && (
                 <button
                   type="button"
-                  onClick={() => onOpenChatWithEmployer(job.company)}
+                  onClick={() => onOpenChatWithEmployer(job.company, {
+                    partnerId: job.employerId || job.employer_id,
+                    partnerRole: 'employer',
+                    partnerAvatar: job.companyLogo
+                  })}
                   className="w-full py-2.5 bg-blue-50 hover:bg-blue-100 text-blue-700 font-semibold text-xs rounded-xl border border-blue-200 transition flex items-center justify-center gap-2 active:scale-98"
                 >
                   <MessageSquare className="w-3.5 h-3.5 text-blue-600" />

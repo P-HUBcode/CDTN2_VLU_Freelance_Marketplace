@@ -52,14 +52,15 @@ export default function MessagesPage({
 
   const activeConv = conversations.find((c) => c.id === selectedConvId) || conversations[0] || null;
 
-  const myName = currentUser?.name || (currentRole === 'employer' ? 'Nhà tuyển dụng' : 'Nguyễn Minh Anh');
+  const myName = currentUser?.name || currentUser?.full_name || (currentRole === 'employer' ? 'Nhà tuyển dụng' : 'Sinh viên');
   const myAvatar = currentUser?.avatar || (currentRole === 'employer' ? 'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=150' : 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150');
   const myRole = currentRole || currentUser?.role || 'student';
   const myId = currentUser?.id || (myRole === 'employer' ? 'role_employer' : 'role_student');
 
   const checkIsMe = (msg) => {
     if (msg.senderId) {
-      if (msg.senderId === myId || msg.senderId === (myRole === 'employer' ? 'role_employer' : 'role_student')) return true;
+      if (myId && msg.senderId.toLowerCase() === myId.toLowerCase()) return true;
+      if (msg.senderId === (myRole === 'employer' ? 'role_employer' : 'role_student')) return true;
       return false;
     }
     if (msg.senderRole) {
@@ -155,15 +156,18 @@ export default function MessagesPage({
 
                   <div className="flex-1 min-w-0 pr-6">
                     <div className="flex items-center justify-between mb-0.5">
-                      <h4 className="text-xs font-bold text-slate-900 truncate">{conv.name}</h4>
-                      <span className="text-[10px] text-slate-400">{lastMsg?.time || 'Vừa xong'}</span>
+                      <div className="flex items-center gap-1.5 min-w-0">
+                        <h4 className={`text-xs truncate ${conv.unread ? 'font-black text-blue-900' : 'font-bold text-slate-900'}`}>{conv.name}</h4>
+                        {conv.unread && <span className="w-2 h-2 bg-blue-600 rounded-full shrink-0 animate-pulse" />}
+                      </div>
+                      <span className={`text-[10px] ${conv.unread ? 'text-blue-600 font-bold' : 'text-slate-400'}`}>{lastMsg?.time || 'Vừa xong'}</span>
                     </div>
 
                     <p className="text-[11px] text-blue-600 font-medium truncate mb-1">
                       {conv.jobTitle}
                     </p>
 
-                    <p className="text-xs text-slate-500 truncate">
+                    <p className={`text-xs truncate ${conv.unread ? 'text-slate-900 font-bold' : 'text-slate-500'}`}>
                       {lastMsg?.sender === 'me' ? 'Bạn: ' : ''}
                       {lastMsg?.text || 'Bắt đầu cuộc trò chuyện'}
                     </p>

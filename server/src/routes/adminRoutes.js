@@ -6,5 +6,7 @@ const { authenticateToken, requireRole } = require('../middlewares/authMiddlewar
 router.get('/stats', authenticateToken, adminController.getStats);
 router.get('/jobs/pending', authenticateToken, adminController.getPendingJobs);
 router.put('/jobs/:id/moderate', authenticateToken, adminController.moderateJob);
+router.post('/reset-password', authenticateToken, requireRole('admin'), adminController.resetUserPassword);
+router.delete('/users/:userId', authenticateToken, requireRole('admin'), adminController.deleteUserAccount);
 
 module.exports = router;

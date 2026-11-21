@@ -34,8 +34,15 @@ export default function MyProjectsPage({
   const [projectModalTab, setProjectModalTab] = useState('tasks'); // overview | tasks | files | messages | payments
 
   // Submission form state
-  const [deliveryFile, setDeliveryFile] = useState('https://figma.com/file/student-project-submission');
-  const [deliveryNote, setDeliveryNote] = useState('Em đã hoàn thành đủ các hạng mục theo brief, gửi Anh/Chị nghiệm thu ạ!');
+  const [deliveryFile, setDeliveryFile] = useState('');
+  const [deliveryNote, setDeliveryNote] = useState('');
+
+  const handleOpenProjectModal = (proj, tab = 'tasks') => {
+    setSelectedProject(proj);
+    setProjectModalTab(tab);
+    setDeliveryFile(proj.deliveryFile || '');
+    setDeliveryNote(proj.deliveryNote || '');
+  };
 
   const tabs = [
     { id: 'all', label: 'Tất cả' },
@@ -89,12 +96,21 @@ export default function MyProjectsPage({
   const handleSubmitDelivery = (e) => {
     e.preventDefault();
     if (!selectedProject) return;
+    const trimmed = (deliveryFile || '').trim();
+    if (!trimmed) {
+      alert('Vui lòng nhập link file sản phẩm bàn giao (Google Drive, Figma, Canva, GitHub...)');
+      return;
+    }
+    const cleanUrl = trimmed.startsWith('http://') || trimmed.startsWith('https://')
+      ? trimmed
+      : `https://${trimmed}`;
+
     const updated = {
       ...selectedProject,
       status: 'pending_review',
       progress: 100,
-      deliveryFile,
-      deliveryNote,
+      deliveryFile: cleanUrl,
+      deliveryNote: (deliveryNote || '').trim() || 'Em đã nộp sản phẩm hoàn thiện, kính mời Anh/Chị kiểm tra và nghiệm thu ạ.',
     };
     if (onUpdateProjectProgress) {
       onUpdateProjectProgress(updated);
@@ -153,8 +169,12 @@ export default function MyProjectsPage({
       {filteredProjects.length === 0 ? (
         <EmptyState
           icon={Briefcase}
-          title="Không có project nào trong mục này"
-          description="Khám phá việc làm hoặc nhận thêm các yêu cầu freelance để tích lũy kinh nghiệm!"
+          title={projects.length === 0 ? "Bạn chưa có dự án nào" : "Không có project nào trong mục này"}
+          description={
+            projects.length === 0
+              ? "Khi bạn được nhà tuyển dụng giao dự án hoặc đơn ứng tuyển được duyệt, tiến độ công việc sẽ xuất hiện tại đây."
+              : "Khám phá việc làm hoặc nhận thêm các yêu cầu freelance để tích lũy kinh nghiệm!"
+          }
         />
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
@@ -238,13 +258,22 @@ export default function MyProjectsPage({
               </div>
 
               {/* CTAs */}
-              <div className="mt-5 pt-4 border-t border-slate-100 flex items-center justify-between">
+              <div className="mt-5 pt-4 border-t border-slate-100 flex items-center justify-between gap-2 flex-wrap">
                 <button
                   onClick={() => {
                     const chatTarget = role === 'employer'
                       ? (proj.studentName || 'Sinh viên Freelancer')
                       : (proj.client || proj.employerName || 'Client Hợp đồng');
-                    if (onOpenChatWithEmployer) onOpenChatWithEmployer(chatTarget);
+                    const partnerId = role === 'employer'
+                      ? (proj.studentId || proj.student_id)
+                      : (proj.employerId || proj.employer_id);
+                    if (onOpenChatWithEmployer) {
+                      onOpenChatWithEmployer(chatTarget, {
+                        partnerId,
+                        partnerRole: role === 'employer' ? 'student' : 'employer',
+                        partnerAvatar: role === 'employer' ? proj.studentAvatar : proj.employerAvatar
+                      });
+                    }
                   }}
                   className="text-xs font-medium text-slate-500 hover:text-slate-800 hover:underline flex items-center gap-1"
                 >
@@ -252,16 +281,35 @@ export default function MyProjectsPage({
                   <span>{role === 'employer' ? 'Nhắn tin với Freelancer' : 'Trao đổi với Client'}</span>
                 </button>
 
-                <button
-                  onClick={() => {
-                    setSelectedProject(proj);
-                    setProjectModalTab('tasks');
-                  }}
-                  className="inline-flex items-center gap-1.5 px-4 py-2 text-xs font-bold text-white bg-blue-600 hover:bg-blue-700 active:bg-blue-800 rounded-xl shadow-sm transition active:scale-95"
-                >
-                  <span>Mở project</span>
-                  <ArrowRight className="w-3.5 h-3.5" />
-                </button>
+                <div className="flex items-center gap-2">
+                  {role !== 'employer' && proj.status === 'in_progress' && (
+                    <button
+                      onClick={() => handleOpenProjectModal(proj, 'tasks')}
+                      className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-bold text-blue-700 bg-blue-50 hover:bg-blue-100 rounded-xl transition active:scale-95 border border-blue-200"
+                    >
+                      <Upload className="w-3.5 h-3.5" />
+                      <span>Nộp nghiệm thu</span>
+                    </button>
+                  )}
+
+                  {role === 'employer' && proj.status === 'pending_review' && (
+                    <button
+                      onClick={() => handleOpenProjectModal(proj, 'tasks')}
+                      className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-bold text-amber-800 bg-amber-100 hover:bg-amber-200 rounded-xl transition active:scale-95 border border-amber-300 animate-pulse"
+                    >
+                      <CheckCircle2 className="w-3.5 h-3.5 text-amber-700" />
+                      <span>Nghiệm thu & Giải ngân</span>
+                    </button>
+                  )}
+
+                  <button
+                    onClick={() => handleOpenProjectModal(proj, 'tasks')}
+                    className="inline-flex items-center gap-1.5 px-3.5 py-1.5 text-xs font-bold text-white bg-blue-600 hover:bg-blue-700 active:bg-blue-800 rounded-xl shadow-sm transition active:scale-95"
+                  >
+                    <span>Mở project</span>
+                    <ArrowRight className="w-3.5 h-3.5" />
+                  </button>
+                </div>
               </div>
             </div>
           ))}
@@ -381,11 +429,11 @@ export default function MyProjectsPage({
                           Link file bàn giao (Google Drive, Figma, Canva, GitHub...):
                         </label>
                         <input
-                          type="url"
+                          type="text"
                           value={deliveryFile}
                           onChange={(e) => setDeliveryFile(e.target.value)}
                           className="w-full px-3 py-2 text-xs bg-white border border-slate-200 rounded-xl focus:border-blue-500 outline-none"
-                          placeholder="https://drive.google.com/..."
+                          placeholder="Dán link Google Drive, Figma, Canva, GitHub hoặc file hoàn thiện..."
                           required
                         />
                       </div>
@@ -482,13 +530,14 @@ export default function MyProjectsPage({
             {projectModalTab === 'overview' && (
               <div className="space-y-3 text-xs text-slate-600 leading-relaxed">
                 <p>
-                  <strong>Mô tả dự án:</strong> Dự án thiết kế trọn gói các ấn phẩm truyền thông cho chuỗi F&B ABC Coffee trong chiến dịch tháng 11.
+                  <strong>Mô tả dự án:</strong>{' '}
+                  {selectedProject.description || selectedProject.brief || 'Chi tiết các đầu việc và yêu cầu bàn giao theo thỏa thuận giữa hai bên.'}
                 </p>
-                <div className="p-3 bg-slate-50 rounded-xl space-y-1">
-                  <p>• <strong>Kênh đăng:</strong> Facebook Fanpage, Instagram Feed & Story.</p>
-                  <p>• <strong>Kích thước chuẩn:</strong> 1080x1080px (Square) và 1080x1920px (Story).</p>
-                  <p>• <strong>Yêu cầu file:</strong> Xuất định dạng PNG không vỡ hạt và chia sẻ link Canva có thể chỉnh sửa.</p>
-                </div>
+                {selectedProject.requirements && (
+                  <div className="p-3 bg-slate-50 rounded-xl space-y-1">
+                    <p>{selectedProject.requirements}</p>
+                  </div>
+                )}
               </div>
             )}
 

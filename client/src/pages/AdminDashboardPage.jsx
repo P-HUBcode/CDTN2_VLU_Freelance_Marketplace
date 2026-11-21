@@ -19,7 +19,6 @@ import {
   GraduationCap,
   RefreshCw,
   Clock,
-  Layers,
   Sparkles,
   Newspaper,
   Plus,
@@ -41,7 +40,8 @@ import {
   updateJobStatusByAdmin,
   getAllUsersForAdmin,
   toggleUserActiveStatus,
-  adminChangeUserPassword
+  adminResetUserPassword,
+  deleteUserByAdmin
 } from '../lib/adminService';
 import {
   getStoredArticles,
@@ -54,7 +54,7 @@ import ArticleDetailModal from '../components/common/ArticleDetailModal';
 
 export default function AdminDashboardPage({ onNavigate }) {
   const { user, signOut } = useAuth();
-  const [activeTab, setActiveTab] = useState('overview'); // 'overview' | 'jobs' | 'users' | 'articles' | 'system'
+  const [activeTab, setActiveTab] = useState('overview'); // 'overview' | 'jobs' | 'users' | 'articles'
 
   // Stat Cards state
   const [stats, setStats] = useState({
@@ -78,14 +78,15 @@ export default function AdminDashboardPage({ onNavigate }) {
   const [userRoleFilter, setUserRoleFilter] = useState('all');
   const [userSearch, setUserSearch] = useState('');
 
-  // Password Management state (Xem & Đổi mật khẩu người dùng cho Admin)
-  const [showPasswordMap, setShowPasswordMap] = useState({});
+  // Password Management state (Admin yêu cầu đặt lại mật khẩu)
   const [passwordModalUser, setPasswordModalUser] = useState(null);
-  const [newPasswordInput, setNewPasswordInput] = useState('');
-  const [showNewPassword, setShowNewPassword] = useState(false);
   const [passwordChangeLoading, setPasswordChangeLoading] = useState(false);
-  const [copiedId, setCopiedId] = useState(null);
   const [passwordToast, setPasswordToast] = useState(null);
+
+  // Delete User state (Admin xóa vĩnh viễn tài khoản)
+  const [deleteModalUser, setDeleteModalUser] = useState(null);
+  const [deleteConfirmInput, setDeleteConfirmInput] = useState('');
+  const [deleteLoading, setDeleteLoading] = useState(false);
 
   // Articles (CMS) state
   const [articles, setArticles] = useState([]);
@@ -192,6 +193,31 @@ export default function AdminDashboardPage({ onNavigate }) {
       alert(`Cập nhật trạng thái người dùng thất bại: ${err.message}`);
     } finally {
       setActionLoadingId(null);
+    }
+  };
+
+  // Xử lý Admin xóa vĩnh viễn tài khoản người dùng
+  const handleConfirmDeleteUser = async (e) => {
+    e.preventDefault();
+    if (!deleteModalUser) return;
+
+    if (deleteConfirmInput.trim().toLowerCase() !== deleteModalUser.email.trim().toLowerCase()) {
+      alert('Email xác nhận không khớp với email tài khoản cần xóa.');
+      return;
+    }
+
+    try {
+      setDeleteLoading(true);
+      const res = await deleteUserByAdmin(deleteModalUser.id, deleteConfirmInput);
+      alert(res.message || 'Đã xóa tài khoản và dọn dẹp dữ liệu thành công.');
+      setDeleteModalUser(null);
+      setDeleteConfirmInput('');
+      await loadUsers();
+      await loadStats();
+    } catch (err) {
+      alert(`Xóa tài khoản thất bại: ${err.message}`);
+    } finally {
+      setDeleteLoading(false);
     }
   };
 
@@ -336,22 +362,6 @@ export default function AdminDashboardPage({ onNavigate }) {
               </div>
               <span className="text-[10px] text-slate-400">({articles.length})</span>
             </button>
-
-            {/* 5. Báo cáo Đồ án & Hạ tầng */}
-            <button
-              onClick={() => setActiveTab('system')}
-              className={`w-full flex items-center justify-between px-3.5 py-2.5 rounded-2xl text-xs font-bold transition ${
-                activeTab === 'system'
-                  ? 'bg-blue-600 text-white shadow-md shadow-blue-500/20'
-                  : 'text-slate-400 hover:text-white hover:bg-slate-800/70'
-              }`}
-            >
-              <div className="flex items-center gap-3">
-                <Layers className="w-4 h-4" />
-                <span>Báo cáo Đồ án & Hạ tầng</span>
-              </div>
-              <ChevronRight className="w-3.5 h-3.5 opacity-60" />
-            </button>
           </nav>
         </div>
 
@@ -370,7 +380,7 @@ export default function AdminDashboardPage({ onNavigate }) {
           <div className="grid grid-cols-2 gap-2 pt-1">
             {onNavigate && (
               <button
-                onClick={() => onNavigate('dashboard')}
+                onClick={() => onNavigate('landing')}
                 className="px-2.5 py-2 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded-xl text-[11px] font-semibold transition text-center"
               >
                 Về Trang chủ
@@ -380,7 +390,7 @@ export default function AdminDashboardPage({ onNavigate }) {
               onClick={() => {
                 if (window.confirm('Bạn có muốn đăng xuất khỏi phiên Quản trị viên?')) {
                   signOut();
-                  if (onNavigate) onNavigate('dashboard');
+                  if (onNavigate) onNavigate('landing');
                 }
               }}
               className="px-2.5 py-2 bg-rose-500/20 hover:bg-rose-500/30 text-rose-300 border border-rose-500/30 rounded-xl text-[11px] font-semibold transition flex items-center justify-center gap-1"
@@ -409,7 +419,6 @@ export default function AdminDashboardPage({ onNavigate }) {
               {activeTab === 'jobs' && 'Kiểm duyệt Tin Tuyển Dụng Doanh Nghiệp'}
               {activeTab === 'users' && 'Quản lý Tài Khoản Sinh Viên & Nhà Tuyển Dụng'}
               {activeTab === 'articles' && 'Cẩm Nang Nghề Nghiệp & Đăng Bài Lên Trang Chủ'}
-              {activeTab === 'system' && 'Kiến Trúc Kỹ Thuật 4 Phân Tầng & Báo Cáo CDTN2'}
             </h1>
           </div>
 
@@ -732,9 +741,9 @@ export default function AdminDashboardPage({ onNavigate }) {
                         <th className="py-3 px-4">Tài khoản & Email</th>
                         <th className="py-3 px-4">Vai trò</th>
                         <th className="py-3 px-4">Đơn vị / Trường học</th>
-                        <th className="py-3 px-4">Mật khẩu (Admin)</th>
+                        <th className="py-3 px-4">Xác thực Email</th>
                         <th className="py-3 px-4">Trạng thái</th>
-                        <th className="py-3 px-4 text-right">Thao tác & Đổi MK</th>
+                        <th className="py-3 px-4 text-right">Mật khẩu & Thao tác</th>
                       </tr>
                     </thead>
                     <tbody className="divide-y divide-slate-100 text-slate-700">
@@ -746,7 +755,11 @@ export default function AdminDashboardPage({ onNavigate }) {
                           </td>
 
                           <td className="py-3.5 px-4">
-                            {u.role === 'employer' ? (
+                            {u.role === 'admin' ? (
+                              <span className="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-semibold bg-purple-50 text-purple-700 border border-purple-200">
+                                Quản trị viên
+                              </span>
+                            ) : u.role === 'employer' ? (
                               <Badge variant="warning">Nhà tuyển dụng</Badge>
                             ) : (
                               <Badge variant="primary">Sinh viên</Badge>
@@ -754,48 +767,25 @@ export default function AdminDashboardPage({ onNavigate }) {
                           </td>
 
                           <td className="py-3.5 px-4 text-slate-600 font-medium">
-                            {u.role === 'employer' ? u.companyName || 'Công ty' : u.university || 'Đại học'}
+                            {u.role === 'admin'
+                              ? 'Hệ thống StudentHub'
+                              : u.role === 'employer'
+                                ? u.companyName || 'Công ty'
+                                : u.university || 'Đại học'}
                           </td>
 
-                          {/* CỘT MẬT KHẨU (XEM / ẨN MẬT KHẨU CHO ADMIN) */}
+                          {/* CỘT XÁC THỰC EMAIL */}
                           <td className="py-3.5 px-4">
-                            <div className="flex items-center gap-1.5">
-                              <span className={`font-mono text-xs px-2 py-1 rounded-lg border transition select-all ${
-                                showPasswordMap[u.id]
-                                  ? 'bg-amber-50 text-amber-900 border-amber-300 font-bold shadow-xs'
-                                  : 'bg-slate-50 text-slate-400 border-slate-200'
-                              }`}>
-                                {showPasswordMap[u.id] ? (u.password || 'Password123!') : '••••••••'}
+                            {u.isEmailConfirmed !== false ? (
+                              <span className="inline-flex items-center gap-1.5 text-[11px] text-emerald-700 font-semibold bg-emerald-50 px-2.5 py-1 rounded-full border border-emerald-200">
+                                <Check className="w-3 h-3 text-emerald-600" />
+                                Đã xác thực
                               </span>
-
-                              {/* Nút Xem / Ẩn */}
-                              <button
-                                type="button"
-                                onClick={() => setShowPasswordMap(prev => ({ ...prev, [u.id]: !prev[u.id] }))}
-                                className={`p-1.5 rounded-lg border transition ${
-                                  showPasswordMap[u.id]
-                                    ? 'bg-blue-50 text-blue-600 border-blue-200'
-                                    : 'bg-slate-50 text-slate-400 border-slate-200 hover:text-slate-700 hover:bg-slate-100'
-                                }`}
-                                title={showPasswordMap[u.id] ? "Ẩn mật khẩu" : "Xem mật khẩu"}
-                              >
-                                {showPasswordMap[u.id] ? <EyeOff className="w-3.5 h-3.5 text-blue-600" /> : <Eye className="w-3.5 h-3.5" />}
-                              </button>
-
-                              {/* Nút Sao chép */}
-                              <button
-                                type="button"
-                                onClick={() => {
-                                  navigator.clipboard.writeText(u.password || 'Password123!');
-                                  setCopiedId(u.id);
-                                  setTimeout(() => setCopiedId(null), 2000);
-                                }}
-                                className="p-1.5 rounded-lg bg-slate-50 text-slate-400 border border-slate-200 hover:text-slate-700 hover:bg-slate-100 transition"
-                                title="Sao chép mật khẩu"
-                              >
-                                {copiedId === u.id ? <Check className="w-3.5 h-3.5 text-emerald-600" /> : <Copy className="w-3.5 h-3.5" />}
-                              </button>
-                            </div>
+                            ) : (
+                              <span className="inline-flex items-center gap-1.5 text-[11px] text-amber-700 font-semibold bg-amber-50 px-2.5 py-1 rounded-full border border-amber-200">
+                                Chưa xác thực
+                              </span>
+                            )}
                           </td>
 
                           <td className="py-3.5 px-4">
@@ -814,43 +804,63 @@ export default function AdminDashboardPage({ onNavigate }) {
 
                           <td className="py-3.5 px-4 text-right">
                             <div className="flex items-center justify-end gap-1.5">
-                              {/* Nút Đổi mật khẩu của Admin */}
+                              {/* Nút Đặt lại mật khẩu của Admin */}
                               <button
                                 type="button"
-                                onClick={() => {
-                                  setPasswordModalUser(u);
-                                  setNewPasswordInput('');
-                                  setShowNewPassword(false);
-                                }}
+                                onClick={() => setPasswordModalUser(u)}
                                 className="px-2.5 py-1.5 rounded-lg text-xs font-semibold transition inline-flex items-center gap-1 bg-blue-50 text-blue-700 hover:bg-blue-100 border border-blue-200 shadow-2xs"
-                                title="Admin trực tiếp đổi mật khẩu cho người dùng này"
+                                title="Admin gửi yêu cầu khôi phục mật khẩu qua Supabase Auth"
                               >
                                 <Key className="w-3.5 h-3.5 text-blue-600" />
-                                <span>Đổi MK</span>
+                                <span>Đặt lại mật khẩu</span>
                               </button>
 
-                              {/* Nút Khóa / Mở khóa */}
-                              <button
-                                onClick={() => handleToggleUser(u.id, u.isActive)}
-                                disabled={actionLoadingId === u.id}
-                                className={`px-2.5 py-1.5 rounded-lg text-xs font-semibold transition inline-flex items-center gap-1 ${
-                                  u.isActive
-                                    ? 'bg-rose-50 text-rose-700 hover:bg-rose-100 border border-rose-200'
-                                    : 'bg-emerald-50 text-emerald-700 hover:bg-emerald-100 border border-emerald-200'
-                                }`}
-                              >
-                                {u.isActive ? (
-                                  <>
-                                    <Lock className="w-3.5 h-3.5" />
-                                    <span>Khóa</span>
-                                  </>
-                                ) : (
-                                  <>
-                                    <Unlock className="w-3.5 h-3.5" />
-                                    <span>Mở</span>
-                                  </>
-                                )}
-                              </button>
+                              {/* Với tài khoản Quản trị viên: Bảo vệ không cho tự khóa hoặc xóa */}
+                              {u.role === 'admin' || (user?.email && u.email?.toLowerCase() === user.email.toLowerCase()) ? (
+                                <span className="px-2.5 py-1 text-[11px] font-semibold text-purple-600 bg-purple-50/80 rounded-lg border border-purple-200">
+                                  Bảo vệ Admin
+                                </span>
+                              ) : (
+                                <>
+                                  {/* Nút Khóa / Mở khóa */}
+                                  <button
+                                    onClick={() => handleToggleUser(u.id, u.isActive)}
+                                    disabled={actionLoadingId === u.id}
+                                    className={`px-2.5 py-1.5 rounded-lg text-xs font-semibold transition inline-flex items-center gap-1 ${
+                                      u.isActive
+                                        ? 'bg-rose-50 text-rose-700 hover:bg-rose-100 border border-rose-200'
+                                        : 'bg-emerald-50 text-emerald-700 hover:bg-emerald-100 border border-emerald-200'
+                                    }`}
+                                  >
+                                    {u.isActive ? (
+                                      <>
+                                        <Lock className="w-3.5 h-3.5" />
+                                        <span>Khóa</span>
+                                      </>
+                                    ) : (
+                                      <>
+                                        <Unlock className="w-3.5 h-3.5" />
+                                        <span>Mở</span>
+                                      </>
+                                    )}
+                                  </button>
+
+                                  {/* Nút Xóa vĩnh viễn tài khoản */}
+                                  <button
+                                    type="button"
+                                    onClick={() => {
+                                      setDeleteModalUser(u);
+                                      setDeleteConfirmInput('');
+                                    }}
+                                    disabled={actionLoadingId === u.id}
+                                    className="px-2.5 py-1.5 rounded-lg text-xs font-semibold transition inline-flex items-center gap-1 bg-rose-50 text-rose-700 hover:bg-rose-100 border border-rose-200"
+                                    title="Admin xóa vĩnh viễn tài khoản người dùng"
+                                  >
+                                    <Trash2 className="w-3.5 h-3.5 text-rose-600" />
+                                    <span>Xóa</span>
+                                  </button>
+                                </>
+                              )}
                             </div>
                           </td>
                         </tr>
@@ -950,53 +960,6 @@ export default function AdminDashboardPage({ onNavigate }) {
                     ))}
                   </tbody>
                 </table>
-              </div>
-            </div>
-          </div>
-        )}
-
-        {/* ===================================================================== */}
-        {/* TAB 5: BÁO CÁO ĐỒ ÁN & HẠ TẦNG (SYSTEM ARCHITECTURE)                 */}
-        {/* ===================================================================== */}
-        {activeTab === 'system' && (
-          <div className="bg-white p-6 sm:p-8 rounded-3xl border border-slate-200 shadow-sm space-y-6 text-xs text-slate-700">
-            <div>
-              <h3 className="text-base font-bold text-slate-900 flex items-center gap-2">
-                <Layers className="w-5 h-5 text-blue-600" />
-                <span>Báo Cáo Kiến Trúc Hệ Thống (CDTN2)</span>
-              </h3>
-              <p className="text-slate-500 mt-1">
-                Kiến trúc 4 phân tầng độc lập theo chuẩn công nghiệp bảo đảm khả năng chịu tải và bảo mật.
-              </p>
-            </div>
-
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div className="p-4 rounded-2xl bg-slate-50 border border-slate-200 space-y-2">
-                <span className="font-bold text-blue-700 uppercase tracking-wider text-[11px]">Tầng 1: Presentation & UI</span>
-                <p className="text-slate-600 leading-relaxed">
-                  ReactJS + TailwindCSS, responsive trên cả máy tính & điện thoại. Sử dụng kiến trúc Component độc lập, tối ưu re-render.
-                </p>
-              </div>
-
-              <div className="p-4 rounded-2xl bg-slate-50 border border-slate-200 space-y-2">
-                <span className="font-bold text-indigo-700 uppercase tracking-wider text-[11px]">Tầng 2: Security & Gateway</span>
-                <p className="text-slate-600 leading-relaxed">
-                  Bảo vệ chống Brute-force với Express Rate Limiter, xác thực JSON Web Token (JWT) và cơ chế phân quyền RBAC.
-                </p>
-              </div>
-
-              <div className="p-4 rounded-2xl bg-slate-50 border border-slate-200 space-y-2">
-                <span className="font-bold text-purple-700 uppercase tracking-wider text-[11px]">Tầng 3: Business Logic</span>
-                <p className="text-slate-600 leading-relaxed">
-                  Quy trình ký quỹ Escrow bảo đảm 100%, tự động giải ngân khi nghiệm thu, gửi email thông báo trạng thái hồ sơ tự động qua SMTP Nodemailer.
-                </p>
-              </div>
-
-              <div className="p-4 rounded-2xl bg-slate-50 border border-slate-200 space-y-2">
-                <span className="font-bold text-emerald-700 uppercase tracking-wider text-[11px]">Tầng 4: Database & Storage</span>
-                <p className="text-slate-600 leading-relaxed">
-                  MySQL 8.0 & Supabase PostgreSQL Compatible, Cloudinary Object Storage lưu trữ ảnh và file CV sinh viên.
-                </p>
               </div>
             </div>
           </div>
@@ -1158,7 +1121,7 @@ export default function AdminDashboardPage({ onNavigate }) {
       />
 
       {/* ===================================================================== */}
-      {/* MODAL ADMIN ĐỔI MẬT KHẨU NGƯỜI DÙNG                                  */}
+      {/* MODAL ADMIN YÊU CẦU ĐẶT LẠI MẬT KHẨU QUA SUPABASE AUTH                */}
       {/* ===================================================================== */}
       {passwordModalUser && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-xs animate-fadeIn">
@@ -1169,7 +1132,7 @@ export default function AdminDashboardPage({ onNavigate }) {
                   <Key className="w-5 h-5" />
                 </div>
                 <div>
-                  <h3 className="font-bold text-slate-900 text-sm">Đổi Mật Khẩu Người Dùng</h3>
+                  <h3 className="font-bold text-slate-900 text-sm">Yêu Cầu Đặt Lại Mật Khẩu</h3>
                   <p className="text-xs text-slate-500 font-medium">{passwordModalUser.fullName} ({passwordModalUser.email})</p>
                 </div>
               </div>
@@ -1185,35 +1148,35 @@ export default function AdminDashboardPage({ onNavigate }) {
             <form
               onSubmit={async (e) => {
                 e.preventDefault();
-                if (!newPasswordInput || newPasswordInput.trim().length < 6) {
-                  alert('Mật khẩu mới phải có tối thiểu 6 ký tự.');
-                  return;
-                }
                 setPasswordChangeLoading(true);
                 try {
-                  await adminChangeUserPassword(passwordModalUser.id, newPasswordInput, passwordModalUser.email);
-                  // Cập nhật ngay lập tức vào state users để bảng đổi ngay
-                  setUsers(prev => prev.map(u => (u.id === passwordModalUser.id || u.email === passwordModalUser.email) ? { ...u, password: newPasswordInput.trim() } : u));
+                  const res = await adminResetUserPassword({
+                    email: passwordModalUser.email
+                  });
+
                   setPasswordToast({
-                    name: passwordModalUser.fullName,
-                    pass: newPasswordInput.trim()
+                    name: passwordModalUser.fullName || passwordModalUser.email,
+                    message: res.message || 'Đã gửi liên kết khôi phục mật khẩu chính thức qua Supabase.'
                   });
                   setPasswordModalUser(null);
                   setTimeout(() => setPasswordToast(null), 6000);
                 } catch (err) {
-                  alert(`Đổi mật khẩu thất bại: ${err.message}`);
+                  alert(`Thao tác trên Supabase thất bại: ${err.message}`);
                 } finally {
                   setPasswordChangeLoading(false);
                 }
               }}
               className="p-5 space-y-4"
             >
+              {/* Thông tin hồ sơ & quyền hạn người dùng */}
               <div className="bg-slate-50 p-3.5 rounded-xl border border-slate-200 space-y-2 text-xs">
                 <div className="flex items-center justify-between text-slate-600">
-                  <span>Mật khẩu hiện tại:</span>
-                  <span className="font-mono font-bold text-blue-700 bg-white px-2 py-0.5 rounded-md border border-slate-200">
-                    {passwordModalUser.password || 'Password123!'}
-                  </span>
+                  <span>Họ và tên:</span>
+                  <span className="font-bold text-slate-900">{passwordModalUser.fullName || 'Người dùng'}</span>
+                </div>
+                <div className="flex items-center justify-between text-slate-600">
+                  <span>Tài khoản email:</span>
+                  <span className="font-bold text-slate-900">{passwordModalUser.email}</span>
                 </div>
                 <div className="flex items-center justify-between text-slate-600">
                   <span>Vai trò tài khoản:</span>
@@ -1221,45 +1184,23 @@ export default function AdminDashboardPage({ onNavigate }) {
                     {passwordModalUser.role === 'employer' ? 'Nhà tuyển dụng' : 'Sinh viên'}
                   </span>
                 </div>
-              </div>
-
-              <div>
-                <label className="block text-xs font-bold text-slate-800 mb-1.5">
-                  Mật khẩu mới <span className="text-rose-500">*</span>
-                </label>
-                <div className="relative">
-                  <input
-                    type={showNewPassword ? 'text' : 'password'}
-                    value={newPasswordInput}
-                    onChange={(e) => setNewPasswordInput(e.target.value)}
-                    placeholder="Nhập mật khẩu mới (tối thiểu 6 ký tự)..."
-                    required
-                    minLength={6}
-                    className="w-full pl-3 pr-10 py-2.5 text-xs bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 font-mono text-slate-900"
-                  />
-                  <button
-                    type="button"
-                    onClick={() => setShowNewPassword(!showNewPassword)}
-                    className="absolute right-3 top-2.5 text-slate-400 hover:text-slate-600 transition"
-                  >
-                    {showNewPassword ? <EyeOff className="w-4 h-4 text-blue-600" /> : <Eye className="w-4 h-4" />}
-                  </button>
+                <div className="flex items-center justify-between text-slate-600">
+                  <span>Trạng thái email:</span>
+                  <span className="font-semibold text-emerald-700">
+                    {passwordModalUser.isEmailConfirmed !== false ? 'Đã xác thực' : 'Chưa xác thực'}
+                  </span>
                 </div>
               </div>
 
-              <div className="flex items-center justify-between">
-                <button
-                  type="button"
-                  onClick={() => {
-                    const randPass = `Pass@${Math.floor(1000 + Math.random() * 9000)}!`;
-                    setNewPasswordInput(randPass);
-                    setShowNewPassword(true);
-                  }}
-                  className="text-xs text-blue-600 hover:text-blue-700 font-bold inline-flex items-center gap-1.5 hover:underline"
-                >
-                  <Sparkles className="w-3.5 h-3.5 text-blue-500" />
-                  <span>Tạo mật khẩu ngẫu nhiên an toàn</span>
-                </button>
+              {/* Thông tin giải thích luồng khôi phục chính thức */}
+              <div className="p-3.5 bg-blue-50/80 border border-blue-200 rounded-xl text-xs text-blue-900 space-y-1.5">
+                <div className="flex items-center gap-2 font-bold text-blue-800">
+                  <ShieldCheck className="w-4 h-4 text-blue-600 shrink-0" />
+                  <span>Quy trình khôi phục chính thức Supabase Auth</span>
+                </div>
+                <p className="text-[11px] text-blue-700 leading-relaxed">
+                  Khi xác nhận, hệ thống backend sẽ gọi API Supabase Auth để gửi email chứa liên kết khôi phục mật khẩu bảo mật đến địa chỉ email của người dùng. Người dùng sẽ truy cập liên kết đó để tự đặt mật khẩu mới an toàn.
+                </p>
               </div>
 
               <div className="flex items-center justify-end gap-2 pt-3 border-t border-slate-100">
@@ -1273,9 +1214,10 @@ export default function AdminDashboardPage({ onNavigate }) {
                 <button
                   type="submit"
                   disabled={passwordChangeLoading}
-                  className="px-4 py-2 rounded-xl text-xs font-bold text-white bg-blue-600 hover:bg-blue-700 shadow-md shadow-blue-500/20 transition disabled:opacity-50"
+                  className="px-4 py-2 rounded-xl text-xs font-bold text-white bg-blue-600 hover:bg-blue-700 shadow-md shadow-blue-500/20 transition disabled:opacity-50 inline-flex items-center gap-1.5"
                 >
-                  {passwordChangeLoading ? 'Đang cập nhật...' : 'Xác nhận đổi mật khẩu'}
+                  <Key className="w-3.5 h-3.5" />
+                  <span>{passwordChangeLoading ? 'Đang gửi yêu cầu...' : 'Gửi email khôi phục'}</span>
                 </button>
               </div>
             </form>
@@ -1283,16 +1225,114 @@ export default function AdminDashboardPage({ onNavigate }) {
         </div>
       )}
 
-      {/* TOAST THÔNG BÁO KHI ĐỔI MẬT KHẨU THÀNH CÔNG */}
+      {/* ===================================================================== */}
+      {/* MODAL ADMIN XÁC NHẬN XÓA TÀI KHOẢN VĨNH VIỄN                          */}
+      {/* ===================================================================== */}
+      {deleteModalUser && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-xs animate-fadeIn">
+          <div className="bg-white rounded-2xl max-w-lg w-full shadow-2xl border border-rose-200 overflow-hidden">
+            {/* Header */}
+            <div className="px-6 py-4 bg-rose-50/80 border-b border-rose-100 flex items-center justify-between">
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 rounded-xl bg-rose-100 text-rose-600 flex items-center justify-center shrink-0">
+                  <AlertCircle className="w-5 h-5 text-rose-600" />
+                </div>
+                <div>
+                  <h3 className="font-bold text-slate-900 text-sm">Xác Nhận Xóa Vĩnh Viễn Tài Khoản</h3>
+                  <p className="text-xs text-rose-600 font-medium">Hành động này không thể hoàn tác</p>
+                </div>
+              </div>
+              <button
+                type="button"
+                onClick={() => setDeleteModalUser(null)}
+                className="p-1.5 rounded-lg text-slate-400 hover:text-slate-600 hover:bg-slate-100 transition"
+              >
+                <XCircle className="w-5 h-5" />
+              </button>
+            </div>
+
+            {/* Form */}
+            <form onSubmit={handleConfirmDeleteUser} className="p-6 space-y-4">
+              {/* Thông tin tài khoản */}
+              <div className="p-3.5 bg-slate-50 rounded-xl border border-slate-200 space-y-2 text-xs">
+                <div className="flex items-center justify-between text-slate-600">
+                  <span>Họ và tên:</span>
+                  <span className="font-bold text-slate-900">{deleteModalUser.fullName || 'Người dùng'}</span>
+                </div>
+                <div className="flex items-center justify-between text-slate-600">
+                  <span>Email tài khoản:</span>
+                  <span className="font-bold text-rose-700">{deleteModalUser.email}</span>
+                </div>
+                <div className="flex items-center justify-between text-slate-600">
+                  <span>Vai trò:</span>
+                  <span className="font-semibold text-slate-800">
+                    {deleteModalUser.role === 'employer' ? 'Nhà tuyển dụng' : (deleteModalUser.role === 'admin' ? 'Quản trị viên' : 'Sinh viên')}
+                  </span>
+                </div>
+              </div>
+
+              {/* Chi tiết dữ liệu sẽ bị xóa */}
+              <div className="p-3.5 bg-amber-50/80 rounded-xl border border-amber-200 text-xs text-amber-900 space-y-2">
+                <p className="font-bold flex items-center gap-1.5 text-amber-800">
+                  <AlertCircle className="w-4 h-4 text-amber-600 shrink-0" />
+                  <span>Dữ liệu sẽ bị xóa khỏi hệ thống:</span>
+                </p>
+                <ul className="list-disc pl-4 space-y-1 text-[11px] text-amber-800 leading-relaxed">
+                  <li>Toàn bộ hồ sơ cá nhân và hồ sơ năng lực ({deleteModalUser.role === 'employer' ? 'Doanh nghiệp, các tin tuyển dụng đã đăng' : 'Hồ sơ sinh viên, kỹ năng, portfolio'}).</li>
+                  <li>Các đơn ứng tuyển cá nhân và file CV tải lên trong Storage (chỉ xóa khi không còn hồ sơ nào khác dùng chung).</li>
+                  <li><strong>Bảo toàn dữ liệu dùng chung:</strong> Lịch sử dự án và tin nhắn liên kết với người dùng khác sẽ được giữ nguyên cho đối phương dưới nhãn <em>[Tài khoản đã xóa]</em>.</li>
+                  <li>Tài khoản xác thực Supabase Auth sẽ được xóa để người dùng có thể đăng ký lại bằng email này nếu cần.</li>
+                </ul>
+              </div>
+
+              {/* Yêu cầu nhập lại email */}
+              <div className="space-y-1.5">
+                <label className="block text-xs font-bold text-slate-700">
+                  Nhập lại chính xác email <span className="text-rose-600 select-all font-mono font-bold">"{deleteModalUser.email}"</span> để xác nhận:
+                </label>
+                <input
+                  type="text"
+                  required
+                  value={deleteConfirmInput}
+                  onChange={(e) => setDeleteConfirmInput(e.target.value)}
+                  placeholder="Nhập email tài khoản..."
+                  className="w-full px-3 py-2 text-xs bg-slate-50 border border-slate-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-rose-500 font-medium"
+                />
+              </div>
+
+              {/* Buttons */}
+              <div className="flex items-center justify-end gap-2 pt-2 border-t border-slate-100">
+                <button
+                  type="button"
+                  onClick={() => setDeleteModalUser(null)}
+                  className="px-4 py-2 rounded-xl text-xs font-semibold text-slate-600 hover:bg-slate-100 transition"
+                >
+                  Hủy bỏ
+                </button>
+                <button
+                  type="submit"
+                  disabled={deleteLoading || deleteConfirmInput.trim().toLowerCase() !== deleteModalUser.email.trim().toLowerCase()}
+                  className="px-4 py-2 rounded-xl text-xs font-bold text-white bg-rose-600 hover:bg-rose-700 shadow-md shadow-rose-500/20 transition disabled:opacity-40 disabled:cursor-not-allowed inline-flex items-center gap-1.5"
+                >
+                  <Trash2 className="w-3.5 h-3.5" />
+                  <span>{deleteLoading ? 'Đang xóa dữ liệu...' : 'Xác nhận xóa vĩnh viễn'}</span>
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
+
+      {/* TOAST THÔNG BÁO KHI ĐẶT LẠI MẬT KHẨU THÀNH CÔNG */}
       {passwordToast && (
         <div className="fixed bottom-6 right-6 z-50 flex items-center gap-3 bg-slate-900 text-white px-4 py-3 rounded-2xl shadow-2xl border border-slate-700 animate-slideUp">
           <div className="p-1.5 bg-emerald-500/20 text-emerald-400 rounded-lg">
             <Check className="w-4 h-4 stroke-[3]" />
           </div>
           <div className="text-xs">
-            <p className="font-bold">Đã đổi mật khẩu thành công!</p>
+            <p className="font-bold">Đã gửi yêu cầu khôi phục mật khẩu!</p>
             <p className="text-slate-300">
-              Người dùng: <span className="font-semibold text-white">{passwordToast.name}</span> | Mật khẩu mới: <span className="font-mono font-bold text-amber-300">{passwordToast.pass}</span>
+              {passwordToast.message}
             </p>
           </div>
           <button

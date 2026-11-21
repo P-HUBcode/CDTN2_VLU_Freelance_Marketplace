@@ -157,6 +157,10 @@ export default function Topbar({
     setShowNotifications(false);
 
     // Điều hướng theo ngữ cảnh
+    if (item.type === 'new_message' || item.title?.includes('Tin nhắn')) {
+      if (onToggleChatBox) onToggleChatBox();
+      return;
+    }
     if (item.type === 'new_project' || item.type === 'project_delivery' || item.type === 'project_completed' || item.relatedProjectId) {
       setCurrentView('my-projects');
     } else if (item.type === 'new_application' || role === 'employer') {
@@ -211,6 +215,9 @@ export default function Topbar({
 
   // Helper icon thông báo
   const getNotificationIcon = (type, title) => {
+    if (type === 'new_message' || title?.includes('Tin nhắn')) {
+      return { icon: MessageSquare, color: 'text-blue-600 bg-blue-50' };
+    }
     if (type === 'new_project' || title?.includes('thuê') || title?.includes('Dự án')) {
       return { icon: Briefcase, color: 'text-amber-600 bg-amber-50' };
     }
@@ -240,10 +247,13 @@ export default function Topbar({
 
   return (
     <header className="h-16 bg-white border-b border-slate-200/90 px-4 sm:px-6 lg:px-8 flex items-center justify-between sticky top-0 z-40 shadow-xs select-none">
-      {/* 1. BRAND LOGO (BÊN TRÁI) */}
+      {/* 1. BRAND LOGO (BÊN TRÁI) - BẤM VÀO LOGO CHUYỂN VỀ TRANG CHỦ */}
       <div className="flex items-center gap-3 shrink-0 mr-3 lg:mr-6">
         <div
-          onClick={() => setCurrentView('landing')}
+          onClick={() => {
+            setCurrentView('landing');
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+          }}
           className="flex items-center gap-2.5 cursor-pointer group"
           title="Trang chủ StudentHub"
         >
@@ -263,23 +273,25 @@ export default function Topbar({
 
       {/* 2. THANH ĐIỀU HƯỚNG CHÍNH VỚI DROPDOWN VÀ MEGA-MENU TRƯỢT TỪ TRÊN XUỐNG */}
       <nav className="hidden md:flex items-center gap-1 lg:gap-1.5 flex-1 relative h-full">
-        {/* Nút 1: Trang chủ / Dashboard */}
-        <button
-          onClick={() => setCurrentView(role === 'employer' ? 'employer-dashboard' : 'dashboard')}
-          className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-semibold whitespace-nowrap transition-all ${
-            currentView === 'dashboard' || (role === 'employer' && currentView === 'employer-dashboard')
-              ? 'bg-blue-50 text-blue-700 font-bold shadow-xs'
-              : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100'
-          }`}
-        >
-          <LayoutDashboard className="w-4 h-4 text-blue-600" />
-          <span>{role === 'employer' ? 'Tuyển dụng (Kanban)' : 'Trang chủ'}</span>
-          {role === 'employer' && employerApplicantsCount > 0 && (
-            <span className="px-1.5 py-0.2 bg-blue-100 text-blue-700 rounded-full text-[10px] font-bold">
-              {employerApplicantsCount}
-            </span>
-          )}
-        </button>
+        {/* Nút Tuyển dụng Kanban (Chỉ hiển thị cho Nhà tuyển dụng) */}
+        {role === 'employer' && (
+          <button
+            onClick={() => setCurrentView('employer-dashboard')}
+            className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-semibold whitespace-nowrap transition-all ${
+              currentView === 'employer-dashboard'
+                ? 'bg-blue-50 text-blue-700 font-bold shadow-xs'
+                : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100'
+            }`}
+          >
+            <LayoutDashboard className="w-4 h-4 text-blue-600" />
+            <span>Tuyển dụng (Kanban)</span>
+            {employerApplicantsCount > 0 && (
+              <span className="px-1.5 py-0.2 bg-blue-100 text-blue-700 rounded-full text-[10px] font-bold">
+                {employerApplicantsCount}
+              </span>
+            )}
+          </button>
+        )}
 
         {/* Nút 2: TÌM VIỆC LÀM (VỚI MEGA-MENU TRƯỢT TỪ TRÊN XUỐNG GIỐNG NHƯ ẢNH) */}
         <div
@@ -982,6 +994,11 @@ export default function Topbar({
             >
               <Briefcase className="w-4 h-4 text-blue-600" />
               <span>Dự án & Ngân sách</span>
+              {activeProjectsCount > 0 && (
+                <span className="px-1.5 py-0.5 bg-blue-100 text-blue-700 font-extrabold text-[10px] rounded-full">
+                  {activeProjectsCount}
+                </span>
+              )}
               <ChevronDown className={`w-3.5 h-3.5 transition-transform duration-200 text-slate-400 group-hover:rotate-180 group-hover:text-blue-600 ${
                 hoveredMenu === 'employer_work' ? 'rotate-180 text-blue-600' : ''
               }`} />

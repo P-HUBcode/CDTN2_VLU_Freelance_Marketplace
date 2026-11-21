@@ -8,7 +8,31 @@ const LOCAL_STORAGE_PROFILE_KEY = 'studenthub_local_profile_';
 const LOCAL_STORAGE_PROJECTS_KEY = 'studenthub_local_projects_';
 const isUuid = (str) => /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(String(str));
 
-// Dữ liệu mẫu chuẩn mực khi người dùng mới tạo hồ sơ
+// Dữ liệu trống cho tài khoản thật mới tạo
+export const blankStudentProfile = {
+  full_name: '',
+  email: '',
+  phone: '',
+  avatar_url: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=300&auto=format&fit=crop&q=80',
+  cover_url: '',
+  bio: '',
+  location: 'TP. Hồ Chí Minh',
+  university: '',
+  major: '',
+  graduation_year: '',
+  birth_date: null,
+  experience: '',
+  availability: '',
+  career_goals: '',
+  skills: [],
+  foreign_languages: [],
+  certifications: [],
+  academic_achievements: '',
+  address: '',
+  is_public: true
+};
+
+// Dữ liệu mẫu chuẩn mực chỉ dùng cho tài khoản demo chủ động
 export const defaultStudentProfile = {
   full_name: 'Nguyễn Minh Anh',
   email: 'minhanh.nguyen@student.vlu.edu.vn',
@@ -88,9 +112,9 @@ function getLocalProjects(userId) {
   try {
     const raw = localStorage.getItem(`${LOCAL_STORAGE_PROJECTS_KEY}${userId}`);
     if (raw) return JSON.parse(raw);
-    return defaultStudentProjects;
+    return isSupabaseConfigured ? [] : defaultStudentProjects;
   } catch (e) {
-    return defaultStudentProjects;
+    return isSupabaseConfigured ? [] : defaultStudentProjects;
   }
 }
 
@@ -126,28 +150,30 @@ export async function getStudentProfile(userId) {
         .maybeSingle();
 
       if (prof) {
+        const isDemo = prof.email?.includes('demo') || (typeof prof.id === 'string' && prof.id.startsWith('demo_'));
+        const template = isDemo ? defaultStudentProfile : blankStudentProfile;
         const merged = {
-          ...defaultStudentProfile,
+          ...template,
           ...cached,
-          full_name: prof.full_name || cached.full_name || defaultStudentProfile.full_name,
-          email: prof.email || cached.email || defaultStudentProfile.email,
-          phone: prof.phone || cached.phone || defaultStudentProfile.phone,
-          avatar_url: prof.avatar_url || cached.avatar_url || defaultStudentProfile.avatar_url,
-          cover_url: prof.cover_url || sProf?.cover_url || cached.cover_url || defaultStudentProfile.cover_url,
-          bio: prof.bio || cached.bio || defaultStudentProfile.bio,
-          location: prof.location || cached.location || defaultStudentProfile.location,
-          university: sProf?.university || cached.university || defaultStudentProfile.university,
-          major: sProf?.major || cached.major || defaultStudentProfile.major,
-          graduation_year: sProf?.graduation_year || cached.graduation_year || defaultStudentProfile.graduation_year,
-          birth_date: sProf?.birth_date || cached.birth_date || defaultStudentProfile.birth_date,
-          experience: sProf?.experience || cached.experience || defaultStudentProfile.experience,
-          availability: sProf?.availability || cached.availability || defaultStudentProfile.availability,
-          career_goals: sProf?.career_goals || cached.career_goals || defaultStudentProfile.career_goals,
-          skills: (Array.isArray(sProf?.skills) && sProf.skills.length > 0) ? sProf.skills : (cached.skills?.length ? cached.skills : defaultStudentProfile.skills),
-          foreign_languages: Array.isArray(sProf?.foreign_languages) ? sProf.foreign_languages : (cached.foreign_languages || defaultStudentProfile.foreign_languages),
-          certifications: Array.isArray(sProf?.certifications) ? sProf.certifications : (cached.certifications || defaultStudentProfile.certifications),
-          academic_achievements: sProf?.academic_achievements || cached.academic_achievements || defaultStudentProfile.academic_achievements,
-          address: sProf?.address || cached.address || defaultStudentProfile.address,
+          full_name: prof.full_name || cached.full_name || template.full_name,
+          email: prof.email || cached.email || template.email,
+          phone: prof.phone || cached.phone || template.phone,
+          avatar_url: prof.avatar_url || cached.avatar_url || template.avatar_url,
+          cover_url: prof.cover_url || sProf?.cover_url || cached.cover_url || template.cover_url,
+          bio: prof.bio || cached.bio || template.bio,
+          location: prof.location || cached.location || template.location,
+          university: sProf?.university || cached.university || template.university,
+          major: sProf?.major || cached.major || template.major,
+          graduation_year: sProf?.graduation_year || cached.graduation_year || template.graduation_year,
+          birth_date: sProf?.birth_date || cached.birth_date || template.birth_date,
+          experience: sProf?.experience || cached.experience || template.experience,
+          availability: sProf?.availability || cached.availability || template.availability,
+          career_goals: sProf?.career_goals || cached.career_goals || template.career_goals,
+          skills: (Array.isArray(sProf?.skills) && sProf.skills.length > 0) ? sProf.skills : (cached.skills?.length ? cached.skills : template.skills),
+          foreign_languages: Array.isArray(sProf?.foreign_languages) ? sProf.foreign_languages : (cached.foreign_languages || template.foreign_languages),
+          certifications: Array.isArray(sProf?.certifications) ? sProf.certifications : (cached.certifications || template.certifications),
+          academic_achievements: sProf?.academic_achievements || cached.academic_achievements || template.academic_achievements,
+          address: sProf?.address || cached.address || template.address,
           is_public: sProf?.is_public !== undefined ? sProf.is_public : (cached.is_public !== undefined ? cached.is_public : true)
         };
         saveLocalProfile(userId, merged);
@@ -234,7 +260,7 @@ export async function updateStudentProfile(userId, updates) {
 
 // 3.1. Lấy danh sách dự án
 export async function getStudentProjects(studentId) {
-  if (!studentId) return defaultStudentProjects;
+  if (!studentId) return isSupabaseConfigured ? [] : defaultStudentProjects;
 
   if (isSupabaseConfigured) {
     try {
@@ -244,7 +270,7 @@ export async function getStudentProjects(studentId) {
         .eq('student_id', studentId)
         .order('created_at', { ascending: false });
 
-      if (!error && data && data.length > 0) {
+      if (!error && Array.isArray(data)) {
         saveLocalProjects(studentId, data);
         return data;
       }

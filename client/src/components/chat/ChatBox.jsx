@@ -52,7 +52,7 @@ export default function ChatBox({
   }, 0);
 
   // Định danh người dùng hiện tại để phân biệt tin nhắn gửi (Me) và tin nhắn nhận (Them)
-  const myName = currentUser?.name || (currentRole === 'employer' ? 'Nhà tuyển dụng' : 'Nguyễn Minh Anh');
+  const myName = currentUser?.name || currentUser?.full_name || (currentRole === 'employer' ? 'Nhà tuyển dụng' : 'Sinh viên');
   const myAvatar = currentUser?.avatar || (currentRole === 'employer' ? 'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=150' : 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150');
   const myRole = currentRole || currentUser?.role || 'student';
   const myId = currentUser?.id || (myRole === 'employer' ? 'role_employer' : 'role_student');
@@ -60,7 +60,8 @@ export default function ChatBox({
   const checkIsMe = (msg) => {
     // 1. So khớp senderId cụ thể
     if (msg.senderId) {
-      if (msg.senderId === myId || msg.senderId === (myRole === 'employer' ? 'role_employer' : 'role_student')) return true;
+      if (myId && msg.senderId.toLowerCase() === myId.toLowerCase()) return true;
+      if (msg.senderId === (myRole === 'employer' ? 'role_employer' : 'role_student')) return true;
       return false;
     }
     // 2. So khớp senderRole nếu 2 bên khác vai trò (1 bên student, 1 bên employer)
@@ -503,17 +504,22 @@ export default function ChatBox({
 
                           <div className="min-w-0 flex-1 pr-2">
                             <div className="flex items-center justify-between">
-                              <h4 className="text-xs font-bold text-slate-900 truncate">
-                                {conv.name}
-                              </h4>
+                              <div className="flex items-center gap-1.5 min-w-0">
+                                <h4 className={`text-xs truncate ${conv.unread ? 'font-black text-blue-900' : 'font-bold text-slate-900'}`}>
+                                  {conv.name}
+                                </h4>
+                                {conv.unread && (
+                                  <span className="w-2 h-2 bg-blue-600 rounded-full shrink-0 animate-pulse" />
+                                )}
+                              </div>
                               {lastMsg && (
-                                <span className="text-[10px] text-slate-400 shrink-0 ml-1">
+                                <span className={`text-[10px] shrink-0 ml-1 ${conv.unread ? 'text-blue-600 font-bold' : 'text-slate-400'}`}>
                                   {lastMsg.time || 'Mới'}
                                 </span>
                               )}
                             </div>
 
-                            <p className="text-[11px] text-slate-500 truncate mt-0.5">
+                            <p className={`text-[11px] truncate mt-0.5 ${conv.unread ? 'text-slate-900 font-semibold' : 'text-slate-500'}`}>
                               {lastMsg ? (
                                 <span>
                                   {lastMsg.sender === 'me' ? (

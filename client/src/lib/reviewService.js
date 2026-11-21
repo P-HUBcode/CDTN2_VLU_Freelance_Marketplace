@@ -39,6 +39,7 @@ const INITIAL_MOCK_REVIEWS = [
 ];
 
 function getStoredReviews() {
+  if (isSupabaseConfigured) return [];
   try {
     const raw = localStorage.getItem(LOCAL_STORAGE_REVIEWS_KEY);
     if (!raw) {
@@ -217,7 +218,8 @@ export async function getReviewsForUser(userId) {
     }
   }
 
-  // Fallback từ Local Storage
+  // Fallback từ Local Storage (chỉ khi offline không có Supabase)
+  if (isSupabaseConfigured) return [];
   const list = getStoredReviews();
   return list.filter(r => String(r.reviewee_id) === String(userId));
 }

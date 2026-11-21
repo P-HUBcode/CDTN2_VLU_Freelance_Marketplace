@@ -17,24 +17,27 @@ import {
   FileCheck
 } from 'lucide-react';
 
-export default function ApplyModal({ isOpen, onClose, job, onSubmit, currentUser }) {
-  const [cvOption, setCvOption] = useState('existing'); // 'existing' | 'upload'
+export default function ApplyModal({ isOpen, onClose, job, onSubmit, currentUser, user, profile, studentProfile }) {
+  const hasSavedCv = Boolean(studentProfile?.cv_url || currentUser?.cv_url);
+  const [cvOption, setCvOption] = useState(hasSavedCv ? 'existing' : 'upload'); // 'existing' | 'upload'
   const [selectedFile, setSelectedFile] = useState(null);
   const [fileError, setFileError] = useState('');
   const fileInputRef = useRef(null);
 
-  const defaultEmail = (currentUser?.email && !currentUser.email.includes('@test.vn') && !currentUser.email.includes('@example.com'))
-    ? currentUser.email
-    : 'phu47008@gmail.com';
+  const savedCvUrl = studentProfile?.cv_url || currentUser?.cv_url || '';
+  const savedCvName = savedCvUrl ? savedCvUrl.split('/').pop().replace(/^\d+_/, '') : '';
+
+  const defaultEmail = user?.email || profile?.email || studentProfile?.email || currentUser?.email || '';
+  const defaultName = profile?.full_name || studentProfile?.full_name || user?.user_metadata?.full_name || currentUser?.name || '';
+  const studentUniversity = studentProfile?.university || profile?.university || currentUser?.university || 'Đại học tại TP.HCM';
+  const studentPhone = profile?.phone || studentProfile?.phone || user?.user_metadata?.phone || currentUser?.phone || 'Chưa cập nhật';
 
   const [applicantEmail, setApplicantEmail] = useState(defaultEmail);
-  const [applicantName, setApplicantName] = useState(
-    currentUser?.name || 'Nguyễn Minh Anh'
-  );
+  const [applicantName, setApplicantName] = useState(defaultName);
 
-  const [portfolioLink, setPortfolioLink] = useState('https://behance.net/minhanh-ueh');
+  const [portfolioLink, setPortfolioLink] = useState(studentProfile?.portfolio_url || studentProfile?.website || '');
   const [coverLetter, setCoverLetter] = useState(
-    `Em chào Quý công ty,\nEm là ${currentUser?.name || 'Nguyễn Minh Anh'}, sinh viên tại ${currentUser?.university || 'Đại học Kinh tế TP.HCM (UEH)'}. Em đã xem kỹ yêu cầu công việc "${job?.title || ''}" và nhận thấy kinh nghiệm, kỹ năng của mình rất phù hợp. Em có thể sắp xếp thời gian làm việc linh hoạt theo thời khóa biểu học tập và cam kết hoàn thành đúng hạn các deadline được giao.`
+    `Em chào Quý công ty,\nEm là ${defaultName || 'sinh viên'}, sinh viên tại ${studentUniversity}. Em đã xem kỹ yêu cầu công việc "${job?.title || ''}" và nhận thấy kinh nghiệm, kỹ năng của mình rất phù hợp. Em có thể sắp xếp thời gian làm việc linh hoạt theo thời khóa biểu học tập và cam kết hoàn thành đúng hạn các deadline được giao.`
   );
   const [expectedSalary, setExpectedSalary] = useState(job?.salary || '3.500.000 – 5.000.000đ/tháng');
   const [startDate, setStartDate] = useState('Ngay khi được duyệt');
@@ -91,10 +94,11 @@ export default function ApplyModal({ isOpen, onClose, job, onSubmit, currentUser
           companyLogo: job.companyLogo,
           coverLetter: coverLetter.trim(),
           cvFile: cvOption === 'upload' ? selectedFile : null,
-          existingCvUrl: 'https://studenthub.vn/uploads/CV_NguyenMinhAnh_Marketing.pdf',
+          existingCvUrl: savedCvUrl,
           expectedSalary,
           availableHours,
           portfolioLink,
+          studentId: user?.id || currentUser?.id,
           studentEmail: applicantEmail.trim(),
           studentName: applicantName.trim()
         });
@@ -136,15 +140,15 @@ export default function ApplyModal({ isOpen, onClose, job, onSubmit, currentUser
         <div className="p-3 bg-blue-50/50 rounded-xl border border-blue-100 grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs text-slate-700">
           <div className="flex items-center gap-2">
             <User className="w-3.5 h-3.5 text-blue-600 shrink-0" />
-            <span className="truncate"><strong>Họ tên:</strong> {applicantName}</span>
+            <span className="truncate"><strong>Họ tên:</strong> {applicantName || 'Chưa cập nhật'}</span>
           </div>
           <div className="flex items-center gap-2">
             <Phone className="w-3.5 h-3.5 text-blue-600 shrink-0" />
-            <span className="truncate"><strong>SĐT:</strong> 0901 234 567</span>
+            <span className="truncate"><strong>SĐT:</strong> {studentPhone}</span>
           </div>
           <div className="flex items-center gap-2 sm:col-span-2">
             <GraduationCap className="w-3.5 h-3.5 text-blue-600 shrink-0" />
-            <span className="truncate"><strong>Trường:</strong> {currentUser?.university || 'ĐH Kinh tế TP.HCM (UEH)'}</span>
+            <span className="truncate"><strong>Trường:</strong> {studentUniversity}</span>
           </div>
         </div>
 
@@ -153,7 +157,7 @@ export default function ApplyModal({ isOpen, onClose, job, onSubmit, currentUser
           <div className="flex items-center justify-between">
             <label className="font-bold text-amber-900 flex items-center gap-1.5">
               <Mail className="w-4 h-4 text-amber-600" />
-              <span>Email nhận kết quả & thư mời phỏng vấn (Gmail thật):</span>
+              <span>Email nhận kết quả & thư mời phỏng vấn:</span>
             </label>
             <span className="text-[10px] text-amber-700 bg-amber-100 px-2 py-0.5 rounded-full font-semibold">Tự động gửi mail</span>
           </div>
@@ -161,12 +165,12 @@ export default function ApplyModal({ isOpen, onClose, job, onSubmit, currentUser
             type="email"
             value={applicantEmail}
             onChange={(e) => setApplicantEmail(e.target.value)}
-            placeholder="vd: phu47008@gmail.com"
+            placeholder="vd: sinhvien@gmail.com"
             className="w-full px-3 py-2 bg-white border border-amber-300 rounded-lg text-xs font-semibold text-slate-800 focus:outline-none focus:ring-2 focus:ring-amber-400"
             required
           />
           <p className="text-[11px] text-amber-800 leading-tight">
-            🛡️ Hệ thống StudentHub sẽ tự động gửi email xác nhận nộp hồ sơ, lịch phỏng vấn và thông báo trúng tuyển đến hòm thư này để chống spam.
+            🛡️ Hệ thống StudentHub sẽ tự động gửi email xác nhận nộp hồ sơ, lịch phỏng vấn và thông báo trúng tuyển đến hòm thư này.
           </p>
         </div>
 
@@ -178,20 +182,29 @@ export default function ApplyModal({ isOpen, onClose, job, onSubmit, currentUser
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
             <button
               type="button"
+              disabled={!hasSavedCv}
               onClick={() => {
-                setCvOption('existing');
-                setFileError('');
+                if (hasSavedCv) {
+                  setCvOption('existing');
+                  setFileError('');
+                }
               }}
               className={`p-3 rounded-xl border text-left transition flex items-center gap-2.5 ${
-                cvOption === 'existing'
+                !hasSavedCv
+                  ? 'border-slate-200 bg-slate-50 opacity-60 cursor-not-allowed text-slate-400'
+                  : cvOption === 'existing'
                   ? 'border-blue-500 bg-blue-50/50 text-blue-900 ring-1 ring-blue-500'
                   : 'border-slate-200 hover:bg-slate-50 text-slate-700'
               }`}
             >
-              <FileText className="w-5 h-5 text-blue-600 shrink-0" />
+              <FileText className={`w-5 h-5 shrink-0 ${hasSavedCv ? 'text-blue-600' : 'text-slate-400'}`} />
               <div className="min-w-0">
-                <span className="text-xs font-bold block truncate">CV_NguyenMinhAnh_Marketing.pdf</span>
-                <span className="text-[10px] text-slate-400">CV đã lưu trong hồ sơ</span>
+                <span className="text-xs font-bold block truncate">
+                  {hasSavedCv ? savedCvName : 'Chưa có CV trong hồ sơ'}
+                </span>
+                <span className="text-[10px] text-slate-400">
+                  {hasSavedCv ? 'CV đã lưu trong hồ sơ' : 'Vui lòng tải file mới bên cạnh'}
+                </span>
               </div>
             </button>
 

@@ -69,19 +69,9 @@ export function AuthProvider({ children }) {
       const savedMockAuth = localStorage.getItem('studenthub_mock_session');
       let loadedFromMock = false;
 
-      // 1b. Tự động đồng bộ mật khẩu người dùng từ máy chủ Backend
+      // 1b. Dọn dẹp an toàn các bản sao mật khẩu cũ nếu còn lưu trong trình duyệt
       try {
-        fetch('http://localhost:5000/api/auth/user-passwords')
-          .then(res => res.json())
-          .then(resData => {
-            if (resData?.success && resData?.data) {
-              const rawP = localStorage.getItem('studenthub_user_passwords');
-              const localMap = rawP ? JSON.parse(rawP) : {};
-              const merged = { ...resData.data, ...localMap };
-              localStorage.setItem('studenthub_user_passwords', JSON.stringify(merged));
-            }
-          })
-          .catch(() => {});
+        localStorage.removeItem('studenthub_user_passwords');
       } catch (e) {}
 
       if (savedMockAuth) {
@@ -189,16 +179,7 @@ export function AuthProvider({ children }) {
       created_at: new Date().toISOString()
     };
 
-    // 2. Lưu mật khẩu cho Admin quản lý & xác thực đăng nhập
-    try {
-      const rawPwd = localStorage.getItem('studenthub_user_passwords');
-      const pwdMap = rawPwd ? JSON.parse(rawPwd) : {};
-      pwdMap[cleanEmail] = password;
-      pwdMap[tempId] = password;
-      localStorage.setItem('studenthub_user_passwords', JSON.stringify(pwdMap));
-    } catch (e) {}
-
-    // 3. Lưu vào danh sách người dùng đã đăng ký
+    // 2. Lưu vào danh sách người dùng đã đăng ký (hồ sơ cục bộ)
     try {
       const rawRegistered = localStorage.getItem('studenthub_registered_users');
       const usersList = rawRegistered ? JSON.parse(rawRegistered) : [];
@@ -219,7 +200,7 @@ export function AuthProvider({ children }) {
       }
     };
 
-    // 4. Nếu có cấu hình Supabase: đồng bộ đăng ký lên Supabase Auth
+    // 3. Nếu có cấu hình Supabase: đồng bộ đăng ký lên Supabase Auth
     if (isSupabaseConfigured) {
       try {
         const { data, error } = await supabase.auth.signUp({
@@ -240,19 +221,18 @@ export function AuthProvider({ children }) {
           createdUser.id = data.user.id;
           newProfile.id = data.user.id;
 
-          // Cập nhật ID chuẩn từ Supabase vào bảng mật khẩu và hồ sơ
           try {
-            const rawPwd = localStorage.getItem('studenthub_user_passwords');
-            const pwdMap = rawPwd ? JSON.parse(rawPwd) : {};
-            pwdMap[data.user.id] = password;
-            localStorage.setItem('studenthub_user_passwords', JSON.stringify(pwdMap));
-
             const rawReg = localStorage.getItem('studenthub_registered_users');
             const usersList = rawReg ? JSON.parse(rawReg) : [];
             const idx = usersList.findIndex(u => u.email?.toLowerCase() === cleanEmail);
             if (idx !== -1) usersList[idx].id = data.user.id;
             localStorage.setItem('studenthub_registered_users', JSON.stringify(usersList));
           } catch (e) {}
+
+          // Nếu Supabase trả về session ngay lập tức (khi Confirm email = OFF)
+          if (data.session) {
+            setSession(data.session);
+          }
 
           // Cố gắng ghi profile vào bảng public.profiles nếu kết nối cho phép
           try {
@@ -278,11 +258,11 @@ export function AuthProvider({ children }) {
           } catch (e) {}
         }
       } catch (err) {
-        console.warn('Lỗi Supabase signUp (đã xác thực qua Gmail OTP, tiếp tục hoàn tất tạo tài khoản):', err);
+        console.warn('Lỗi Supabase signUp (tiếp tục hoàn tất tạo tài khoản):', err);
       }
     }
 
-    // 5. Tự động thiết lập phiên đăng nhập ngay khi xác thực thành công
+    // 4. Thiết lập người dùng và hồ sơ
     setUser(createdUser);
     setProfile(newProfile);
     setRole(selectedRole);
@@ -310,55 +290,20 @@ export function AuthProvider({ children }) {
     return { success: true, user: createdUser };
   };
 
-  // 4. Đăng nhập (Hỗ trợ Supabase Auth + Xác thực tài khoản đăng ký qua Gmail OTP + Admin đổi mật khẩu)
+  // 4. Đăng nhập (Xác thực tiêu chuẩn qua Supabase Auth)
   const signIn = async ({ email, password }) => {
     setLoading(true);
     setAuthError(null);
     const cleanEmail = (email || '').trim().toLowerCase();
 
-    // Đọc danh sách mật khẩu người dùng đã đăng ký hoặc được Admin gán
-    let pwdMap = {};
-    try {
-      const rawPwd = localStorage.getItem('studenthub_user_passwords');
-      pwdMap = rawPwd ? JSON.parse(rawPwd) : {};
-    } catch (e) {}
-
-    const defaultPasswords = {
-      'student.a@test.vn': 'Password123!',
-      'student.b@test.vn': 'Password123!',
-      'employer.a@test.vn': 'Password123!',
-      'employer.b@test.vn': 'Password123!',
-      'admin@test.vn': 'Password123!',
-      'phu47008@gmail.com': 'Password123!',
-      'havykute0101@gmail.com': 'Password123!',
-      'test_signup_1795109425500@gmail.com': 'Password123!',
-      'sinhvien.demo@student.vlu.edu.vn': 'VluStudent@2026',
-      'tuyendung.demo@gmail.com': 'Employer@2026'
-    };
-
-    let expectedPass = pwdMap[cleanEmail] || defaultPasswords[cleanEmail];
-
-    // Nếu chưa có trong local, đồng bộ tức thời từ Backend server
-    if (!expectedPass) {
-      try {
-        const pRes = await fetch('http://localhost:5000/api/auth/user-passwords');
-        if (pRes.ok) {
-          const pData = await pRes.json();
-          if (pData?.data?.[cleanEmail]) {
-            expectedPass = pData.data[cleanEmail];
-            pwdMap[cleanEmail] = expectedPass;
-            try { localStorage.setItem('studenthub_user_passwords', JSON.stringify(pwdMap)); } catch (e) {}
-          }
-        }
-      } catch (e) {}
+    if (!cleanEmail || !password) {
+      const errMsg = 'Vui lòng cung cấp email và mật khẩu.';
+      setAuthError(errMsg);
+      setLoading(false);
+      return { success: false, error: errMsg };
     }
 
-    // Mặc định an toàn cho các tài khoản hệ thống / Supabase
-    if (!expectedPass && (cleanEmail.includes('havykute') || cleanEmail.includes('vy'))) {
-      expectedPass = 'Password123!';
-    }
-
-    // 1. Thử đăng nhập qua Supabase Auth nếu có session trực tiếp
+    // 1. Đăng nhập chính thức qua Supabase Auth
     if (isSupabaseConfigured) {
       try {
         const { data, error } = await supabase.auth.signInWithPassword({
@@ -366,12 +311,27 @@ export function AuthProvider({ children }) {
           password
         });
 
-        // Supabase đăng nhập thành công trực tiếp (Email đã xác thực trên Supabase)
-        if (!error && data?.session) {
+        if (error) {
+          let errorMsg = 'Email hoặc mật khẩu không chính xác. Vui lòng kiểm tra lại.';
+          const lowerMsg = (error.message || '').toLowerCase();
+          if (lowerMsg.includes('email not confirmed')) {
+            errorMsg = 'Tài khoản chưa được kích hoạt xác thực email trên Supabase. Vui lòng kiểm tra lại hoặc liên hệ Quản trị viên hỗ trợ.';
+          } else if (lowerMsg.includes('invalid login credentials')) {
+            errorMsg = 'Email hoặc mật khẩu không chính xác. Vui lòng kiểm tra lại.';
+          } else if (lowerMsg.includes('rate limit') || lowerMsg.includes('too many requests')) {
+            errorMsg = 'Bạn đã thử đăng nhập quá nhiều lần. Vui lòng chờ ít phút rồi thử lại.';
+          } else {
+            errorMsg = error.message;
+          }
+          setAuthError(errorMsg);
+          setLoading(false);
+          return { success: false, error: errorMsg };
+        }
+
+        if (data?.session && data?.user) {
           try {
-            pwdMap[cleanEmail] = password;
-            if (data.user?.id) pwdMap[data.user.id] = password;
-            localStorage.setItem('studenthub_user_passwords', JSON.stringify(pwdMap));
+            localStorage.removeItem('studenthub_mock_session');
+            localStorage.removeItem('studenthub_user_passwords');
           } catch (e) {}
 
           setUser(data.user);
@@ -381,120 +341,16 @@ export function AuthProvider({ children }) {
           return { success: true, user: data.user };
         }
       } catch (err) {
-        console.warn('Supabase signInWithPassword thông báo:', err?.message);
-      }
-    }
-
-    // 2. Xác thực theo dữ liệu tài khoản đã đăng ký (xử lý "Email not confirmed", mật khẩu do Admin gán hoặc Gmail OTP)
-    if (expectedPass) {
-      if (password !== expectedPass) {
-        const errMsg = 'Mật khẩu không chính xác. Vui lòng kiểm tra lại.';
+        console.error('Exception khi đăng nhập Supabase:', err);
+        const errMsg = err.message || 'Lỗi kết nối máy chủ xác thực.';
         setAuthError(errMsg);
         setLoading(false);
         return { success: false, error: errMsg };
       }
-
-      // Mật khẩu chính xác! Tìm thông tin tài khoản đã đăng ký
-      let regUser = null;
-      try {
-        const rawReg = localStorage.getItem('studenthub_registered_users');
-        if (rawReg) {
-          const list = JSON.parse(rawReg);
-          regUser = list.find(u => u.email?.toLowerCase() === cleanEmail);
-        }
-      } catch (e) {}
-
-      let resolvedRole = regUser?.role || 'student';
-      let resolvedName = regUser?.full_name || regUser?.fullName;
-      let resolvedUni = regUser?.university;
-      let resolvedMajor = regUser?.major;
-      let resolvedId = regUser?.id;
-
-      if (!resolvedName) {
-        if (cleanEmail.includes('admin')) {
-          resolvedRole = 'admin';
-          resolvedName = 'Quản trị viên Hệ Thống';
-        } else if (cleanEmail.includes('employer') || cleanEmail.includes('tuyendung')) {
-          resolvedRole = 'employer';
-          resolvedName = 'Nhà tuyển dụng Doanh nghiệp';
-        } else if (cleanEmail === 'student.a@test.vn') {
-          resolvedRole = 'student';
-          resolvedName = 'Sinh viên A (Test)';
-        } else if (cleanEmail === 'student.b@test.vn') {
-          resolvedRole = 'student';
-          resolvedName = 'Sinh viên B (Test)';
-        } else if (cleanEmail.includes('phu')) {
-          resolvedRole = 'student';
-          resolvedName = 'Nguyễn Minh Phú';
-        } else if (cleanEmail.includes('havykute') || cleanEmail.includes('vy')) {
-          resolvedRole = 'student';
-          resolvedName = 'Vy';
-          resolvedUni = 'Đại học Kinh tế TP.HCM (UEH)';
-          resolvedMajor = 'Quản trị';
-          resolvedId = '8789328f-66cb-4b37-b8e1-17fae0c00ef5';
-        } else if (cleanEmail.includes('test_signup_1795109425500')) {
-          resolvedRole = 'student';
-          resolvedName = 'test_signup_1795109425500';
-          resolvedUni = 'Đại học';
-          resolvedMajor = 'Marketing';
-          resolvedId = 'c1d046ef-28db-4942-98b4-3a7b0d64fc66';
-        } else {
-          resolvedName = cleanEmail.split('@')[0];
-        }
-      }
-
-      const authenticatedUser = {
-        id: resolvedId || regUser?.id || `usr_${cleanEmail.replace(/[^a-zA-Z0-9]/g, '_')}`,
-        email: cleanEmail,
-        user_metadata: {
-          full_name: resolvedName,
-          role: resolvedRole,
-          university: resolvedUni || regUser?.university,
-          major: resolvedMajor || regUser?.major,
-          company_name: regUser?.company_name
-        }
-      };
-
-      const authenticatedProfile = {
-        id: authenticatedUser.id,
-        full_name: resolvedName,
-        email: cleanEmail,
-        role: resolvedRole,
-        avatar_url: regUser?.avatar_url || 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150&auto=format&fit=crop&q=80',
-        university: resolvedUni || regUser?.university || (resolvedRole === 'student' ? 'Đại học Kinh tế TP.HCM (UEH)' : undefined),
-        major: resolvedMajor || regUser?.major || (resolvedRole === 'student' ? 'Quản trị' : undefined),
-        company_name: regUser?.company_name || (resolvedRole === 'employer' ? 'Studio Sáng tạo' : undefined)
-      };
-
-      setUser(authenticatedUser);
-      setProfile(authenticatedProfile);
-      setRole(resolvedRole);
-
-      if (resolvedRole === 'student') {
-        setStudentProfile({
-          user_id: authenticatedUser.id,
-          university: authenticatedProfile.university,
-          major: authenticatedProfile.major
-        });
-      } else if (resolvedRole === 'employer') {
-        setCompany({
-          owner_id: authenticatedUser.id,
-          company_name: authenticatedProfile.company_name
-        });
-      }
-
-      localStorage.setItem('studenthub_mock_session', JSON.stringify({
-        user: authenticatedUser,
-        profile: authenticatedProfile,
-        role: resolvedRole
-      }));
-
-      setLoading(false);
-      return { success: true, user: authenticatedUser };
     }
 
-    // 3. Nếu không tìm thấy thông tin email đã đăng ký
-    const notFoundMsg = 'Tài khoản chưa được đăng ký hoặc email không chính xác.';
+    // 2. Chế độ Mock Session Fallback (chỉ khi không có Supabase)
+    const notFoundMsg = 'Tài khoản chưa được đăng ký hoặc email/mật khẩu không chính xác.';
     setAuthError(notFoundMsg);
     setLoading(false);
     return { success: false, error: notFoundMsg };
@@ -512,12 +368,18 @@ export function AuthProvider({ children }) {
     }
     try {
       localStorage.removeItem('studenthub_mock_session');
+      localStorage.removeItem('studenthub_user_passwords');
       localStorage.removeItem('studenthub_current_user');
       localStorage.removeItem('studenthub_wallet_balance');
       localStorage.removeItem('studenthub_conversations');
       localStorage.removeItem('studenthub_conversations_default');
       localStorage.removeItem('studenthub_conversations_role_student');
       localStorage.removeItem('studenthub_conversations_role_employer');
+      localStorage.removeItem('studenthub_projects');
+      localStorage.removeItem('studenthub_credited_projects');
+      if (user?.id) {
+        localStorage.removeItem(`studenthub_projects_${String(user.id).trim().toLowerCase()}`);
+      }
       localStorage.removeItem('studenthub_local_applications');
       localStorage.removeItem('studenthub_bookmarked_ids');
     } catch (e) {}
@@ -672,6 +534,8 @@ export function AuthProvider({ children }) {
   const value = {
     user,
     session,
+    setUser,
+    setSession,
     profile,
     studentProfile,
     company,
@@ -686,6 +550,7 @@ export function AuthProvider({ children }) {
     signOut,
     loginAsDemo,
     updateProfile,
+    fetchUserProfile,
     isSupabaseConfigured,
     isAuthenticated: Boolean(user)
   };

@@ -27,7 +27,7 @@ exports.getNotifications = async (req, res) => {
     list = list.filter((n) => {
       const matchId = qId && n.userId && n.userId.toLowerCase() === qId;
       const matchEmail = qEmail && n.userEmail && n.userEmail.toLowerCase() === qEmail;
-      const matchName = qName && n.recipientName && n.recipientName.toLowerCase().includes(qName);
+      const matchName = qName && ((n.recipientName && n.recipientName.toLowerCase().includes(qName)) || (n.userName && n.userName.toLowerCase().includes(qName)));
       return matchId || matchEmail || matchName;
     });
 

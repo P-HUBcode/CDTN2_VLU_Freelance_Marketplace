@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Badge from '../components/common/Badge';
 import {
   Search,
@@ -15,8 +15,13 @@ import {
   MapPin,
   Clock,
   Bookmark,
-  GraduationCap
+  GraduationCap,
+  BookOpen,
+  ChevronDown,
+  ChevronUp
 } from 'lucide-react';
+import { getStoredArticles } from '../lib/articleService';
+import ArticleDetailModal from '../components/common/ArticleDetailModal';
 
 export default function LandingPage({
   jobs = [],
@@ -39,6 +44,31 @@ export default function LandingPage({
   ];
 
   const featuredJobs = jobs.slice(0, 6);
+
+  // Quản lý bài viết Cẩm nang Nghề nghiệp (giống TopCV - đặt ở cuối trang chủ)
+  const [articles, setArticles] = useState(getStoredArticles());
+  const [selectedCategory, setSelectedCategory] = useState('TẤT CẢ');
+  const [visibleArticlesCount, setVisibleArticlesCount] = useState(8);
+  const [selectedArticle, setSelectedArticle] = useState(null);
+
+  const categories = ['TẤT CẢ', 'WIKI CAREER', 'KỸ NĂNG', 'HƯỚNG DẪN', 'THƯ GIÃN'];
+
+  // Đồng bộ bài viết CMS khi Admin đăng hoặc xóa bài
+  useEffect(() => {
+    const syncArticles = () => {
+      setArticles(getStoredArticles());
+    };
+    window.addEventListener('storage', syncArticles);
+    window.addEventListener('studenthub_articles_updated', syncArticles);
+    return () => {
+      window.removeEventListener('storage', syncArticles);
+      window.removeEventListener('studenthub_articles_updated', syncArticles);
+    };
+  }, []);
+
+  const filteredArticles = selectedCategory === 'TẤT CẢ'
+    ? articles
+    : articles.filter((a) => a.category?.toUpperCase() === selectedCategory);
 
   const handleSearch = (e) => {
     e.preventDefault();
@@ -360,6 +390,143 @@ export default function LandingPage({
           </button>
         </div>
       </section>
+
+      {/* 5. CẨM NANG NGHỀ NGHIỆP (GIỐNG TOPCV - ĐẶT Ở DƯỚI CÙNG TRANG CHỦ, LƯỚT XUỐNG DƯỚI ĐỂ XEM) */}
+      <section id="cam-nang" className="bg-white rounded-3xl border border-slate-200/90 p-6 sm:p-10 shadow-subtle space-y-6 scroll-mt-20">
+        <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 border-b border-slate-100 pb-6">
+          <div className="space-y-1.5">
+            <div className="inline-flex items-center gap-2 px-3 py-1 bg-blue-50 text-blue-700 rounded-full text-xs font-semibold">
+              <BookOpen className="w-3.5 h-3.5" />
+              <span>Cẩm Nang & Hành Trang Nghề Nghiệp</span>
+            </div>
+            <h2 className="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight">
+              Cẩm Nang Nghề Nghiệp
+            </h2>
+            <p className="text-xs sm:text-sm text-slate-500 max-w-2xl">
+              Cập nhật kiến thức pháp lý, kỹ năng nghề nghiệp, kinh nghiệm phỏng vấn và bí quyết thành công dành riêng cho sinh viên
+            </p>
+          </div>
+
+          {/* Bộ lọc danh mục bài viết */}
+          <div className="flex flex-wrap items-center gap-1.5">
+            {categories.map((cat) => {
+              const isActive = selectedCategory === cat;
+              return (
+                <button
+                  key={cat}
+                  onClick={() => {
+                    setSelectedCategory(cat);
+                    setVisibleArticlesCount(8);
+                  }}
+                  className={`px-3 py-1.5 rounded-xl text-xs font-bold transition-all ${
+                    isActive
+                      ? 'bg-blue-600 text-white shadow-sm shadow-blue-500/20'
+                      : 'bg-slate-100 hover:bg-slate-200 text-slate-600'
+                  }`}
+                >
+                  {cat}
+                </button>
+              );
+            })}
+          </div>
+        </div>
+
+        {/* Danh sách bài viết */}
+        {filteredArticles.length === 0 ? (
+          <div className="py-12 text-center text-slate-400 text-xs sm:text-sm">
+            Chưa có bài viết nào trong chuyên mục này.
+          </div>
+        ) : (
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-5">
+            {filteredArticles.slice(0, visibleArticlesCount).map((article) => {
+              const isRelax = article.category === 'THƯ GIÃN';
+              return (
+                <div
+                  key={article.id}
+                  onClick={() => setSelectedArticle(article)}
+                  className="group bg-white rounded-2xl border border-slate-200 overflow-hidden hover:shadow-cardHover hover:border-blue-400 transition-all duration-200 cursor-pointer flex flex-col hover:-translate-y-1"
+                >
+                  {/* Ảnh bìa bài viết */}
+                  <div className="relative h-44 overflow-hidden bg-slate-100">
+                    <img
+                      src={article.imageUrl}
+                      alt={article.title}
+                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                    />
+                    <div className="absolute top-2.5 left-2.5">
+                      <span
+                        className={`px-2 py-0.5 text-[10px] font-extrabold uppercase rounded-md tracking-wider border shadow-sm ${
+                          isRelax
+                            ? 'bg-amber-500 text-white border-amber-600'
+                            : 'bg-blue-600 text-white border-blue-700'
+                        }`}
+                      >
+                        {article.category}
+                      </span>
+                    </div>
+                  </div>
+
+                  {/* Nội dung bài viết */}
+                  <div className="p-4 flex-1 flex flex-col justify-between">
+                    <div>
+                      <div
+                        className={`text-[10px] font-extrabold uppercase tracking-wider mb-1.5 ${
+                          isRelax ? 'text-amber-600' : 'text-blue-600'
+                        }`}
+                      >
+                        {article.category}
+                      </div>
+                      <h3 className="text-sm font-bold text-slate-900 group-hover:text-blue-600 transition leading-snug line-clamp-2">
+                        {article.title}
+                      </h3>
+                      {article.summary && (
+                        <p className="mt-1.5 text-xs text-slate-500 line-clamp-2">
+                          {article.summary}
+                        </p>
+                      )}
+                    </div>
+
+                    <div className="mt-3.5 pt-2.5 border-t border-slate-100 flex items-center justify-between text-[11px] text-slate-400">
+                      <span>{article.publishedDate}</span>
+                      <span className="font-semibold text-blue-600 group-hover:underline">Chi tiết →</span>
+                    </div>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        )}
+
+        {/* Nút Xem thêm bài viết nếu nhiều bài */}
+        {filteredArticles.length > 4 && (
+          <div className="pt-2 flex justify-center">
+            {visibleArticlesCount < filteredArticles.length ? (
+              <button
+                onClick={() => setVisibleArticlesCount((prev) => Math.min(prev + 4, filteredArticles.length))}
+                className="inline-flex items-center gap-2 px-5 py-2.5 bg-blue-50 hover:bg-blue-100 active:scale-95 text-blue-700 text-xs sm:text-sm font-bold rounded-xl transition border border-blue-200/60 shadow-sm"
+              >
+                <span>Xem thêm cẩm nang & tin tức (còn {filteredArticles.length - visibleArticlesCount} bài)</span>
+                <ChevronDown className="w-4 h-4" />
+              </button>
+            ) : (
+              <button
+                onClick={() => setVisibleArticlesCount(4)}
+                className="inline-flex items-center gap-2 px-5 py-2.5 bg-slate-100 hover:bg-slate-200 active:scale-95 text-slate-700 text-xs sm:text-sm font-semibold rounded-xl transition"
+              >
+                <span>Thu gọn cẩm nang</span>
+                <ChevronUp className="w-4 h-4" />
+              </button>
+            )}
+          </div>
+        )}
+      </section>
+
+      {/* Modal xem chi tiết bài viết cẩm nang */}
+      <ArticleDetailModal
+        isOpen={Boolean(selectedArticle)}
+        onClose={() => setSelectedArticle(null)}
+        article={selectedArticle}
+      />
     </div>
   );
 }

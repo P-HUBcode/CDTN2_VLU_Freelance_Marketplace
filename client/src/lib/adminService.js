@@ -26,12 +26,12 @@ export async function getAdminStats() {
     }
   }
 
-  // Fallback thống kê mẫu cho chế độ local
+  // Fallback thống kê khi không có dữ liệu
   return {
-    totalStudents: 148,
-    totalEmployers: 42,
-    totalJobs: 86,
-    totalApplications: 312
+    totalStudents: 0,
+    totalEmployers: 0,
+    totalJobs: 0,
+    totalApplications: 0
   };
 }
 
@@ -103,7 +103,12 @@ export async function getAllJobsForAdmin({ status = 'all', search = '', page = 1
     }
   }
 
-  // Fallback Local Storage
+  // Khi đang kết nối Supabase Cloud mà truy vấn trả về rỗng: Không tự chèn tin mẫu
+  if (isSupabaseConfigured) {
+    return { jobs: [], totalCount: 0 };
+  }
+
+  // Fallback Local Storage (chỉ khi offline)
   const { jobs: all } = await getMarketplaceJobs({ pageSize: 100 });
   let filtered = [...(all || [])];
   if (status && status !== 'all') {
@@ -150,42 +155,7 @@ export async function updateJobStatusByAdmin(jobId, newStatus, reason = '') {
 }
 
 // ------------------------------------------------------------------------------
-// 4. QUẢN LÝ MẬT KHẨU NGƯỜI DÙNG DÀNH CHO ADMIN
-// ------------------------------------------------------------------------------
-const DEFAULT_PASSWORDS = {
-  'student.a@test.vn': 'Password123!',
-  'student.b@test.vn': 'Password123!',
-  'employer.a@test.vn': 'Password123!',
-  'employer.b@test.vn': 'Password123!',
-  'admin@test.vn': 'Password123!',
-  'phu47008@gmail.com': 'Password123!',
-  'havykute0101@gmail.com': 'Password123!',
-  'test_signup_1795109425500@gmail.com': 'Password123!',
-  'sinhvien.demo@student.vlu.edu.vn': 'VluStudent@2026',
-  'tuyendung.demo@gmail.com': 'Employer@2026'
-};
-
-export function getUserPasswordMap() {
-  try {
-    const raw = localStorage.getItem('studenthub_user_passwords');
-    const custom = raw ? JSON.parse(raw) : {};
-    return { ...DEFAULT_PASSWORDS, ...custom };
-  } catch (e) {
-    return { ...DEFAULT_PASSWORDS };
-  }
-}
-
-export function getUserPassword(user) {
-  const map = getUserPasswordMap();
-  const emailKey = (user?.email || '').trim().toLowerCase();
-  const idKey = user?.id || '';
-  if (map[emailKey]) return map[emailKey];
-  if (map[idKey]) return map[idKey];
-  return 'Password123!';
-}
-
-// ------------------------------------------------------------------------------
-// 5. LẤY DANH SÁCH NGƯỜI DÙNG CHO ADMIN QUẢN TRỊ (KÈM MẬT KHẨU QUẢN TRỊ)
+// 5. LẤY DANH SÁCH NGƯỜI DÙNG CHO ADMIN QUẢN TRỊ
 // ------------------------------------------------------------------------------
 export async function getAllUsersForAdmin({ role = 'all', search = '', page = 1, pageSize = 30 } = {}) {
   let allUsers = [];
@@ -225,7 +195,7 @@ export async function getAllUsersForAdmin({ role = 'all', search = '', page = 1,
           avatarUrl: u.avatar_url,
           isActive: u.is_active !== false,
           createdAt: u.created_at,
-          password: getUserPassword(u)
+          isEmailConfirmed: true
         }));
       }
     } catch (err) {
@@ -233,82 +203,34 @@ export async function getAllUsersForAdmin({ role = 'all', search = '', page = 1,
     }
   }
 
-  // Kết hợp thêm người dùng đã đăng ký qua form (localStorage)
-  try {
-    const rawReg = localStorage.getItem('studenthub_registered_users');
-    if (rawReg) {
-      const registeredList = JSON.parse(rawReg);
-      registeredList.forEach(reg => {
-        if (!allUsers.some(u => u.email?.toLowerCase() === reg.email?.toLowerCase())) {
-          allUsers.push({
-            id: reg.id || `reg_${Date.now()}`,
-            fullName: reg.full_name || reg.fullName || 'Người dùng mới',
-            email: reg.email,
-            phone: reg.phone || '0901234567',
-            role: reg.role || 'student',
-            avatarUrl: reg.avatar_url || reg.avatarUrl || 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=120',
-            university: reg.university,
-            companyName: reg.company_name,
-            isActive: true,
-            createdAt: reg.createdAt || new Date().toISOString(),
-            password: getUserPassword(reg)
-          });
-        }
-      });
-    }
-  } catch (e) {}
-
-  // Fallback các tài khoản demo nếu danh sách còn trống
-  if (allUsers.length === 0) {
-    const mockUsers = [
-      {
-        id: '11111111-1111-1111-1111-111111111111',
-        fullName: 'Nguyễn Minh Anh',
-        email: 'student.a@test.vn',
-        phone: '0901234567',
-        role: 'student',
-        avatarUrl: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=120',
-        isActive: true,
-        createdAt: '2026-10-01T08:00:00Z',
-        password: getUserPassword({ email: 'student.a@test.vn' })
-      },
-      {
-        id: '22222222-2222-2222-2222-222222222222',
-        fullName: 'Trần Thị Bích',
-        email: 'student.b@test.vn',
-        phone: '0902345678',
-        role: 'student',
-        avatarUrl: 'https://images.unsplash.com/photo-1517841905240-472988babdf9?w=120',
-        isActive: true,
-        createdAt: '2026-10-05T09:30:00Z',
-        password: getUserPassword({ email: 'student.b@test.vn' })
-      },
-      {
-        id: 'aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa',
-        fullName: 'ABC Media Studio (HR Mai)',
-        email: 'employer.a@test.vn',
-        phone: '0987654321',
-        role: 'employer',
-        avatarUrl: 'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=120',
-        isActive: true,
-        createdAt: '2026-09-20T10:00:00Z',
-        password: getUserPassword({ email: 'employer.a@test.vn' })
-      },
-      {
-        id: 'bbbbbbbb-bbbb-bbbb-bbbb-bbbbbbbbbbbb',
-        fullName: 'TechCorp Solutions',
-        email: 'employer.b@test.vn',
-        phone: '0911223344',
-        role: 'employer',
-        avatarUrl: 'https://images.unsplash.com/photo-1560179707-f14e90ef3623?w=120',
-        isActive: false,
-        createdAt: '2026-09-25T14:15:00Z',
-        password: getUserPassword({ email: 'employer.b@test.vn' })
+  // Chỉ sử dụng bộ nhớ cục bộ làm fallback khi KHÔNG kết nối Supabase Cloud
+  if (!isSupabaseConfigured) {
+    try {
+      const rawReg = localStorage.getItem('studenthub_registered_users');
+      if (rawReg) {
+        const registeredList = JSON.parse(rawReg);
+        registeredList.forEach(reg => {
+          if (!allUsers.some(u => u.email?.toLowerCase() === reg.email?.toLowerCase())) {
+            allUsers.push({
+              id: reg.id || `reg_${Date.now()}`,
+              fullName: reg.full_name || reg.fullName || 'Người dùng mới',
+              email: reg.email,
+              phone: reg.phone || '0901234567',
+              role: reg.role || 'student',
+              avatarUrl: reg.avatar_url || reg.avatarUrl || 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=120',
+              university: reg.university,
+              companyName: reg.company_name,
+              isActive: true,
+              createdAt: reg.createdAt || new Date().toISOString(),
+              isEmailConfirmed: true
+            });
+          }
+        });
       }
-    ];
-    allUsers = mockUsers;
+    } catch (e) {}
   }
 
+  // Bỏ cơ chế tự chèn dữ liệu demo vào luồng dùng tài khoản thật khi danh sách trống
   let filtered = [...allUsers];
   if (role && role !== 'all') {
     filtered = filtered.filter(u => u.role === role);
@@ -327,83 +249,46 @@ export async function getAllUsersForAdmin({ role = 'all', search = '', page = 1,
 // ------------------------------------------------------------------------------
 // 6. ADMIN ĐỔI MẬT KHẨU CHO NGƯỜI DÙNG (TỰ ĐỔI MẬT KHẨU BẤT KỲ USER NÀO)
 // ------------------------------------------------------------------------------
-export async function adminChangeUserPassword(userId, newPassword, userEmail) {
-  if (!newPassword || newPassword.trim().length < 6) {
-    throw new Error('Mật khẩu mới phải có tối thiểu 6 ký tự.');
+// ------------------------------------------------------------------------------
+// 6. ADMIN GỬI YÊU CẦU ĐẶT LẠI MẬT KHẨU CHO NGƯỜI DÙNG QUA SUPABASE AUTH
+// ------------------------------------------------------------------------------
+export async function adminResetUserPassword({ email }) {
+  if (!email || !email.includes('@')) {
+    throw new Error('Vui lòng cung cấp địa chỉ email người dùng hợp lệ.');
   }
 
-  const cleanPass = newPassword.trim();
-
-  // 1. Lưu vào registry mật khẩu quản trị
-  try {
-    const raw = localStorage.getItem('studenthub_user_passwords');
-    const pwdMap = raw ? JSON.parse(raw) : {};
-    if (userEmail) pwdMap[userEmail.trim().toLowerCase()] = cleanPass;
-    if (userId) pwdMap[userId] = cleanPass;
-    localStorage.setItem('studenthub_user_passwords', JSON.stringify(pwdMap));
-  } catch (e) {
-    console.warn('Lỗi lưu mật khẩu:', e);
-  }
-
-  // 2. Cập nhật vào danh sách registered_users (nếu user đăng ký lưu tại client)
-  try {
-    const rawReg = localStorage.getItem('studenthub_registered_users');
-    if (rawReg) {
-      const usersList = JSON.parse(rawReg);
-      const updated = usersList.map((u) => {
-        if (
-          (u.id && u.id === userId) ||
-          (userEmail && u.email?.toLowerCase() === userEmail.toLowerCase())
-        ) {
-          return { ...u, password: cleanPass };
-        }
-        return u;
-      });
-      localStorage.setItem('studenthub_registered_users', JSON.stringify(updated));
-    }
-  } catch (e) {}
-
-  // 3. Nếu là phiên đăng nhập hiện tại khớp với tài khoản bị đổi mật khẩu
-  try {
-    const savedMockAuth = localStorage.getItem('studenthub_mock_session');
-    if (savedMockAuth) {
-      const parsed = JSON.parse(savedMockAuth);
-      if (
-        (parsed?.user?.id && parsed.user.id === userId) ||
-        (userEmail && parsed?.user?.email?.toLowerCase() === userEmail.toLowerCase())
-      ) {
-        parsed.password = cleanPass;
-        localStorage.setItem('studenthub_mock_session', JSON.stringify(parsed));
-      }
-    }
-  } catch (e) {}
-
-  // 4. Đồng bộ mật khẩu mới lên Backend Server (cho đa thiết bị & trình duyệt khác)
-  try {
-    fetch('http://localhost:5000/api/auth/update-password', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ email: userEmail, userId, newPassword: cleanPass })
-    }).catch(err => console.warn('Lỗi sync password lên server:', err));
-  } catch (e) {}
-
-  // 5. Nếu có Supabase profiles
-  if (isSupabaseConfigured && userId && !userId.startsWith('mock_') && !userId.startsWith('reg_') && !userId.startsWith('11111111')) {
+  // 1. Lấy token xác thực của Admin từ Supabase hoặc Mock Session
+  let token = null;
+  if (isSupabaseConfigured) {
     try {
-      await supabase.from('profiles').update({
-        updated_at: new Date().toISOString()
-      }).eq('id', userId);
-    } catch (e) {
-      console.warn('Supabase profile timestamp update:', e.message);
-    }
+      const { data: { session } } = await supabase.auth.getSession();
+      if (session?.access_token) {
+        token = session.access_token;
+      }
+    } catch (e) {}
   }
 
-  return {
-    success: true,
-    message: `Đã đổi mật khẩu thành công cho ${userEmail || userId}`,
-    newPassword: cleanPass
-  };
+  // 2. Gửi lệnh đặt lại mật khẩu đến Backend API (kiểm tra quyền Admin tin cậy và gọi Supabase recovery)
+  const res = await fetch('http://localhost:5000/api/admin/reset-password', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      ...(token ? { 'Authorization': `Bearer ${token}` } : {})
+    },
+    body: JSON.stringify({ email: email.trim().toLowerCase() })
+  });
+
+  const data = await res.json();
+  if (!res.ok || !data.success) {
+    throw new Error(data.message || 'Thao tác trên Supabase thất bại.');
+  }
+
+  return data;
 }
+
+// Giữ alias tương thích nếu có code cũ gọi
+export const adminChangeUserPassword = (userId, newPassword, email) =>
+  adminResetUserPassword({ email });
 
 // ------------------------------------------------------------------------------
 // 7. ADMIN KHÓA HOẶC MỞ KHÓA TÀI KHOẢN NGƯỜI DÙNG
@@ -429,4 +314,47 @@ export async function toggleUserActiveStatus(userId, isActive) {
   }
 
   return { id: userId, is_active: isActive };
+}
+
+// ------------------------------------------------------------------------------
+// 8. ADMIN XÓA VĨNH VIỄN TÀI KHOẢN NGƯỜI DÙNG QUA BACKEND API
+// ------------------------------------------------------------------------------
+export async function deleteUserByAdmin(userId, confirmEmail) {
+  if (!userId) throw new Error('Thiếu ID tài khoản cần xóa.');
+  if (!confirmEmail) throw new Error('Vui lòng nhập email xác nhận.');
+
+  let token = null;
+  if (isSupabaseConfigured) {
+    try {
+      const { data: { session } } = await supabase.auth.getSession();
+      if (session?.access_token) {
+        token = session.access_token;
+      }
+    } catch (e) {}
+  }
+
+  const res = await fetch(`http://localhost:5000/api/admin/users/${encodeURIComponent(userId)}`, {
+    method: 'DELETE',
+    headers: {
+      'Content-Type': 'application/json',
+      ...(token ? { 'Authorization': `Bearer ${token}` } : {})
+    },
+    body: JSON.stringify({ confirmEmail: confirmEmail.trim().toLowerCase() })
+  });
+
+  const data = await res.json();
+  if (!res.ok || !data.success) {
+    throw new Error(data.message || 'Xóa tài khoản thất bại.');
+  }
+
+  // Dọn dẹp cache cục bộ nếu có
+  try {
+    const rawReg = localStorage.getItem('studenthub_registered_users');
+    if (rawReg) {
+      const list = JSON.parse(rawReg).filter(u => u.id !== userId && u.email?.toLowerCase() !== confirmEmail.trim().toLowerCase());
+      localStorage.setItem('studenthub_registered_users', JSON.stringify(list));
+    }
+  } catch (e) {}
+
+  return data;
 }

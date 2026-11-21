@@ -16,14 +16,14 @@ export const currentUser = {
   avatar: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=160&auto=format&fit=crop&q=80',
   bio: 'Sinh viên Marketing năm 3 tại UEH đam mê sáng tạo nội dung số, thiết kế Canva, kịch bản video TikTok và chạy chiến dịch social media. Tinh thần trách nhiệm cao, luôn hoàn thành deadline trước hạn.',
   status: 'Đang tìm việc',
-  profileCompletion: 80,
-  rating: 4.8,
-  reviewsCount: 18,
-  projectsCompleted: 12,
-  responseRate: '96%',
-  earningsMonth: '4.800.000đ',
-  totalEarnings: '18.500.000đ',
-  availableBalance: 12500000,
+  profileCompletion: 20,
+  rating: 0,
+  reviewsCount: 0,
+  projectsCompleted: 0,
+  responseRate: '100%',
+  earningsMonth: '0đ',
+  totalEarnings: '0đ',
+  availableBalance: 0,
   skills: [
     'Canva',
     'Content Marketing',
@@ -666,122 +666,16 @@ export const initialServices = [
 ];
 
 // ==============================================================================
-// DỰ ÁN & TIẾN ĐỘ THỰC HIỆN (MANAGE YOUR PROJECT)
+// DỰ ÁN & TIẾN ĐỘ THỰC HIỆN (Rỗng mặc định cho tài khoản mới)
 // ==============================================================================
-export const initialProjects = [
-  {
-    id: 'proj_01',
-    title: 'Thiết kế 20 bài Social Media cho Chuỗi F&B',
-    client: 'ABC Coffee',
-    clientAvatar: 'https://images.unsplash.com/photo-1501339847302-ac426a4a7cbb?w=120&auto=format&fit=crop&q=80',
-    budget: '2.500.000đ',
-    deadline: '15/11/2026',
-    remainingDays: 4,
-    progress: 70,
-    status: 'in_progress', // 'in_progress' | 'pending_review' | 'completed' | 'cancelled'
-    nextTask: 'Thiết kế 10 bài còn lại theo theme Khai trương cơ sở mới',
-    tasks: [
-      { id: 1, name: 'Nhận brief & tone giọng thương hiệu từ Client', completed: true },
-      { id: 2, name: 'Thiết kế Moodboard màu sắc & Font chữ', completed: true },
-      { id: 3, name: 'Thiết kế đợt 1 (10 bài concept đầu tiên)', completed: true },
-      { id: 4, name: 'Thiết kế đợt 2 (10 bài khuyến mãi & khai trương)', completed: false },
-      { id: 5, name: 'Client phản hồi chỉnh sửa đợt cuối', completed: false },
-      { id: 6, name: 'Nghiệm thu toàn bộ file và giải ngân qua StudentHub', completed: false }
-    ],
-    files: [
-      { name: 'Brand_Guidelines_ABCCoffee.pdf', size: '4.2 MB', date: '02/11/2026' },
-      { name: 'Batch1_Designs_10Posts.zip', size: '18.5 MB', date: '05/11/2026' }
-    ]
-  },
-  {
-    id: 'proj_02',
-    title: 'Kịch bản & Quay dựng 4 Video TikTok Lookbook',
-    client: 'Local Brand Chic Studio',
-    clientAvatar: 'https://images.unsplash.com/photo-1560179707-f14e90ef3623?w=120&auto=format&fit=crop&q=80',
-    budget: '1.800.000đ',
-    deadline: '22/11/2026',
-    remainingDays: 11,
-    progress: 40,
-    status: 'in_progress',
-    nextTask: 'Dựng thô video số 3 và phối nhạc nền',
-    tasks: [
-      { id: 1, name: 'Lên 4 kịch bản video TikTok trendy', completed: true },
-      { id: 2, name: 'Quay dựng hoàn chỉnh Video 1 & Video 2', completed: true },
-      { id: 3, name: 'Quay dựng Video 3 & Video 4', completed: false },
-      { id: 4, name: 'Chèn phụ đề động & Xuất file 4K', completed: false }
-    ],
-    files: [
-      { name: 'KichBan_Lookbook_Chic_V1.docx', size: '1.1 MB', date: '04/11/2026' }
-    ]
-  },
-  {
-    id: 'proj_03',
-    title: 'Thiết kế Bộ Banner Quảng Cáo Khuyến Mãi 11.11',
-    client: 'The Book Cafe',
-    clientAvatar: 'https://images.unsplash.com/photo-1522071820081-009f0129c71c?w=120&auto=format&fit=crop&q=80',
-    budget: '800.000đ',
-    deadline: '10/11/2026',
-    remainingDays: 0,
-    progress: 100,
-    status: 'completed',
-    nextTask: 'Đã hoàn thành nghiệm thu & nhận tiền',
-    tasks: [
-      { id: 1, name: 'Nhận thông tin chương trình giảm giá', completed: true },
-      { id: 2, name: 'Thiết kế 6 banner đa kích thước', completed: true },
-      { id: 3, name: 'Bàn giao file và nhận đánh giá 5 sao', completed: true }
-    ],
-    files: [
-      { name: 'Final_Banners_1111.zip', size: '12.4 MB', date: '01/11/2026' }
-    ]
-  }
-];
+export const initialProjects = [];
 
 // ==============================================================================
-// LỊCH SỬ GIAO DỊCH & DÒNG TIỀN VÍ
+// LỊCH SỬ GIAO DỊCH & DÒNG TIỀN VÍ (Rỗng mặc định cho tài khoản mới)
 // ==============================================================================
-export const initialTransactions = [
-  {
-    id: 'tx_01',
-    jobTitle: 'Thiết kế banner 11.11',
-    client: 'The Book Cafe',
-    date: '02/11/2026',
-    amount: '+500.000đ',
-    status: 'completed'
-  },
-  {
-    id: 'tx_02',
-    jobTitle: 'Content TikTok Lookbook Đợt 1',
-    client: 'Chic Studio',
-    date: '01/11/2026',
-    amount: '+800.000đ',
-    status: 'pending'
-  },
-  {
-    id: 'tx_03',
-    jobTitle: 'Viết 5 bài blog du lịch SEO',
-    client: 'GoVietnam Travel',
-    date: '28/10/2026',
-    amount: '+750.000đ',
-    status: 'completed'
-  },
-  {
-    id: 'tx_04',
-    jobTitle: 'Rút tiền về Vietcombank (***756)',
-    client: 'Hệ thống StudentHub',
-    date: '25/10/2026',
-    amount: '-2.000.000đ',
-    status: 'completed'
-  }
-];
+export const initialTransactions = [];
 
-export const monthlyEarningsChart = [
-  { month: 'T6', amount: 1800000 },
-  { month: 'T7', amount: 2400000 },
-  { month: 'T8', amount: 3200000 },
-  { month: 'T9', amount: 3900000 },
-  { month: 'T10', amount: 4800000 },
-  { month: 'T11', amount: 4800000 }
-];
+export const monthlyEarningsChart = [];
 
 // ==============================================================================
 // TIN NHẮN CHAT VỚI NHÀ TUYỂN DỤNG & CLIENT (Rỗng mặc định cho tài khoản mới)
@@ -797,63 +691,10 @@ export const initialAppliedJobs = [];
 // DÀNH CHO NHÀ TUYỂN DỤNG (EMPLOYER DASHBOARD & KANBAN APPLICANTS)
 // ==============================================================================
 export const employerDashboardStats = {
-  totalJobs: 12,
-  totalApplicants: 86,
-  activeJobs: 5,
-  hiredCount: 7
+  totalJobs: 0,
+  totalApplicants: 0,
+  activeJobs: 0,
+  hiredCount: 0
 };
 
-export const initialApplicantsForEmployer = [
-  {
-    id: 'app_emp_1',
-    name: 'Nguyễn Minh Anh',
-    avatar: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=120&auto=format&fit=crop&q=80',
-    university: 'Đại học Kinh tế TP.HCM (UEH)',
-    major: 'Marketing',
-    appliedFor: 'Social Media Content Creator',
-    skills: ['Canva', 'Content', 'TikTok'],
-    rating: 4.8,
-    status: 'interview', // 'new' | 'reviewing' | 'interview' | 'accepted' | 'rejected'
-    appliedDate: 'Hôm nay',
-    coverLetter: 'Em là sinh viên năm 3 Marketing UEH, đã có 12 dự án hoàn thành trên StudentHub. Em rất tự tin có thể đảm nhận tốt vị trí này.'
-  },
-  {
-    id: 'app_emp_2',
-    name: 'Trần Hoàng Nam',
-    avatar: 'https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?w=120&auto=format&fit=crop&q=80',
-    university: 'Đại học Văn Lang (VLU)',
-    major: 'Thiết kế Đồ họa',
-    appliedFor: 'Video Editor TikTok & CapCut',
-    skills: ['CapCut', 'Premiere', 'TikTok'],
-    rating: 4.9,
-    status: 'new',
-    appliedDate: '3 giờ trước',
-    coverLetter: 'Em chuyên dựng video dọc ngắn cho các nhãn hàng thời trang, cam kết giao file đúng hạn.'
-  },
-  {
-    id: 'app_emp_3',
-    name: 'Lê Thảo Nhi',
-    avatar: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=120&auto=format&fit=crop&q=80',
-    university: 'ĐH Kinh tế - Luật',
-    major: 'Kinh doanh Quốc tế',
-    appliedFor: 'SEO Content Writer',
-    skills: ['Copywriting', 'SEO', 'Tiếng Anh'],
-    rating: 4.8,
-    status: 'reviewing',
-    appliedDate: 'Hôm qua',
-    coverLetter: 'Có kinh nghiệm viết bài chuyên ngành kinh tế và tài chính với văn phong tự nhiên, chuẩn SEO.'
-  },
-  {
-    id: 'app_emp_4',
-    name: 'Phạm Minh Khôi',
-    avatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=120&auto=format&fit=crop&q=80',
-    university: 'ĐH Tôn Đức Thắng',
-    major: 'Hệ thống Thông tin',
-    appliedFor: 'Data Entry Assistant',
-    skills: ['Excel', 'Google Sheets'],
-    rating: 5.0,
-    status: 'accepted',
-    appliedDate: '2 ngày trước',
-    coverLetter: 'Thành thạo các hàm xử lý dữ liệu phức tạp, đã vượt qua bài test nhập liệu 95 từ/phút.'
-  }
-];
+export const initialApplicantsForEmployer = [];

@@ -30,7 +30,7 @@ export function getLocalServices() {
   } catch (e) {
     console.warn('Lỗi đọc local services:', e);
   }
-  return initialServices;
+  return isSupabaseConfigured ? [] : initialServices;
 }
 
 // Helper: Lưu services vào localStorage
@@ -104,8 +104,10 @@ export async function getFreelanceServices() {
     }
   }
 
-  // Hợp nhất: Server trung tâm (mới nhất từ mọi trình duyệt) -> Cục bộ -> Cloud DB -> Mẫu ban đầu
-  const combined = [...serverServices, ...localList, ...cloudServices, ...initialServices];
+  // Hợp nhất: Server trung tâm -> Cục bộ -> Cloud DB (Không tự chèn mẫu ban đầu khi dùng Supabase thật)
+  const combined = isSupabaseConfigured
+    ? [...serverServices, ...localList, ...cloudServices]
+    : [...serverServices, ...localList, ...cloudServices, ...initialServices];
   // Khử trùng lặp theo ID
   const map = new Map();
   combined.forEach((s) => {

@@ -151,7 +151,13 @@ export default function ServiceDetailModal({
                 type="button"
                 onClick={() => {
                   onClose();
-                  if (onOpenChat) onOpenChat(service.studentName);
+                  if (onOpenChat) {
+                    onOpenChat(service.studentName, {
+                      partnerId: service.studentId,
+                      partnerRole: 'student',
+                      partnerAvatar: service.studentAvatar
+                    });
+                  }
                 }}
                 className="inline-flex items-center gap-1.5 px-4 py-2.5 text-xs font-bold text-slate-700 bg-slate-100 hover:bg-slate-200 rounded-xl transition"
               >

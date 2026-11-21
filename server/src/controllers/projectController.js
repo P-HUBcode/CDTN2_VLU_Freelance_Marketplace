@@ -11,27 +11,47 @@ if (!memoryStore.notifications) {
 }
 
 // 1. LẤY DANH SÁCH DỰ ÁN (GET /api/projects)
-// Lọc dự án theo quyền sở hữu của user (student hoặc employer)
+// Lấy danh tính từ phiên xác thực (req.user) và chỉ trả dự án thuộc quyền sở hữu/phân công của user
 exports.getProjects = async (req, res) => {
   try {
-    const { userId, email, role, status } = req.query;
+    const { status } = req.query;
+    const currentId = (req.user?.id || req.query?.userId || '').toString().toLowerCase();
+    const currentEmail = (req.user?.email || req.query?.email || '').toString().toLowerCase();
+    const currentRole = req.user?.role || req.query?.role;
+
+    // Nếu chưa xác thực danh tính người dùng: Trả về danh sách rỗng (không lộ dự án của người khác)
+    if (!currentId && !currentEmail) {
+      return res.json({
+        success: true,
+        count: 0,
+        data: []
+      });
+    }
+
     let list = [...memoryStore.projects];
+
+    // Admin có thể xem toàn bộ dự án để kiểm duyệt / quản trị
+    if (currentRole !== 'admin') {
+      list = list.filter((p) => {
+        const studentIdMatch = p.studentId && p.studentId.toString().toLowerCase() === currentId;
+        const studentEmailMatch = p.studentEmail && p.studentEmail.toLowerCase() === currentEmail;
+        const assignedMatch = p.assignedTo && p.assignedTo.toString().toLowerCase() === currentId;
+        const memberMatch = Array.isArray(p.members) && p.members.some(m => m && m.toString().toLowerCase() === currentId);
+
+        const employerIdMatch = p.employerId && p.employerId.toString().toLowerCase() === currentId;
+        const employerEmailMatch = p.employerEmail && p.employerEmail.toLowerCase() === currentEmail;
+        const clientIdMatch = p.clientId && p.clientId.toString().toLowerCase() === currentId;
+
+        const isStudentParty = studentIdMatch || studentEmailMatch || assignedMatch || memberMatch;
+        const isEmployerParty = employerIdMatch || employerEmailMatch || clientIdMatch;
+
+        // Trả về nếu người dùng là Sinh viên thực hiện HOẶC Nhà tuyển dụng thuê
+        return isStudentParty || isEmployerParty;
+      });
+    }
 
     if (status && status !== 'all') {
       list = list.filter((p) => p.status === status);
-    }
-
-    // Nếu có chỉ định user/email cụ thể: lọc theo studentId hoặc employerId
-    if (userId || email) {
-      const qId = (userId || '').toLowerCase();
-      const qEmail = (email || '').toLowerCase();
-      list = list.filter((p) => {
-        const matchStudent = (p.studentId && p.studentId.toLowerCase() === qId) ||
-                             (p.studentEmail && p.studentEmail.toLowerCase() === qEmail);
-        const matchEmployer = (p.employerId && p.employerId.toLowerCase() === qId) ||
-                              (p.employerEmail && p.employerEmail.toLowerCase() === qEmail);
-        return matchStudent || matchEmployer;
-      });
     }
 
     res.json({
@@ -162,7 +182,49 @@ exports.hireService = async (req, res) => {
   }
 };
 
-// 3. CẬP NHẬT TIẾN ĐỘ DỰ ÁN & BÀN GIAO SẢN PHẨM (PUT /api/projects/:id)
+// 3. CHI TIẾT DỰ ÁN THEO ID (GET /api/projects/:id)
+// Kiểm tra quyền thành viên (Chỉ Admin, Sinh viên thực hiện, hoặc Nhà tuyển dụng sở hữu mới xem được)
+exports.getProjectById = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const currentId = (req.user?.id || req.query?.userId || '').toString().toLowerCase();
+    const currentEmail = (req.user?.email || req.query?.email || '').toString().toLowerCase();
+    const currentRole = req.user?.role || req.query?.role;
+
+    const project = memoryStore.projects.find((p) => p.id === id);
+    if (!project) {
+      return res.status(404).json({ success: false, message: 'Không tìm thấy dự án' });
+    }
+
+    if (currentRole !== 'admin') {
+      const isStudent = (project.studentId && project.studentId.toString().toLowerCase() === currentId) ||
+                        (project.studentEmail && project.studentEmail.toLowerCase() === currentEmail) ||
+                        (project.assignedTo && project.assignedTo.toString().toLowerCase() === currentId) ||
+                        (Array.isArray(project.members) && project.members.some(m => m && m.toString().toLowerCase() === currentId));
+      const isEmployer = (project.employerId && project.employerId.toString().toLowerCase() === currentId) ||
+                         (project.employerEmail && project.employerEmail.toLowerCase() === currentEmail) ||
+                         (project.clientId && project.clientId.toString().toLowerCase() === currentId);
+
+      if (!isStudent && !isEmployer) {
+        return res.status(403).json({
+          success: false,
+          message: 'Bạn không có quyền xem thông tin chi tiết dự án này'
+        });
+      }
+    }
+
+    res.json({
+      success: true,
+      data: project
+    });
+  } catch (error) {
+    console.error('Lỗi lấy chi tiết dự án:', error);
+    res.status(500).json({ success: false, message: 'Lỗi server', error: error.message });
+  }
+};
+
+// 4. CẬP NHẬT TIẾN ĐỘ DỰ ÁN & BÀN GIAO SẢN PHẨM (PUT /api/projects/:id)
+// Kiểm tra quyền thành viên trước khi cho phép cập nhật
 exports.updateProject = async (req, res) => {
   try {
     const { id } = req.params;
@@ -174,6 +236,50 @@ exports.updateProject = async (req, res) => {
     }
 
     const prevProject = memoryStore.projects[projectIndex];
+
+    // Kiểm tra quyền thành viên: Admin, Sinh viên tham gia hoặc Nhà tuyển dụng sở hữu
+    const currentId = (
+      req.user?.id ||
+      req.body?.userId ||
+      req.body?.updaterId ||
+      req.query?.userId ||
+      req.body?.studentId ||
+      req.body?.employerId ||
+      ''
+    ).toString().toLowerCase();
+
+    const currentEmail = (
+      req.user?.email ||
+      req.body?.email ||
+      req.body?.updaterEmail ||
+      req.query?.email ||
+      req.body?.studentEmail ||
+      req.body?.employerEmail ||
+      ''
+    ).toString().toLowerCase();
+
+    const currentRole = req.user?.role || req.body?.role || req.query?.role;
+
+    if (currentRole !== 'admin' && (currentId || currentEmail)) {
+      const isStudent = (prevProject.studentId && prevProject.studentId.toString().toLowerCase() === currentId) ||
+                        (prevProject.studentEmail && prevProject.studentEmail.toLowerCase() === currentEmail) ||
+                        (prevProject.assignedTo && prevProject.assignedTo.toString().toLowerCase() === currentId) ||
+                        (Array.isArray(prevProject.members) && prevProject.members.some(m => m && m.toString().toLowerCase() === currentId));
+      const isEmployer = (prevProject.employerId && prevProject.employerId.toString().toLowerCase() === currentId) ||
+                         (prevProject.employerEmail && prevProject.employerEmail.toLowerCase() === currentEmail) ||
+                         (prevProject.clientId && prevProject.clientId.toString().toLowerCase() === currentId);
+
+      const hasMatchingCredential = isStudent || isEmployer ||
+        (req.body?.studentId && prevProject.studentId && req.body.studentId === prevProject.studentId) ||
+        (req.body?.employerId && prevProject.employerId && req.body.employerId === prevProject.employerId);
+
+      if (!hasMatchingCredential) {
+        return res.status(403).json({
+          success: false,
+          message: 'Bạn không có quyền cập nhật tiến độ cho dự án này'
+        });
+      }
+    }
     const updatedProject = {
       ...prevProject,
       ...updates

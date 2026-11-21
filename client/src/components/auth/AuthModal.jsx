@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import Modal from '../common/Modal';
 import { useAuth } from '../../contexts/AuthContext';
-import { sendRegistrationOtp, verifyRegistrationOtp } from '../../lib/emailService';
+import { supabase, isSupabaseConfigured } from '../../lib/supabase';
 import {
   GraduationCap,
   Building2,
@@ -43,7 +43,7 @@ const GoogleIcon = () => (
 );
 
 export default function AuthModal({ isOpen, onClose, initialMode = 'login', onShowToast }) {
-  const { signIn, signUp, signInWithGoogle, loginAsDemo, isSupabaseConfigured } = useAuth();
+  const { signIn, signUp, signInWithGoogle, loginAsDemo, setSession, setUser, fetchUserProfile } = useAuth();
 
   const [mode, setMode] = useState(initialMode); // 'login' | 'register'
   const [role, setRole] = useState('student'); // 'student' | 'employer'
@@ -89,45 +89,96 @@ export default function AuthModal({ isOpen, onClose, initialMode = 'login', onSh
 
   if (!isOpen) return null;
 
-  // Yêu cầu Backend gửi mã OTP 6 số đến Gmail
+  // 1. Đăng ký tài khoản qua Supabase Auth và kích hoạt gửi mã OTP xác nhận
   const handleRequestOtpForRegistration = async (regData) => {
     setIsSendingOtp(true);
     setErrorMessage('');
     try {
-      const res = await sendRegistrationOtp({
-        email: regData.email,
-        fullName: regData.fullName
-      });
+      if (isSupabaseConfigured) {
+        const cleanEmail = regData.email.trim().toLowerCase();
+        const { data, error } = await supabase.auth.signUp({
+          email: cleanEmail,
+          password: regData.password,
+          options: {
+            data: {
+              full_name: regData.fullName,
+              role: regData.role,
+              university: regData.university,
+              major: regData.major,
+              company_name: regData.companyName
+            }
+          }
+        });
 
-      if (res && res.success) {
-        setPendingRegistration(regData);
+        if (error) {
+          let msg = error.message;
+          if (error.status === 429 || error.message?.toLowerCase().includes('rate limit')) {
+            msg = 'Supabase Cloud đã đạt giới hạn gửi email trong giờ (3 email/giờ). Vui lòng thử lại sau hoặc cấu hình Custom SMTP trong Supabase Dashboard.';
+          } else if (error.message?.toLowerCase().includes('already registered')) {
+            msg = 'Email này đã được đăng ký tài khoản trước đó. Vui lòng chuyển sang tab Đăng nhập.';
+          }
+          setErrorMessage(msg);
+          setIsSendingOtp(false);
+          return;
+        }
+
+        setPendingRegistration({
+          ...regData,
+          email: cleanEmail,
+          userId: data.user?.id
+        });
         setRegisterStep('otp');
         setOtpCode('');
         setResendCooldown(60);
         if (onShowToast) {
-          onShowToast(`📧 Mã xác thực 6 số đã được gửi tới Gmail: ${regData.email}`);
+          onShowToast(`📧 Mã xác nhận OTP 6 số từ Supabase đã được gửi tới email: ${cleanEmail}`);
         }
       } else {
-        setErrorMessage(res?.message || 'Không thể gửi mã xác thực tới Gmail. Vui lòng kiểm tra lại địa chỉ email.');
+        setPendingRegistration(regData);
+        setRegisterStep('otp');
+        setOtpCode('');
+        setResendCooldown(60);
       }
     } catch (err) {
-      setErrorMessage(err.message || 'Lỗi khi kết nối máy chủ gửi mã OTP.');
+      setErrorMessage(err.message || 'Lỗi khi kết nối tới máy chủ Supabase Auth.');
     } finally {
       setIsSendingOtp(false);
     }
   };
 
-  // Gửi lại mã OTP mới
+  // 2. Gửi lại mã OTP xác nhận qua Supabase Auth
   const handleResendOtp = async () => {
     if (resendCooldown > 0 || !pendingRegistration?.email) return;
-    await handleRequestOtpForRegistration(pendingRegistration);
+    setIsSendingOtp(true);
+    setErrorMessage('');
+    try {
+      if (isSupabaseConfigured) {
+        const { error } = await supabase.auth.resend({
+          type: 'signup',
+          email: pendingRegistration.email.trim().toLowerCase()
+        });
+        if (error) {
+          setErrorMessage(`Gửi lại mã thất bại: ${error.message}`);
+          setIsSendingOtp(false);
+          return;
+        }
+      }
+      setResendCooldown(60);
+      if (onShowToast) {
+        onShowToast(`📧 Đã yêu cầu Supabase gửi lại mã xác nhận OTP tới: ${pendingRegistration.email}`);
+      }
+    } catch (err) {
+      setErrorMessage(err.message || 'Lỗi khi gửi lại mã OTP.');
+    } finally {
+      setIsSendingOtp(false);
+    }
   };
 
-  // Xác thực mã OTP và hoàn tất tạo tài khoản
+  // 3. Xác thực mã OTP trực tiếp qua Supabase Auth và nhận phiên cấp quyền
   const handleVerifyAndCreateAccount = async (e) => {
     e.preventDefault();
     if (!otpCode || otpCode.trim().length !== 6) {
-      setErrorMessage('Vui lòng nhập đủ 6 chữ số mã xác thực nhận được từ Gmail.');
+      setErrorMessage('Vui lòng nhập đủ 6 chữ số mã xác thực nhận được từ Supabase.');
       return;
     }
 
@@ -135,57 +186,71 @@ export default function AuthModal({ isOpen, onClose, initialMode = 'login', onSh
     setErrorMessage('');
 
     try {
-      // 1. Kiểm tra mã OTP với máy chủ Backend
-      const verifyRes = await verifyRegistrationOtp({
-        email: pendingRegistration.email,
-        code: otpCode.trim()
-      });
+      if (isSupabaseConfigured) {
+        const cleanEmail = pendingRegistration.email.trim().toLowerCase();
+        const cleanOtp = otpCode.trim();
 
-      if (!verifyRes || !verifyRes.success) {
-        setErrorMessage(verifyRes?.message || 'Mã xác thực không chính xác hoặc đã hết hạn.');
-        setIsVerifyingOtp(false);
-        return;
-      }
+        // 1. Xác minh mã OTP trực tiếp qua Supabase Auth
+        const { data, error } = await supabase.auth.verifyOtp({
+          email: cleanEmail,
+          token: cleanOtp,
+          type: 'signup'
+        });
 
-      // 2. Mã chính xác -> Tiến hành tạo tài khoản và tự động đăng nhập
-      let signUpRes = null;
-      if (pendingRegistration.isGoogleAuth) {
-        signUpRes = await signInWithGoogle({
-          email: pendingRegistration.email,
-          fullName: pendingRegistration.fullName,
-          role: pendingRegistration.role,
-          university: pendingRegistration.university,
-          companyName: pendingRegistration.companyName
-        });
-      } else {
-        signUpRes = await signUp({
-          email: pendingRegistration.email,
-          password: pendingRegistration.password,
-          fullName: pendingRegistration.fullName,
-          role: pendingRegistration.role,
-          university: pendingRegistration.university,
-          major: pendingRegistration.major,
-          companyName: pendingRegistration.companyName
-        });
+        if (error) {
+          setErrorMessage(
+            error.message?.toLowerCase().includes('expired') || error.message?.toLowerCase().includes('invalid')
+              ? 'Mã xác thực không chính xác hoặc đã hết hạn. Vui lòng kiểm tra lại.'
+              : error.message || 'Mã xác thực không hợp lệ.'
+          );
+          setIsVerifyingOtp(false);
+          return;
+        }
+
+        // 2. Nhận phiên chính thức do Supabase cấp sau xác minh
+        if (data?.session && data?.user) {
+          setSession(data.session);
+          setUser(data.user);
+
+          // Ghi thông tin profile vào bảng public.profiles trong Supabase
+          try {
+            await supabase.from('profiles').upsert({
+              id: data.user.id,
+              full_name: pendingRegistration.fullName,
+              email: cleanEmail,
+              role: pendingRegistration.role,
+              avatar_url: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150&auto=format&fit=crop&q=80',
+              is_active: true
+            });
+
+            if (pendingRegistration.role === 'student') {
+              await supabase.from('student_profiles').upsert({
+                user_id: data.user.id,
+                university: pendingRegistration.university,
+                major: pendingRegistration.major
+              });
+            } else if (pendingRegistration.role === 'employer') {
+              await supabase.from('companies').upsert({
+                owner_id: data.user.id,
+                company_name: pendingRegistration.companyName
+              });
+            }
+          } catch (pe) {
+            console.warn('Lỗi upsert profile sau verifyOtp:', pe);
+          }
+
+          await fetchUserProfile(data.user.id);
+        }
       }
 
       setIsVerifyingOtp(false);
-
-      if (signUpRes && signUpRes.success) {
-        onClose();
-        if (onShowToast) {
-          onShowToast(`🎉 Xác thực Gmail thành công! Chào mừng ${pendingRegistration.fullName} gia nhập StudentHub.`);
-        }
-      } else {
-        setErrorMessage(
-          signUpRes?.error?.includes('already registered')
-            ? 'Email này đã được đăng ký tài khoản trước đó. Vui lòng chuyển sang Đăng nhập.'
-            : signUpRes?.error || 'Có lỗi xảy ra khi hoàn tất tạo tài khoản.'
-        );
+      onClose();
+      if (onShowToast) {
+        onShowToast(`🎉 Xác thực email thành công! Chào mừng ${pendingRegistration.fullName} gia nhập StudentHub.`);
       }
     } catch (err) {
       setIsVerifyingOtp(false);
-      setErrorMessage(err.message || 'Lỗi trong quá trình kích hoạt tài khoản.');
+      setErrorMessage(err.message || 'Lỗi trong quá trình xác thực OTP với Supabase.');
     }
   };
 

@@ -1,9 +1,88 @@
-import { supabase, isSupabaseConfigured } from './supabase';
+import { supabase, isSupabaseConfigured } from './supabase.js';
 
 // ==============================================================================
 // STUDENTHUB - APPLICATION SERVICE (SPRINT 3.2.1 HARDENING)
 // Dữ liệu nghiệp vụ lấy 100% từ Supabase Database (Không mock, không localStorage)
 // ==============================================================================
+
+// ==============================================================================
+// XÁC MINH PHIÊN SUPABASE AUTH VÀ VAI TRÒ TRƯỚC KHI THAO TÁC RLS
+// ==============================================================================
+export async function verifySupabaseAuthSession(activeUser) {
+  if (!isSupabaseConfigured) {
+    return {
+      isCloud: false,
+      verifiedUserId: activeUser?.id || 'demo_student_01',
+      role: activeUser?.role || 'student'
+    };
+  }
+
+  // 1. Kiểm tra session trực tiếp từ Supabase Auth
+  const { data: { session }, error: sessionError } = await supabase.auth.getSession();
+
+  if (sessionError) {
+    console.error('[ApplicationAuth] Lỗi lấy session Supabase:', sessionError);
+    throw new Error('Không thể xác thực phiên đăng nhập Supabase. Vui lòng đăng nhập lại.');
+  }
+
+  if (!session || !session.user) {
+    console.warn('[ApplicationAuth] ⚠️ Thiếu phiên Supabase Auth (chưa đăng nhập hoặc phiên đã hết hạn).');
+    throw new Error('Phiên đăng nhập Supabase đã hết hạn hoặc chưa được xác thực. Vui lòng đăng xuất và đăng nhập lại bằng tài khoản Sinh viên.');
+  }
+
+  const sessionUser = session.user;
+  const sessionUserId = sessionUser.id;
+  const activeUserId = activeUser?.id;
+  const isMatch = activeUserId && String(activeUserId).toLowerCase() === String(sessionUserId).toLowerCase();
+
+  // Ghi kết quả đối chiếu, che email và token
+  const maskedEmail = sessionUser.email
+    ? sessionUser.email.replace(/(.{2})(.*)(@.*)/, '$1***$3')
+    : '***';
+
+  console.log('[ApplicationAuth] 🔍 Kết quả đối chiếu phiên Supabase:', {
+    sessionUserId,
+    activeUserId,
+    isMatch,
+    account: maskedEmail
+  });
+
+  // Nếu ID lệch nhau (activeUser trong frontend lệch với phiên Supabase đang kết nối)
+  if (!isMatch && activeUserId) {
+    console.warn(`[ApplicationAuth] ⚠️ ID người dùng frontend (${activeUserId}) không khớp với phiên Supabase (${sessionUserId}). Hệ thống tự động đồng bộ sang phiên Supabase đã xác thực.`);
+  }
+
+  // 2. Kiểm tra vai trò từ bảng profiles
+  let dbRole = null;
+  try {
+    const { data: prof, error: profError } = await supabase
+      .from('profiles')
+      .select('role')
+      .eq('id', sessionUserId)
+      .maybeSingle();
+
+    if (!profError && prof) {
+      dbRole = prof.role;
+    }
+  } catch (e) {
+    console.warn('[ApplicationAuth] Lỗi đọc role từ profiles:', e.message);
+  }
+
+  const verifiedRole = dbRole || sessionUser.user_metadata?.role || activeUser?.role || 'student';
+  console.log('[ApplicationAuth] 👤 Vai trò đã xác thực:', { role: verifiedRole, verifiedInProfiles: Boolean(dbRole) });
+
+  if (verifiedRole === 'employer') {
+    throw new Error('Tài khoản Nhà tuyển dụng không có quyền nộp đơn ứng tuyển việc làm.');
+  }
+
+  return {
+    isCloud: true,
+    session,
+    sessionUser,
+    verifiedUserId: sessionUserId,
+    role: verifiedRole
+  };
+}
 
 // ------------------------------------------------------------------------------
 // 1. TẢI FILE CV LÊN SUPABASE STORAGE (BUCKET 'cv')
@@ -22,9 +101,15 @@ export async function uploadCvToStorage(file, userId) {
     throw new Error('Dung lượng file CV vượt quá giới hạn 10MB. Vui lòng nén file hoặc tải file nhỏ hơn.');
   }
 
-  if (isSupabaseConfigured && userId && !userId.startsWith('demo_') && !userId.startsWith('mock_')) {
+  if (isSupabaseConfigured) {
+    // Luôn xác thực phiên Supabase và lấy đúng auth.uid() để thỏa mãn RLS cv_insert_policy:
+    // auth.uid()::text = (storage.foldername(name))[1]
+    const { verifiedUserId } = await verifySupabaseAuthSession({ id: userId });
+
     const sanitizedName = file.name.replace(/[^a-zA-Z0-9._-]/g, '_');
-    const filePath = `${userId}/${Date.now()}_${sanitizedName}`;
+    const filePath = `${verifiedUserId}/${Date.now()}_${sanitizedName}`;
+
+    console.log('[ApplicationStorage] 📤 Tải file CV lên bucket cv:', { folder: verifiedUserId, file: sanitizedName });
 
     const { data: uploadData, error: uploadError } = await supabase.storage
       .from('cv')
@@ -108,29 +193,11 @@ export async function submitJobApplication(
     existingCvUrl = '',
     portfolioLink = '',
     expectedSalary = '',
-    availableHours = ''
+    availableHours = '',
+    studentId: inputStudentId = null
   },
   activeUser
 ) {
-  if (!activeUser || !activeUser.id) {
-    throw new Error('Bạn cần đăng nhập tài khoản Sinh viên để nộp hồ sơ ứng tuyển.');
-  }
-
-  let userRole = activeUser.user_metadata?.role || (activeUser.role && activeUser.role !== 'authenticated' ? activeUser.role : null);
-  if (!userRole && isSupabaseConfigured && activeUser.id) {
-    try {
-      const { data: prof } = await supabase.from('profiles').select('role').eq('id', activeUser.id).maybeSingle();
-      if (prof?.role) userRole = prof.role;
-    } catch (e) {
-      // ignore
-    }
-  }
-  if (!userRole) userRole = 'student';
-
-  if (userRole === 'employer') {
-    throw new Error('Tài khoản Nhà tuyển dụng không thể nộp đơn ứng tuyển việc làm.');
-  }
-
   if (!jobId) {
     throw new Error('Thông tin công việc không hợp lệ (Missing Job ID).');
   }
@@ -139,9 +206,22 @@ export async function submitJobApplication(
     throw new Error('Vui lòng viết lời giới thiệu ngắn (Cover Letter) để nhà tuyển dụng đánh giá.');
   }
 
-  const studentId = activeUser.id;
+  // Khai báo studentId ở phạm vi dùng chung cho cả hai nhánh (dùng CV đã lưu & tải CV mới)
+  let studentId = inputStudentId || activeUser?.id;
 
-  // 1. Upload CV nếu người dùng chọn file mới (Lưu path tương đối trong bucket 'cv')
+  if (isSupabaseConfigured) {
+    // 1. Xác minh phiên Supabase trước khi upload hoặc insert
+    const authCheck = await verifySupabaseAuthSession(activeUser || { id: studentId });
+    studentId = authCheck.verifiedUserId;
+  }
+
+  if (!studentId) {
+    throw new Error('Phiên đăng nhập không hợp lệ hoặc đã hết hạn. Vui lòng đăng nhập lại bằng tài khoản Sinh viên.');
+  }
+
+  // 2. Xử lý đường dẫn CV cho cả hai nhánh:
+  // - Nhánh 1: Tải CV mới -> upload lên bucket cv với folder là studentId đã xác thực
+  // - Nhánh 2: Dùng CV đã lưu -> trích xuất clean storage path từ existingCvUrl
   let finalCvPath = cleanCvStoragePath(existingCvUrl);
   if (cvFile) {
     const uploadRes = await uploadCvToStorage(cvFile, studentId);
@@ -156,8 +236,8 @@ export async function submitJobApplication(
     typeof val === 'string' &&
     /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(val);
 
-  if (isSupabaseConfigured && !studentId.startsWith('demo_') && !studentId.startsWith('mock_') && isUuid(jobId)) {
-    // 2. Kiểm tra tin tuyển dụng có tồn tại và còn mở không
+  if (isSupabaseConfigured && isUuid(jobId)) {
+    // 3. Kiểm tra tin tuyển dụng có tồn tại và còn mở không
     const { data: job, error: jobErr } = await supabase
       .from('jobs')
       .select('id, title, status, deadline, employer_id, company:companies(company_name, logo_url)')
@@ -185,7 +265,7 @@ export async function submitJobApplication(
       }
     }
 
-    // 3. Insert vào bảng public.job_applications với status 'applied' (lưu relative storage path)
+    // 4. Insert vào bảng public.job_applications với student_id = studentId
     const payload = {
       job_id: jobId,
       student_id: studentId,
@@ -193,6 +273,12 @@ export async function submitJobApplication(
       cover_letter: coverLetter.trim(),
       status: 'applied'
     };
+
+    console.log('[ApplicationService] 📥 Đang lưu hồ sơ ứng tuyển vào Supabase:', {
+      job_id: jobId,
+      student_id: studentId,
+      cv_url: finalCvPath
+    });
 
     const { data: newApp, error: insertErr } = await supabase
       .from('job_applications')
@@ -279,6 +365,7 @@ export async function getStudentApplications(studentId) {
           job:jobs(
             id,
             title,
+            employer_id,
             salary_min,
             salary_max,
             location,
@@ -314,7 +401,8 @@ export async function getStudentApplications(studentId) {
             statusText: mapStatusToVietnamese(st),
             cvUrl: item.cv_url,
             coverLetter: item.cover_letter,
-            studentId: item.student_id
+            studentId: item.student_id,
+            employerId: item.job?.employer_id
           };
         });
       }

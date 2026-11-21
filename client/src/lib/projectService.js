@@ -1,10 +1,9 @@
 // ==============================================================================
 // STUDENTHUB - PROJECT SERVICE
 // Quản lý hợp đồng & dự án freelance, đồng bộ thời gian thực đa trình duyệt
-// (Express Backend API + BroadcastChannel + LocalStorage)
+// (Express Backend API + BroadcastChannel + LocalStorage cách ly theo User ID)
 // ==============================================================================
 
-const LOCAL_STORAGE_KEY = 'studenthub_projects';
 const CHANNEL_NAME = 'studenthub_project_sync';
 
 let broadcastChannel = null;
@@ -16,10 +15,20 @@ try {
   console.warn('BroadcastChannel không khả dụng:', e);
 }
 
-// 1. Đọc danh sách projects từ LocalStorage
-export function getLocalProjects() {
+export function getProjectStorageKey(userId) {
+  if (!userId) return null;
+  return `studenthub_projects_${String(userId).trim().toLowerCase()}`;
+}
+
+// 1. Đọc danh sách projects từ LocalStorage theo User ID (Không dùng chung)
+export function getLocalProjects(userId) {
   try {
-    const raw = localStorage.getItem(LOCAL_STORAGE_KEY);
+    // Dọn dẹp key dùng chung cũ nếu còn sót
+    localStorage.removeItem('studenthub_projects');
+    if (!userId) return [];
+    const storageKey = getProjectStorageKey(userId);
+    if (!storageKey) return [];
+    const raw = localStorage.getItem(storageKey);
     if (raw) {
       const parsed = JSON.parse(raw);
       if (Array.isArray(parsed)) return parsed;
@@ -30,25 +39,50 @@ export function getLocalProjects() {
   return [];
 }
 
-// 2. Lưu projects vào LocalStorage & phát tín hiệu Broadcast
-export function saveLocalProjects(projectsList) {
+// 2. Lưu projects vào LocalStorage & phát tín hiệu Broadcast theo User ID
+export function saveLocalProjects(userId, projectsList) {
   try {
-    localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(projectsList));
+    localStorage.removeItem('studenthub_projects');
+    if (!userId) return;
+    const storageKey = getProjectStorageKey(userId);
+    if (!storageKey) return;
+    localStorage.setItem(storageKey, JSON.stringify(projectsList));
     if (broadcastChannel) {
-      broadcastChannel.postMessage({ type: 'SYNC_PROJECTS', projects: projectsList });
+      broadcastChannel.postMessage({ type: 'SYNC_PROJECTS', userId: String(userId), projects: projectsList });
     }
   } catch (e) {
     console.warn('Lỗi lưu local projects:', e);
   }
 }
 
-// 3. Lấy tất cả projects từ Server API + Local
-export async function getProjects() {
-  const localList = getLocalProjects();
+// 3. Lấy projects từ Server API + Local của đúng user đang đăng nhập
+export async function getProjects(user, token, role) {
+  try {
+    localStorage.removeItem('studenthub_projects');
+  } catch (e) {}
+
+  if (!user || !user.id) {
+    return [];
+  }
+
+  const userId = user.id;
+  const localList = getLocalProjects(userId);
   let serverProjects = [];
 
   try {
-    const res = await fetch('http://localhost:5000/api/projects');
+    const headers = { 'Content-Type': 'application/json' };
+    if (token) {
+      headers['Authorization'] = `Bearer ${token}`;
+    }
+
+    const activeRole = role || user.role || user.user_metadata?.role || 'student';
+    const queryParams = new URLSearchParams({
+      userId: String(userId),
+      email: (user.email || '').trim().toLowerCase(),
+      role: String(activeRole)
+    });
+
+    const res = await fetch(`http://localhost:5000/api/projects?${queryParams.toString()}`, { headers });
     if (res.ok) {
       const json = await res.json();
       if (json && json.success && Array.isArray(json.data)) {
@@ -59,7 +93,13 @@ export async function getProjects() {
     // Backend offline fallback
   }
 
-  // Kết hợp và khử trùng lặp (không nhồi mock projects dùng chung)
+  // Nếu cả backend lẫn local đều không có dự án nào thuộc về user -> trả về mảng rỗng
+  if (serverProjects.length === 0 && localList.length === 0) {
+    saveLocalProjects(userId, []);
+    return [];
+  }
+
+  // Kết hợp và khử trùng lặp theo ID dự án
   const combined = [...serverProjects, ...localList];
   const map = new Map();
   combined.forEach((p) => {
@@ -69,19 +109,23 @@ export async function getProjects() {
   });
 
   const merged = Array.from(map.values());
-  try {
-    localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(merged));
-  } catch (e) {}
-
+  saveLocalProjects(userId, merged);
   return merged;
 }
 
 // 4. Thuê dịch vụ Freelance (Gửi lên Server API để Cả 2 bên đều nhận được dự án và thông báo)
-export async function hireFreelanceService(hireData) {
+export async function hireFreelanceService(hireData, user, token) {
+  const currentUserId = user?.id || hireData?.employerId || hireData?.studentId;
+
   try {
+    const headers = { 'Content-Type': 'application/json' };
+    if (token) {
+      headers['Authorization'] = `Bearer ${token}`;
+    }
+
     const res = await fetch('http://localhost:5000/api/projects/hire', {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      headers,
       body: JSON.stringify(hireData)
     });
 
@@ -89,10 +133,17 @@ export async function hireFreelanceService(hireData) {
       const json = await res.json();
       if (json && json.success && json.data) {
         const createdProject = json.data;
-        // Cập nhật local
-        const current = getLocalProjects();
-        const updated = [createdProject, ...current.filter((p) => p.id !== createdProject.id)];
-        saveLocalProjects(updated);
+        if (currentUserId) {
+          const current = getLocalProjects(currentUserId);
+          const updated = [createdProject, ...current.filter((p) => p.id !== createdProject.id)];
+          saveLocalProjects(currentUserId, updated);
+        }
+        const partnerId = hireData?.studentId || hireData?.employerId;
+        if (partnerId && partnerId !== currentUserId) {
+          const pCurrent = getLocalProjects(partnerId);
+          const pUpdated = [createdProject, ...pCurrent.filter((p) => p.id !== createdProject.id)];
+          saveLocalProjects(partnerId, pUpdated);
+        }
         return createdProject;
       }
     }
@@ -140,27 +191,53 @@ export async function hireFreelanceService(hireData) {
     createdAt: new Date().toISOString()
   };
 
-  const current = getLocalProjects();
-  const updated = [fallbackProject, ...current.filter((p) => p.id !== fallbackProject.id)];
-  saveLocalProjects(updated);
+  if (currentUserId) {
+    const current = getLocalProjects(currentUserId);
+    const updated = [fallbackProject, ...current.filter((p) => p.id !== fallbackProject.id)];
+    saveLocalProjects(currentUserId, updated);
+  }
+  const partnerId = hireData?.studentId || hireData?.employerId;
+  if (partnerId && partnerId !== currentUserId) {
+    const pCurrent = getLocalProjects(partnerId);
+    const pUpdated = [fallbackProject, ...pCurrent.filter((p) => p.id !== fallbackProject.id)];
+    saveLocalProjects(partnerId, pUpdated);
+  }
   return fallbackProject;
 }
 
 // 5. Cập nhật tiến độ dự án (Task checklist, nộp link sản phẩm, duyệt nghiệm thu)
-export async function updateProjectProgress(projectId, updates) {
+export async function updateProjectProgress(projectId, updates, user, token) {
+  const currentUserId = user?.id || updates?.userId || updates?.studentId || updates?.employerId;
+
   try {
+    const headers = { 'Content-Type': 'application/json' };
+    if (token) {
+      headers['Authorization'] = `Bearer ${token}`;
+    }
+
+    const payload = {
+      ...updates,
+      userId: currentUserId,
+      email: user?.email || updates?.email || updates?.studentEmail || updates?.employerEmail,
+    };
+
     const res = await fetch(`http://localhost:5000/api/projects/${projectId}`, {
       method: 'PUT',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(updates)
+      headers,
+      body: JSON.stringify(payload)
     });
     if (res.ok) {
       const json = await res.json();
       if (json && json.success && json.data) {
-        const current = getLocalProjects();
-        const nextList = current.map((p) => (p.id === projectId ? json.data : p));
-        saveLocalProjects(nextList);
-        return json.data;
+        const updated = json.data;
+        const parties = [currentUserId, updated.studentId, updated.employerId].filter(Boolean);
+        parties.forEach((pid) => {
+          const current = getLocalProjects(pid);
+          const nextList = current.map((p) => (p.id === projectId ? updated : p));
+          if (!nextList.some((p) => p.id === projectId)) nextList.unshift(updated);
+          saveLocalProjects(pid, nextList);
+        });
+        return updated;
       }
     }
   } catch (err) {
@@ -168,22 +245,31 @@ export async function updateProjectProgress(projectId, updates) {
   }
 
   // Fallback local
-  const current = getLocalProjects();
-  const nextList = current.map((p) => (p.id === projectId ? { ...p, ...updates } : p));
-  saveLocalProjects(nextList);
-  return { ...nextList.find((p) => p.id === projectId) };
+  if (currentUserId) {
+    const current = getLocalProjects(currentUserId);
+    const nextList = current.map((p) => (p.id === projectId ? { ...p, ...updates } : p));
+    saveLocalProjects(currentUserId, nextList);
+    return { ...nextList.find((p) => p.id === projectId) };
+  }
+  return null;
 }
 
 // 6. Đăng ký nhận sự kiện đồng bộ dự án thời gian thực
-export function subscribeToProjectSync(callback) {
+export function subscribeToProjectSync(userId, callback) {
+  if (!userId) return () => {};
+
+  const userKey = getProjectStorageKey(userId);
+
   const onBroadcast = (event) => {
     if (event.data?.type === 'SYNC_PROJECTS') {
-      callback(event.data.projects);
+      if (String(event.data.userId) === String(userId)) {
+        callback(event.data.projects || []);
+      }
     }
   };
 
   const onStorage = (event) => {
-    if (event.key === LOCAL_STORAGE_KEY && event.newValue) {
+    if (event.key === userKey && event.newValue) {
       try {
         const parsed = JSON.parse(event.newValue);
         if (Array.isArray(parsed)) callback(parsed);

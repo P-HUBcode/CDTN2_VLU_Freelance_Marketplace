@@ -68,7 +68,9 @@ import {
   Building2,
   History,
   ArrowRight,
-  MessageSquare
+  MessageSquare,
+  Layers,
+  Upload
 } from 'lucide-react';
 
 export default function EmployerDashboardPage({
@@ -77,10 +79,23 @@ export default function EmployerDashboardPage({
   onOpenPostJob,
   onShowToast,
   onSelectJob,
-  onOpenChatWithEmployer
+  onOpenChatWithEmployer,
+  projects = [],
+  onUpdateProjectProgress,
+  onNavigate
 }) {
   const { user } = useAuth();
-  const [activeTab, setActiveTab] = useState('jobs'); // 'jobs' | 'applicants'
+  const [activeTab, setActiveTab] = useState('jobs'); // 'jobs' | 'applicants' | 'hired_services' | 'analytics'
+  const [hiredStatusFilter, setHiredStatusFilter] = useState('all');
+
+  // Danh sách dịch vụ Freelance mà Nhà tuyển dụng này đã thuê
+  const hiredProjects = useMemo(() => {
+    return Array.isArray(projects) ? projects : [];
+  }, [projects]);
+
+  const pendingReviewCount = useMemo(() => {
+    return hiredProjects.filter((p) => p.status === 'pending_review').length;
+  }, [hiredProjects]);
 
   // Jobs state
   const [employerJobs, setEmployerJobs] = useState([]);
@@ -552,8 +567,8 @@ export default function EmployerDashboardPage({
         </button>
       </div>
 
-      {/* 5 Stats Cards for Employer */}
-      <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3.5">
+      {/* 6 Stats Cards for Employer */}
+      <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3.5">
         <StatCard
           title="Tổng số tin đăng"
           value={employerJobs.length.toString()}
@@ -594,13 +609,22 @@ export default function EmployerDashboardPage({
           iconColor="text-purple-600"
           iconBg="bg-purple-50"
         />
+        <StatCard
+          title="Dịch vụ đã thuê"
+          value={hiredProjects.length.toString()}
+          subtitle={pendingReviewCount > 0 ? `${pendingReviewCount} chờ nghiệm thu` : 'Hợp đồng Freelance'}
+          icon={Layers}
+          iconColor="text-blue-600"
+          iconBg="bg-blue-50"
+          onClick={() => setActiveTab('hired_services')}
+        />
       </div>
 
-      {/* Tab Switcher: Quản lý tin đăng vs Quản lý ứng viên */}
-      <div className="flex items-center gap-2 border-b border-slate-200">
+      {/* Tab Switcher: Quản lý tin đăng vs Quản lý ứng viên vs Dịch vụ đã thuê vs Báo cáo */}
+      <div className="flex items-center gap-2 border-b border-slate-200 overflow-x-auto">
         <button
           onClick={() => setActiveTab('jobs')}
-          className={`pb-3 px-3 text-xs font-bold border-b-2 transition flex items-center gap-2 ${
+          className={`pb-3 px-3 text-xs font-bold border-b-2 transition flex items-center gap-2 whitespace-nowrap ${
             activeTab === 'jobs'
               ? 'border-blue-600 text-blue-600'
               : 'border-transparent text-slate-500 hover:text-slate-800'
@@ -611,7 +635,7 @@ export default function EmployerDashboardPage({
         </button>
         <button
           onClick={() => setActiveTab('applicants')}
-          className={`pb-3 px-3 text-xs font-bold border-b-2 transition flex items-center gap-2 ${
+          className={`pb-3 px-3 text-xs font-bold border-b-2 transition flex items-center gap-2 whitespace-nowrap ${
             activeTab === 'applicants'
               ? 'border-blue-600 text-blue-600'
               : 'border-transparent text-slate-500 hover:text-slate-800'
@@ -621,8 +645,24 @@ export default function EmployerDashboardPage({
           <span>Quản lý Ứng Viên ({applicantsList.length})</span>
         </button>
         <button
+          onClick={() => setActiveTab('hired_services')}
+          className={`pb-3 px-3 text-xs font-bold border-b-2 transition flex items-center gap-2 whitespace-nowrap ${
+            activeTab === 'hired_services'
+              ? 'border-blue-600 text-blue-600'
+              : 'border-transparent text-slate-500 hover:text-slate-800'
+          }`}
+        >
+          <Layers className="w-4 h-4" />
+          <span>Dịch vụ Freelance đã thuê ({hiredProjects.length})</span>
+          {pendingReviewCount > 0 && (
+            <span className="px-2 py-0.5 bg-amber-100 text-amber-800 text-[10px] font-extrabold rounded-full animate-pulse border border-amber-300">
+              {pendingReviewCount} chờ nghiệm thu
+            </span>
+          )}
+        </button>
+        <button
           onClick={() => setActiveTab('analytics')}
-          className={`pb-3 px-3 text-xs font-bold border-b-2 transition flex items-center gap-2 ${
+          className={`pb-3 px-3 text-xs font-bold border-b-2 transition flex items-center gap-2 whitespace-nowrap ${
             activeTab === 'analytics'
               ? 'border-blue-600 text-blue-600'
               : 'border-transparent text-slate-500 hover:text-slate-800'
@@ -1282,6 +1322,234 @@ export default function EmployerDashboardPage({
       )}
 
       {/* ===================================================================== */}
+      {/* TAB 4: DỊCH VỤ FREELANCE ĐÃ THUÊ (HIRED SERVICES & ESCROW) */}
+      {/* ===================================================================== */}
+      {activeTab === 'hired_services' && (
+        <div className="space-y-4">
+          {/* Subbar filter */}
+          <div className="flex flex-wrap items-center justify-between gap-3 bg-white p-3.5 rounded-2xl border border-slate-200 shadow-xs">
+            <div className="flex items-center gap-1.5 overflow-x-auto text-xs">
+              <span className="text-slate-400 font-semibold mr-1 flex items-center gap-1">
+                <Filter className="w-3.5 h-3.5" /> Trạng thái:
+              </span>
+              {[
+                { id: 'all', label: `Tất cả (${hiredProjects.length})` },
+                { id: 'in_progress', label: `Đang thực hiện (${hiredProjects.filter((p) => p.status === 'in_progress').length})` },
+                { id: 'pending_review', label: `Chờ nghiệm thu (${hiredProjects.filter((p) => p.status === 'pending_review').length})` },
+                { id: 'completed', label: `Đã hoàn thành (${hiredProjects.filter((p) => p.status === 'completed').length})` },
+              ].map((st) => (
+                <button
+                  key={st.id}
+                  onClick={() => setHiredStatusFilter(st.id)}
+                  className={`px-3 py-1.5 rounded-xl font-medium transition ${
+                    hiredStatusFilter === st.id
+                      ? 'bg-blue-600 text-white font-bold shadow-xs'
+                      : 'bg-slate-50 text-slate-600 hover:bg-slate-100'
+                  }`}
+                >
+                  {st.label}
+                </button>
+              ))}
+            </div>
+
+            <button
+              onClick={() => onNavigate && onNavigate('freelance')}
+              className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-blue-50 hover:bg-blue-100 text-blue-700 text-xs font-bold rounded-xl transition border border-blue-200"
+            >
+              <PlusCircle className="w-3.5 h-3.5" />
+              <span>Thuê thêm dịch vụ Freelance</span>
+            </button>
+          </div>
+
+          {/* List of hired services */}
+          {hiredProjects.filter((p) => hiredStatusFilter === 'all' || p.status === hiredStatusFilter).length === 0 ? (
+            <div className="bg-white rounded-3xl border border-slate-200 p-12 text-center text-slate-400 space-y-3">
+              <Layers className="w-10 h-10 text-slate-300 mx-auto stroke-1" />
+              <div>
+                <p className="font-bold text-slate-700 text-sm">
+                  {hiredProjects.length === 0
+                    ? 'Bạn chưa thuê dịch vụ freelance nào'
+                    : 'Không có dự án nào trong trạng thái này'}
+                </p>
+                <p className="text-xs text-slate-400 mt-1 max-w-md mx-auto">
+                  {hiredProjects.length === 0
+                    ? 'Khám phá các gói dịch vụ Thiết kế Canva, Kịch bản TikTok, Viết bài Content và Lập trình từ sinh viên trên Sàn Freelance.'
+                    : 'Chuyển bộ lọc sang trạng thái khác để xem tiến độ các hợp đồng freelance.'}
+                </p>
+              </div>
+              {hiredProjects.length === 0 && (
+                <button
+                  onClick={() => onNavigate && onNavigate('freelance')}
+                  className="inline-flex items-center gap-2 px-5 py-2.5 bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs rounded-xl shadow transition"
+                >
+                  <Briefcase className="w-4 h-4" />
+                  <span>Khám phá Sàn Freelance</span>
+                </button>
+              )}
+            </div>
+          ) : (
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+              {hiredProjects
+                .filter((p) => hiredStatusFilter === 'all' || p.status === hiredStatusFilter)
+                .map((proj) => (
+                  <div
+                    key={proj.id}
+                    className="bg-white rounded-2xl border border-slate-200 p-5 hover:border-blue-300 hover:shadow-cardHover transition flex flex-col justify-between space-y-4"
+                  >
+                    <div>
+                      {/* Top row */}
+                      <div className="flex items-start justify-between gap-3">
+                        <div className="flex items-center gap-3">
+                          <img
+                            src={proj.studentAvatar || 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=120'}
+                            alt={proj.studentName}
+                            className="w-10 h-10 rounded-xl object-cover ring-1 ring-slate-100"
+                          />
+                          <div>
+                            <span className="text-xs font-bold text-slate-900 block">
+                              {proj.studentName || 'Sinh viên Freelancer'}
+                            </span>
+                            <span className="text-[11px] text-slate-400">
+                              {proj.studentUniversity || 'Đại học'}
+                            </span>
+                          </div>
+                        </div>
+
+                        {proj.status === 'in_progress' && (
+                          <Badge variant="primary" size="sm">Đang thực hiện</Badge>
+                        )}
+                        {proj.status === 'pending_review' && (
+                          <Badge variant="warning" size="sm">Chờ nghiệm thu</Badge>
+                        )}
+                        {proj.status === 'completed' && (
+                          <Badge variant="success" size="sm">Đã hoàn thành</Badge>
+                        )}
+                      </div>
+
+                      {/* Title */}
+                      <h3 className="text-sm font-bold text-slate-900 mt-3 line-clamp-1">
+                        {proj.title}
+                      </h3>
+
+                      {/* Info grid */}
+                      <div className="mt-3 grid grid-cols-2 gap-2.5 p-3 bg-slate-50 rounded-xl text-xs">
+                        <div>
+                          <span className="text-slate-400 block font-medium text-[11px]">Ngân sách tạm giữ (Escrow)</span>
+                          <span className="font-bold text-blue-600 mt-0.5 block">{proj.budget}</span>
+                        </div>
+                        <div>
+                          <span className="text-slate-400 block font-medium text-[11px]">Hạn bàn giao</span>
+                          <span className="font-semibold text-slate-700 mt-0.5 block">{proj.deadline}</span>
+                        </div>
+                      </div>
+
+                      {/* Progress bar */}
+                      <div className="mt-3 space-y-1">
+                        <div className="flex items-center justify-between text-xs">
+                          <span className="text-slate-500 font-medium">Tiến độ hoàn thiện:</span>
+                          <span className="font-bold text-blue-600">{proj.progress}%</span>
+                        </div>
+                        <div className="w-full bg-slate-100 rounded-full h-2 overflow-hidden">
+                          <div
+                            className="bg-blue-600 h-2 rounded-full transition-all duration-300"
+                            style={{ width: `${proj.progress}%` }}
+                          />
+                        </div>
+                      </div>
+
+                      {/* Pending Review Box */}
+                      {proj.status === 'pending_review' && (
+                        <div className="mt-3.5 p-3.5 bg-amber-50 rounded-xl border border-amber-200 space-y-2.5">
+                          <div className="flex items-center gap-1.5 text-xs font-bold text-amber-900">
+                            <Clock className="w-4 h-4 text-amber-600 shrink-0" />
+                            <span>Sinh viên đã nộp sản phẩm bàn giao!</span>
+                          </div>
+
+                          <div className="text-xs bg-white p-2.5 rounded-lg border border-amber-200/60 space-y-1">
+                            <div>
+                              <span className="font-semibold text-slate-700">Link sản phẩm:</span>{' '}
+                              <a
+                                href={proj.deliveryFile}
+                                target="_blank"
+                                rel="noreferrer"
+                                className="text-blue-600 font-bold underline inline-flex items-center gap-1 ml-1 break-all"
+                              >
+                                {proj.deliveryFile || 'Mở link bàn giao'}
+                                <ExternalLink className="w-3 h-3" />
+                              </a>
+                            </div>
+                            {proj.deliveryNote && (
+                              <p className="text-slate-600 text-[11px]">
+                                <span className="font-semibold text-slate-700">Ghi chú:</span> {proj.deliveryNote}
+                              </p>
+                            )}
+                          </div>
+
+                          <button
+                            type="button"
+                            onClick={() => {
+                              if (onUpdateProjectProgress) {
+                                onUpdateProjectProgress({
+                                  ...proj,
+                                  status: 'completed',
+                                  progress: 100
+                                });
+                              }
+                              if (onShowToast) {
+                                onShowToast('🎉 Đã xác nhận nghiệm thu và giải ngân thù lao thành công cho sinh viên!');
+                              }
+                            }}
+                            className="w-full py-2.5 bg-emerald-600 hover:bg-emerald-700 active:bg-emerald-800 text-white font-bold text-xs rounded-xl shadow transition flex items-center justify-center gap-1.5"
+                          >
+                            <CheckCircle2 className="w-4 h-4" />
+                            <span>Xác nhận nghiệm thu & Giải ngân {proj.budget} vào Ví sinh viên</span>
+                          </button>
+                        </div>
+                      )}
+
+                      {/* Completed Box */}
+                      {proj.status === 'completed' && (
+                        <div className="mt-3.5 p-2.5 bg-emerald-50 rounded-xl border border-emerald-200 flex items-center gap-2 text-xs text-emerald-800 font-medium">
+                          <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />
+                          <span>Hợp đồng đã hoàn tất nghiệm thu & giải ngân {proj.budget} thành công.</span>
+                        </div>
+                      )}
+                    </div>
+
+                    {/* Bottom action row */}
+                    <div className="pt-3 border-t border-slate-100 flex items-center justify-between gap-2">
+                      <button
+                        onClick={() => {
+                          if (onOpenChatWithEmployer) {
+                            onOpenChatWithEmployer(proj.studentName || 'Sinh viên Freelancer', {
+                              partnerId: proj.studentId,
+                              partnerRole: 'student',
+                              partnerAvatar: proj.studentAvatar
+                            });
+                          }
+                        }}
+                        className="text-xs font-semibold text-slate-600 hover:text-blue-600 flex items-center gap-1.5 hover:underline"
+                      >
+                        <MessageSquare className="w-3.5 h-3.5" />
+                        <span>Nhắn tin với Freelancer</span>
+                      </button>
+
+                      <button
+                        onClick={() => onNavigate && onNavigate('my-projects')}
+                        className="text-xs font-semibold text-blue-600 hover:underline flex items-center gap-1"
+                      >
+                        <span>Chi tiết tiến độ</span>
+                        <ArrowRight className="w-3.5 h-3.5" />
+                      </button>
+                    </div>
+                  </div>
+                ))}
+            </div>
+          )}
+        </div>
+      )}
+
+      {/* ===================================================================== */}
       {/* MODAL 1: CHỈNH SỬA TIN TUYỂN DỤNG */}
       {/* ===================================================================== */}
       {editingJob && (
@@ -1623,7 +1891,11 @@ export default function EmployerDashboardPage({
                   const targetName = selectedApplicant.studentName || selectedApplicant.name || 'Ứng viên';
                   setSelectedApplicant(null);
                   if (onOpenChatWithEmployer) {
-                    onOpenChatWithEmployer(targetName);
+                    onOpenChatWithEmployer(targetName, {
+                      partnerId: selectedApplicant.studentId || selectedApplicant.student_id,
+                      partnerRole: 'student',
+                      partnerAvatar: selectedApplicant.avatar
+                    });
                   }
                 }}
                 className="w-full py-2.5 bg-emerald-50 hover:bg-emerald-100 active:bg-emerald-200 text-emerald-800 font-bold text-xs rounded-xl border border-emerald-200 transition flex items-center justify-center gap-1.5"

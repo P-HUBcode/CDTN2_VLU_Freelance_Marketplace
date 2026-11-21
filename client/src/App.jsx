@@ -28,6 +28,7 @@ import ApplyModal from './pages/ApplyModal';
 import ServiceDetailModal from './pages/ServiceDetailModal';
 import CreateServiceModal from './pages/CreateServiceModal';
 import AuthModal from './components/auth/AuthModal';
+import ResetPasswordModal from './components/auth/ResetPasswordModal';
 import AdminDashboardModal from './components/admin/AdminDashboardModal';
 import PublicCompanyModal from './pages/PublicCompanyModal';
 import EmailPreviewModal from './components/common/EmailPreviewModal';
@@ -48,6 +49,8 @@ import {
 } from './lib/freelanceService';
 import {
   getProjects,
+  getLocalProjects,
+  saveLocalProjects,
   hireFreelanceService,
   updateProjectProgress,
   subscribeToProjectSync
@@ -68,8 +71,48 @@ import {
   monthlyEarningsChart
 } from './data/mockData';
 
+const defaultBlankUser = {
+  id: '',
+  name: 'Sinh viên mới',
+  role: 'student',
+  university: 'Chưa cập nhật trường',
+  faculty: '',
+  major: '',
+  year: '',
+  location: 'TP. Hồ Chí Minh',
+  avatar: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=160&auto=format&fit=crop&q=80',
+  bio: '',
+  status: 'Đang tìm việc',
+  profileCompletion: 20,
+  rating: 0,
+  reviewsCount: 0,
+  projectsCompleted: 0,
+  responseRate: '100%',
+  earningsMonth: '0đ',
+  totalEarnings: '0đ',
+  availableBalance: 0,
+  skills: [],
+  education: [],
+  experiences: [],
+  certifications: [],
+  portfolios: []
+};
+
 export default function App() {
-  const { user, profile, role, setRole, isAuthenticated, loading: authLoading, signOut } = useAuth();
+  const { user, session, profile, studentProfile, role, setRole, isAuthenticated, loading: authLoading, signOut } = useAuth();
+
+  // Dọn sạch các cache dữ liệu giả lập cũ trong localStorage khi kết nối Supabase Cloud
+  useEffect(() => {
+    if (isSupabaseConfigured) {
+      try {
+        localStorage.removeItem('studenthub_services');
+        localStorage.removeItem('studenthub_reviews_store');
+        localStorage.removeItem('studenthub_local_applications');
+        localStorage.removeItem('studenthub_registered_users');
+        localStorage.removeItem('studenthub_applicants');
+      } catch (e) {}
+    }
+  }, []);
 
   // Navigation State (Persist across F5 so user stays on active page)
   const [currentView, setCurrentView] = useState(() => {
@@ -105,18 +148,20 @@ export default function App() {
     if (role === 'admin') {
       setRole('student');
     }
-    setCurrentUser(initialCurrentUser);
+    const baseUser = isSupabaseConfigured ? defaultBlankUser : initialCurrentUser;
+    setCurrentUser(baseUser);
     try {
       localStorage.removeItem('studenthub_current_user');
       localStorage.removeItem('studenthub_mock_session');
     } catch (e) {}
-    setCurrentView('dashboard');
+    setCurrentView('landing');
   };
 
   const [searchQuery, setSearchQuery] = useState('');
 
-  // App Data State (Initialized with localStorage persistence or mock data)
+  // App Data State (Initialized with localStorage persistence or clean state)
   const [currentUser, setCurrentUser] = useState(() => {
+    const baseUser = isSupabaseConfigured ? defaultBlankUser : initialCurrentUser;
     try {
       const savedUser = localStorage.getItem('studenthub_current_user');
       if (savedUser) {
@@ -124,7 +169,7 @@ export default function App() {
         // Tách biệt hoàn toàn cổng Admin: Nếu dữ liệu lưu dính nhãn Admin, bỏ qua và dùng profile Sinh viên mặc định
         if (parsed.role === 'admin' || parsed.name?.includes('Admin') || parsed.name?.includes('Quản trị viên')) {
           localStorage.removeItem('studenthub_current_user');
-          return initialCurrentUser;
+          return baseUser;
         }
         const savedBalance = localStorage.getItem('studenthub_wallet_balance');
         if (savedBalance !== null) {
@@ -135,23 +180,24 @@ export default function App() {
       const savedBalance = localStorage.getItem('studenthub_wallet_balance');
       if (savedBalance !== null) {
         return {
-          ...initialCurrentUser,
-          availableBalance: parseInt(savedBalance, 10) || initialCurrentUser.availableBalance
+          ...baseUser,
+          availableBalance: parseInt(savedBalance, 10) || baseUser.availableBalance
         };
       }
     } catch (e) {
       console.warn('Lỗi đọc current_user từ localStorage:', e);
     }
-    return initialCurrentUser;
+    return baseUser;
   });
 
   // Đồng bộ thông tin currentUser với AuthContext, đảm bảo Sinh viên hiển thị đúng tên và không dính nhãn Admin
   useEffect(() => {
     // 1. Khi ở trang người dùng (không phải /admin), nếu thông tin có dính Admin, chuyển ngay về Sinh viên
     if (!isAdminRoute && (role === 'admin' || profile?.role === 'admin' || user?.user_metadata?.role === 'admin')) {
+      const baseUser = isSupabaseConfigured ? defaultBlankUser : initialCurrentUser;
       setCurrentUser((prev) => ({
-        ...initialCurrentUser,
-        availableBalance: prev.availableBalance || initialCurrentUser.availableBalance
+        ...baseUser,
+        availableBalance: prev.availableBalance || baseUser.availableBalance
       }));
       return;
     }
@@ -159,39 +205,48 @@ export default function App() {
     // 2. Nếu profile hợp lệ và không phải Admin
     if (profile && profile.full_name && !profile.full_name.includes('Admin') && !profile.full_name.includes('Quản trị viên')) {
       const isDemo = profile.email?.includes('demo') || profile.id?.startsWith('demo_');
+      const activeId = profile.id || user?.id;
+      const savedBalanceRaw = activeId ? localStorage.getItem(`studenthub_wallet_balance_${activeId}`) : null;
+      const savedBalance = savedBalanceRaw !== null ? parseInt(savedBalanceRaw, 10) : null;
+
       setCurrentUser((prev) => ({
         ...prev,
-        id: profile.id || user?.id,
+        id: activeId,
         name: profile.full_name,
         email: profile.email || prev.email,
         role: profile.role || role || 'student',
         university: profile.university || prev.university || 'Trường Đại học',
-        projectsCompleted: isDemo ? (prev.projectsCompleted || 12) : 0,
-        reviewsCount: isDemo ? (prev.reviewsCount || 18) : 0,
-        totalEarnings: isDemo ? (prev.totalEarnings || '18.500.000đ') : '0đ',
-        earningsMonth: isDemo ? (prev.earningsMonth || '4.800.000đ') : '0đ',
-        availableBalance: isDemo ? (prev.availableBalance ?? 12500000) : 0
+        projectsCompleted: isDemo ? (prev.projectsCompleted || 12) : (prev.projectsCompleted || 0),
+        reviewsCount: isDemo ? (prev.reviewsCount || 18) : (prev.reviewsCount || 0),
+        totalEarnings: isDemo ? (prev.totalEarnings || '18.500.000đ') : (prev.totalEarnings || '0đ'),
+        earningsMonth: isDemo ? (prev.earningsMonth || '4.800.000đ') : (prev.earningsMonth || '0đ'),
+        availableBalance: savedBalance !== null ? savedBalance : (isDemo ? (prev.availableBalance ?? 12500000) : (prev.availableBalance || 0))
       }));
     } else if (user?.user_metadata?.full_name && !user.user_metadata.full_name.includes('Admin') && !user.user_metadata.full_name.includes('Quản trị viên')) {
       const isDemo = user.email?.includes('demo') || user.id?.startsWith('demo_');
+      const activeId = user.id;
+      const savedBalanceRaw = activeId ? localStorage.getItem(`studenthub_wallet_balance_${activeId}`) : null;
+      const savedBalance = savedBalanceRaw !== null ? parseInt(savedBalanceRaw, 10) : null;
+
       setCurrentUser((prev) => ({
         ...prev,
         id: user.id,
         name: user.user_metadata.full_name,
         email: user.email || prev.email,
         role: role || 'student',
-        projectsCompleted: isDemo ? (prev.projectsCompleted || 12) : 0,
-        reviewsCount: isDemo ? (prev.reviewsCount || 18) : 0,
-        totalEarnings: isDemo ? (prev.totalEarnings || '18.500.000đ') : '0đ',
-        earningsMonth: isDemo ? (prev.earningsMonth || '4.800.000đ') : '0đ',
-        availableBalance: isDemo ? (prev.availableBalance ?? 12500000) : 0
+        projectsCompleted: isDemo ? (prev.projectsCompleted || 12) : (prev.projectsCompleted || 0),
+        reviewsCount: isDemo ? (prev.reviewsCount || 18) : (prev.reviewsCount || 0),
+        totalEarnings: isDemo ? (prev.totalEarnings || '18.500.000đ') : (prev.totalEarnings || '0đ'),
+        earningsMonth: isDemo ? (prev.earningsMonth || '4.800.000đ') : (prev.earningsMonth || '0đ'),
+        availableBalance: savedBalance !== null ? savedBalance : (isDemo ? (prev.availableBalance ?? 12500000) : (prev.availableBalance || 0))
       }));
     } else {
       setCurrentUser((prev) => {
         if (prev.name?.includes('Admin') || prev.name?.includes('Quản trị viên') || prev.role === 'admin') {
+          const baseUser = isSupabaseConfigured ? defaultBlankUser : initialCurrentUser;
           return {
-            ...initialCurrentUser,
-            availableBalance: prev.availableBalance || initialCurrentUser.availableBalance
+            ...baseUser,
+            availableBalance: prev.availableBalance || baseUser.availableBalance
           };
         }
         return prev;
@@ -200,6 +255,7 @@ export default function App() {
   }, [profile, user, role, isAuthenticated, isAdminRoute]);
 
   const [jobs, setJobs] = useState(() => {
+    if (isSupabaseConfigured) return [];
     try {
       const local = getLocalSavedJobs();
       if (local && local.length > 0) {
@@ -211,6 +267,7 @@ export default function App() {
   });
 
   const [services, setServices] = useState(() => {
+    if (isSupabaseConfigured) return [];
     try {
       const saved = localStorage.getItem('studenthub_services');
       if (saved) {
@@ -220,7 +277,7 @@ export default function App() {
     } catch (e) {
       console.warn('Lỗi đọc services từ localStorage:', e);
     }
-    return initialServices;
+    return [];
   });
 
   // Lắng nghe tín hiệu đồng bộ dịch vụ giữa các tab / cửa sổ thời gian thực
@@ -268,147 +325,39 @@ export default function App() {
       localStorage.removeItem('studenthub_conversations_default');
       localStorage.removeItem('studenthub_conversations_role_student');
       localStorage.removeItem('studenthub_conversations_role_employer');
+      localStorage.removeItem('studenthub_transactions');
+      localStorage.removeItem('studenthub_credited_projects');
     } catch (e) {}
   }, []);
 
-  // Lắng nghe tin nhắn real-time giữa các tab qua BroadcastChannel
-  useEffect(() => {
-    if (typeof window !== 'undefined' && 'BroadcastChannel' in window) {
-      const chatChannel = new BroadcastChannel('studenthub_chat_sync');
-      chatChannel.onmessage = (event) => {
-        if (event.data?.type === 'NEW_CHAT_MSG') {
-          const { senderId, senderName, senderAvatar, senderRole, targetName, message } = event.data;
+  const getTransactionsStorageKey = (currentUserObj) => {
+    if (currentUserObj?.id) return `studenthub_transactions_${currentUserObj.id}`;
+    if (currentUserObj?.email) return `studenthub_transactions_${currentUserObj.email.replace(/[^a-zA-Z0-9]/g, '_')}`;
+    return null;
+  };
 
-          // Bỏ qua nếu tin nhắn do chính tab này phát ra
-          const myCurrentId = user?.id || role;
-          if (senderId && myCurrentId && senderId === myCurrentId) return;
-
-          // Tự động bật mở chat (nếu đang đóng thì hiện bong bóng chat thông báo)
-          setIsChatBoxOpen(true);
-
-          setConversations((prev) => {
-            // Đối với Tab nhận, người gửi tin chính là đối tác hội thoại (partnerName)
-            const partnerName = senderName || 'Người liên hệ';
-            const convIndex = prev.findIndex(
-              (c) =>
-                c.name.toLowerCase() === partnerName.toLowerCase() ||
-                (targetName && c.name.toLowerCase() === targetName.toLowerCase())
-            );
-            const incomingMsg = {
-              ...message,
-              sender: 'them',
-              senderId: senderId || message?.senderId,
-              senderName: senderName || message?.senderName,
-              senderAvatar: senderAvatar || message?.senderAvatar,
-              senderRole: senderRole || message?.senderRole
-            };
-
-            let updated;
-            if (convIndex >= 0) {
-              updated = [...prev];
-              const target = updated[convIndex];
-              if (!target.messages.some((m) => m.id === incomingMsg.id)) {
-                updated[convIndex] = {
-                  ...target,
-                  messages: [...target.messages, incomingMsg]
-                };
-              }
-            } else {
-              const newConv = {
-                id: `conv_${senderId || Date.now()}`,
-                name: partnerName,
-                jobTitle: senderRole === 'employer' ? 'Nhà tuyển dụng' : 'Ứng viên sinh viên',
-                avatar: senderAvatar || 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150',
-                online: true,
-                messages: [incomingMsg]
-              };
-              updated = [newConv, ...prev];
-            }
-
-            try {
-              const key = getChatStorageKey(user, role);
-              if (key) localStorage.setItem(key, JSON.stringify(updated));
-            } catch (e) {}
-
-            return updated;
-          });
-        }
-      };
-      return () => chatChannel.close();
-    }
-  }, [user?.id, role, profile?.full_name, currentUser?.name]);
-
-  // Lắng nghe và đồng bộ tin nhắn xuyên trình duyệt (Edge <-> Cốc Cốc) qua Backend API
-  useEffect(() => {
-    const fetchServerMessages = async () => {
-      const currentUserId = user?.id || profile?.id;
-      const currentUserEmail = user?.email || profile?.email;
-      if (!currentUserId && !currentUserEmail) return;
-
-      try {
-        const queryParam = currentUserId ? `userId=${encodeURIComponent(currentUserId)}` : `email=${encodeURIComponent(currentUserEmail)}`;
-        const res = await fetch(`http://localhost:5000/api/chat/messages?${queryParam}`);
-        if (!res.ok) return;
-        const json = await res.json();
-        if (json && json.success && Array.isArray(json.data)) {
-          setConversations((prev) => {
-            let changed = false;
-            const updated = [...prev];
-            json.data.forEach((serverConv) => {
-              const localConvIndex = updated.findIndex(
-                (c) => c.id === serverConv.id || c.name.toLowerCase() === serverConv.name.toLowerCase()
-              );
-              if (localConvIndex >= 0) {
-                const localConv = updated[localConvIndex];
-                const localMsgIds = new Set(localConv.messages.map((m) => m.id));
-                const newServerMsgs = (serverConv.messages || []).filter((m) => !localMsgIds.has(m.id));
-                if (newServerMsgs.length > 0) {
-                  changed = true;
-                  updated[localConvIndex] = {
-                    ...localConv,
-                    messages: [...localConv.messages, ...newServerMsgs]
-                  };
-                }
-              } else {
-                changed = true;
-                updated.unshift(serverConv);
-              }
-            });
-            if (changed) {
-              try {
-                const key = getChatStorageKey(user, role);
-                if (key) localStorage.setItem(key, JSON.stringify(updated));
-              } catch (e) {}
-              return updated;
-            }
-            return prev;
-          });
-        }
-      } catch (err) {}
-    };
-
-    const chatPollTimer = setInterval(fetchServerMessages, 2500);
-    return () => clearInterval(chatPollTimer);
-  }, [user?.id, user?.email, profile?.id, role]);
-
-  const [selectedJob, setSelectedJob] = useState(initialJobs[0]);
+  const [selectedJob, setSelectedJob] = useState(null);
   const [selectedService, setSelectedService] = useState(null);
   const [appliedJobs, setAppliedJobs] = useState([]);
 
-  const [projects, setProjects] = useState(() => {
-    try {
-      const saved = localStorage.getItem('studenthub_projects');
-      if (saved) return JSON.parse(saved);
-    } catch (e) {
-      console.warn('Lỗi đọc projects từ localStorage:', e);
-    }
-    return [];
-  });
+  const [projects, setProjects] = useState([]);
 
   const [transactions, setTransactions] = useState(() => {
     try {
-      const saved = localStorage.getItem('studenthub_transactions');
-      if (saved) return JSON.parse(saved);
+      localStorage.removeItem('studenthub_transactions');
+      localStorage.removeItem('studenthub_credited_projects');
+      let currentSessionUser = null;
+      const savedMockAuth = localStorage.getItem('studenthub_mock_session');
+      if (savedMockAuth) {
+        try {
+          currentSessionUser = JSON.parse(savedMockAuth)?.user;
+        } catch (e) {}
+      }
+      const key = getTransactionsStorageKey(currentSessionUser);
+      if (key) {
+        const saved = localStorage.getItem(key);
+        if (saved) return JSON.parse(saved);
+      }
     } catch (e) {
       console.warn('Lỗi đọc transactions từ localStorage:', e);
     }
@@ -479,106 +428,201 @@ export default function App() {
     } catch (e) {}
   }, [bookmarkedIds]);
 
+  // Dọn dẹp key projects dùng chung cũ trên localStorage
   useEffect(() => {
     try {
-      localStorage.setItem('studenthub_projects', JSON.stringify(projects));
-    } catch (e) {
-      console.warn('Lỗi lưu projects:', e);
-    }
-  }, [projects]);
+      localStorage.removeItem('studenthub_projects');
+    } catch (e) {}
+  }, []);
 
-  // Đồng bộ dự án thời gian thực giữa các trình duyệt (Backend API + BroadcastChannel)
+  // Lưu dự án vào localStorage cách ly theo user ID
   useEffect(() => {
-    // 1. Fetch danh sách dự án mới nhất từ server
-    getProjects().then((latest) => {
-      if (Array.isArray(latest) && latest.length > 0) {
-        setProjects(latest);
-      }
-    });
+    if (user?.id) {
+      saveLocalProjects(user.id, projects);
+    }
+  }, [projects, user?.id]);
 
-    // 2. Lắng nghe BroadcastChannel
-    const unsubscribe = subscribeToProjectSync((updatedProjects) => {
-      if (Array.isArray(updatedProjects) && updatedProjects.length > 0) {
+  // Đồng bộ dự án thời gian thực cho tài khoản đang đăng nhập (Backend API + BroadcastChannel)
+  useEffect(() => {
+    if (!user?.id) {
+      setProjects([]);
+      return;
+    }
+
+    // 1. Nạp ngay cache cục bộ của riêng user này
+    const local = getLocalProjects(user.id);
+    setProjects(local);
+
+    // 2. Fetch danh sách dự án mới nhất từ server theo danh tính phiên
+    const fetchUserProjects = () => {
+      getProjects(user, session?.access_token, role).then((latest) => {
+        if (Array.isArray(latest)) {
+          setProjects(latest);
+        }
+      });
+    };
+
+    fetchUserProjects();
+
+    // 3. Lắng nghe BroadcastChannel cho riêng user này
+    const unsubscribe = subscribeToProjectSync(user.id, (updatedProjects) => {
+      if (Array.isArray(updatedProjects)) {
         setProjects(updatedProjects);
       }
     });
 
-    // 3. Polling định kỳ mỗi 3 giây để đảm bảo tài khoản được thuê (ở trình duyệt khác) nhận ngay lập tức
-    const timer = setInterval(() => {
-      getProjects().then((latest) => {
-        if (Array.isArray(latest) && latest.length > 0) {
-          setProjects(latest);
-        }
-      });
-    }, 3000);
+    // 4. Polling định kỳ mỗi 5 giây
+    const timer = setInterval(fetchUserProjects, 5000);
 
     return () => {
       unsubscribe();
       clearInterval(timer);
     };
-  }, []);
+  }, [user?.id, user?.email, role, session?.access_token]);
 
   // Tự động giải ngân thù lao vào Ví sinh viên khi dự án hoàn thành nghiệm thu (đồng bộ kể cả khi Client duyệt ở trình duyệt khác)
   useEffect(() => {
-    if (role !== 'student') return;
     try {
-      const creditedRaw = localStorage.getItem('studenthub_credited_projects') || '[]';
-      const creditedIds = new Set(JSON.parse(creditedRaw));
-      let newlyCreditedAmount = 0;
-      const newTransactions = [];
+      const activeId = user?.id || currentUser?.id;
+      if (!activeId) return;
 
-      projects.forEach((proj) => {
-        if (proj.status === 'completed' && !creditedIds.has(proj.id)) {
-          creditedIds.add(proj.id);
+      const completedProjects = projects.filter((p) => p.status === 'completed');
+      const pendingProjects = projects.filter((p) => ['in_progress', 'pending_review'].includes(p.status));
+      const totalCompletedEarn = completedProjects.reduce((sum, p) => sum + (parseInt((p.budget || '0').replace(/[^0-9]/g, ''), 10) || 0), 0);
+      const totalPendingAmount = pendingProjects.reduce((sum, p) => sum + (parseInt((p.budget || '0').replace(/[^0-9]/g, ''), 10) || 0), 0);
+
+      if (role === 'student') {
+        const creditedKey = `studenthub_credited_projects_${activeId}`;
+        const creditedRaw = localStorage.getItem(creditedKey) || '[]';
+        const creditedIds = new Set(JSON.parse(creditedRaw));
+        let newlyCreditedAmount = 0;
+        const newTransactions = [];
+
+        projects.forEach((proj) => {
+          if (proj.status === 'completed' && !creditedIds.has(proj.id)) {
+            creditedIds.add(proj.id);
+            const rawBudget = proj.budget || '0';
+            const numeric = parseInt(rawBudget.replace(/[^0-9]/g, ''), 10) || 0;
+            if (numeric > 0) {
+              newlyCreditedAmount += numeric;
+              newTransactions.push({
+                id: `tx_payout_${proj.id}`,
+                jobTitle: `Thù lao: ${proj.title}`,
+                client: proj.client || proj.employerName || 'Khách hàng Hợp đồng',
+                date: 'Hôm nay',
+                amount: `+${new Intl.NumberFormat('vi-VN').format(numeric)}đ`,
+                status: 'completed'
+              });
+            }
+          }
+        });
+
+        if (newlyCreditedAmount > 0) {
+          localStorage.setItem(creditedKey, JSON.stringify(Array.from(creditedIds)));
+          setCurrentUser((prev) => {
+            const nextBal = (prev.availableBalance || 0) + newlyCreditedAmount;
+            try {
+              localStorage.setItem(`studenthub_wallet_balance_${activeId}`, String(nextBal));
+            } catch (e) {}
+            return {
+              ...prev,
+              availableBalance: nextBal,
+              projectsCompleted: completedProjects.length,
+              totalEarnings: `${new Intl.NumberFormat('vi-VN').format(totalCompletedEarn)}đ`,
+              earningsMonth: `${new Intl.NumberFormat('vi-VN').format(totalCompletedEarn)}đ`,
+              pendingPayment: `${new Intl.NumberFormat('vi-VN').format(totalPendingAmount)}đ`
+            };
+          });
+          if (newTransactions.length > 0) {
+            setTransactions((prev) => [...newTransactions, ...prev]);
+          }
+          showToastMsg(`🎉 Chúc mừng! Bạn nhận được +${new Intl.NumberFormat('vi-VN').format(newlyCreditedAmount)}đ vào Ví từ dự án đã nghiệm thu!`);
+        } else {
+          setCurrentUser((prev) => ({
+            ...prev,
+            projectsCompleted: completedProjects.length > 0 ? completedProjects.length : prev.projectsCompleted,
+            totalEarnings: totalCompletedEarn > 0 ? `${new Intl.NumberFormat('vi-VN').format(totalCompletedEarn)}đ` : prev.totalEarnings,
+            earningsMonth: totalCompletedEarn > 0 ? `${new Intl.NumberFormat('vi-VN').format(totalCompletedEarn)}đ` : prev.earningsMonth,
+            pendingPayment: `${new Intl.NumberFormat('vi-VN').format(totalPendingAmount)}đ`
+          }));
+        }
+      } else if (role === 'employer') {
+        const empTransactions = projects.map((proj) => {
           const rawBudget = proj.budget || '0';
           const numeric = parseInt(rawBudget.replace(/[^0-9]/g, ''), 10) || 0;
-          if (numeric > 0) {
-            newlyCreditedAmount += numeric;
-            newTransactions.push({
-              id: `tx_payout_${proj.id}`,
-              jobTitle: `Thù lao: ${proj.title}`,
-              client: proj.client || proj.employerName || 'Khách hàng Hợp đồng',
-              date: 'Hôm nay',
-              amount: `+${new Intl.NumberFormat('vi-VN').format(numeric)}đ`,
-              status: 'completed'
-            });
-          }
-        }
-      });
+          const isCompleted = proj.status === 'completed';
+          return {
+            id: `tx_emp_${proj.id}`,
+            jobTitle: isCompleted ? `Giải ngân: ${proj.title}` : `Ký quỹ Escrow: ${proj.title}`,
+            client: proj.studentName || 'Sinh viên Freelancer',
+            date: proj.date || 'Hôm nay',
+            amount: `-${new Intl.NumberFormat('vi-VN').format(numeric)}đ`,
+            status: isCompleted ? 'completed' : 'pending'
+          };
+        });
 
-      if (newlyCreditedAmount > 0) {
-        localStorage.setItem('studenthub_credited_projects', JSON.stringify(Array.from(creditedIds)));
+        setTransactions(empTransactions);
+
         setCurrentUser((prev) => ({
           ...prev,
-          availableBalance: (prev.availableBalance || 0) + newlyCreditedAmount
+          projectsCompleted: completedProjects.length,
+          totalEarnings: `${new Intl.NumberFormat('vi-VN').format(totalCompletedEarn)}đ`,
+          earningsMonth: `${new Intl.NumberFormat('vi-VN').format(totalCompletedEarn)}đ`,
+          pendingPayment: `${new Intl.NumberFormat('vi-VN').format(totalPendingAmount)}đ`
         }));
-        if (newTransactions.length > 0) {
-          setTransactions((prev) => [...newTransactions, ...prev]);
-        }
-        showToastMsg(`🎉 Chúc mừng! Bạn nhận được +${new Intl.NumberFormat('vi-VN').format(newlyCreditedAmount)}đ vào Ví từ dự án đã nghiệm thu!`);
       }
     } catch (e) {
       console.warn('Lỗi auto credit escrow payout:', e);
     }
-  }, [projects, role]);
+  }, [projects, role, user?.id, currentUser?.id]);
 
+  // Đồng bộ transactions khi tài khoản thay đổi (User / Role)
   useEffect(() => {
     try {
-      localStorage.setItem('studenthub_transactions', JSON.stringify(transactions));
+      localStorage.removeItem('studenthub_transactions');
+      localStorage.removeItem('studenthub_credited_projects');
+      const activeUser = user || currentUser;
+      const key = getTransactionsStorageKey(activeUser);
+      if (key) {
+        const saved = localStorage.getItem(key);
+        if (saved) {
+          try {
+            setTransactions(JSON.parse(saved));
+            return;
+          } catch (e) {}
+        }
+      }
+      setTransactions([]);
+    } catch (e) {
+      setTransactions([]);
+    }
+  }, [user?.id, user?.email, role]);
+
+  // Lưu transactions vào key riêng của user
+  useEffect(() => {
+    try {
+      const activeUser = user || currentUser;
+      const key = getTransactionsStorageKey(activeUser);
+      if (key) {
+        localStorage.setItem(key, JSON.stringify(transactions));
+      }
+      localStorage.removeItem('studenthub_transactions');
     } catch (e) {
       console.warn('Lỗi lưu transactions:', e);
     }
-  }, [transactions]);
+  }, [transactions, user?.id, user?.email]);
 
   useEffect(() => {
     try {
-      if (currentUser?.availableBalance !== undefined) {
-        localStorage.setItem('studenthub_wallet_balance', String(currentUser.availableBalance));
+      const activeId = user?.id || currentUser?.id;
+      if (activeId && currentUser?.availableBalance !== undefined) {
+        localStorage.setItem(`studenthub_wallet_balance_${activeId}`, String(currentUser.availableBalance));
       }
+      localStorage.removeItem('studenthub_wallet_balance');
     } catch (e) {
       console.warn('Lỗi lưu wallet_balance:', e);
     }
-  }, [currentUser?.availableBalance]);
+  }, [currentUser?.availableBalance, user?.id, currentUser?.id]);
 
   // Đồng bộ hòm thư tin nhắn khi tài khoản (User / Role) thay đổi (đăng nhập / đăng xuất)
   useEffect(() => {
@@ -616,6 +660,25 @@ export default function App() {
   const [showEmailModal, setShowEmailModal] = useState(false);
   const [showCreateServiceModal, setShowCreateServiceModal] = useState(false);
   const [authModalState, setAuthModalState] = useState({ isOpen: false, mode: 'login' });
+  const [showResetPasswordModal, setShowResetPasswordModal] = useState(() => {
+    return typeof window !== 'undefined' && (
+      window.location.hash.includes('type=recovery') ||
+      window.location.hash.includes('reset-password')
+    );
+  });
+
+  useEffect(() => {
+    const handleHash = () => {
+      if (
+        window.location.hash.includes('type=recovery') ||
+        window.location.hash.includes('reset-password')
+      ) {
+        setShowResetPasswordModal(true);
+      }
+    };
+    window.addEventListener('hashchange', handleHash);
+    return () => window.removeEventListener('hashchange', handleHash);
+  }, []);
   const [showAdminModal, setShowAdminModal] = useState(false);
   const [activeChatEmployerName, setActiveChatEmployerName] = useState(null);
   const [isChatBoxOpen, setIsChatBoxOpen] = useState(false);
@@ -646,6 +709,209 @@ export default function App() {
     setTimeout(() => setToast(null), 4000);
   };
 
+  // Âm thanh thông báo tin nhắn mới dịu nhẹ (Web Audio API)
+  const playMessageSound = () => {
+    try {
+      const AudioCtx = window.AudioContext || window.webkitAudioContext;
+      if (!AudioCtx) return;
+      const ctx = new AudioCtx();
+      const osc = ctx.createOscillator();
+      const gain = ctx.createGain();
+      osc.type = 'sine';
+      osc.frequency.setValueAtTime(587.33, ctx.currentTime);
+      osc.frequency.exponentialRampToValueAtTime(880, ctx.currentTime + 0.12);
+      gain.gain.setValueAtTime(0.12, ctx.currentTime);
+      gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.18);
+      osc.connect(gain);
+      gain.connect(ctx.destination);
+      osc.start();
+      osc.stop(ctx.currentTime + 0.18);
+    } catch (e) {}
+  };
+
+  // 1. Lắng nghe tin nhắn real-time giữa các tab cùng trình duyệt qua BroadcastChannel
+  useEffect(() => {
+    if (typeof window !== 'undefined' && 'BroadcastChannel' in window) {
+      const chatChannel = new BroadcastChannel('studenthub_chat_sync');
+      chatChannel.onmessage = (event) => {
+        if (event.data?.type === 'NEW_CHAT_MSG') {
+          const { senderId, senderName, senderAvatar, senderRole, targetName, message } = event.data;
+
+          const myCurrentId = user?.id || role;
+          if (senderId && myCurrentId && senderId === myCurrentId) return;
+
+          const partnerName = senderName || 'Người liên hệ';
+          const isCurrentlyActive = isChatBoxOpen && !isChatMinimized && activeChatEmployerName?.toLowerCase() === partnerName.toLowerCase();
+
+          setConversations((prev) => {
+            const convIndex = prev.findIndex(
+              (c) =>
+                c.name.toLowerCase() === partnerName.toLowerCase() ||
+                (targetName && c.name.toLowerCase() === targetName.toLowerCase())
+            );
+            const incomingMsg = {
+              ...message,
+              sender: 'them',
+              senderId: senderId || message?.senderId,
+              senderName: senderName || message?.senderName,
+              senderAvatar: senderAvatar || message?.senderAvatar,
+              senderRole: senderRole || message?.senderRole
+            };
+
+            let updated;
+            if (convIndex >= 0) {
+              updated = [...prev];
+              const target = updated[convIndex];
+              if (!target.messages.some((m) => m.id === incomingMsg.id)) {
+                updated[convIndex] = {
+                  ...target,
+                  unread: !isCurrentlyActive,
+                  messages: [...target.messages, incomingMsg]
+                };
+              }
+            } else {
+              const newConv = {
+                id: `conv_${senderId || Date.now()}`,
+                name: partnerName,
+                jobTitle: senderRole === 'employer' ? 'Nhà tuyển dụng' : 'Ứng viên sinh viên',
+                avatar: senderAvatar || 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150',
+                online: true,
+                unread: !isCurrentlyActive,
+                messages: [incomingMsg]
+              };
+              updated = [newConv, ...prev];
+            }
+
+            try {
+              const key = getChatStorageKey(user, role);
+              if (key) localStorage.setItem(key, JSON.stringify(updated));
+            } catch (e) {}
+
+            return updated;
+          });
+
+          if (!isCurrentlyActive) {
+            showToastMsg(`💬 Tin nhắn mới từ ${partnerName}: ${message?.text || 'Tin nhắn mới'}`, 'info');
+            playMessageSound();
+          }
+        }
+      };
+      return () => chatChannel.close();
+    }
+  }, [user?.id, role, isChatBoxOpen, isChatMinimized, activeChatEmployerName]);
+
+  // 2. Lắng nghe và đồng bộ tin nhắn xuyên trình duyệt (Edge <-> Cốc Cốc) qua Backend API
+  useEffect(() => {
+    const fetchServerMessages = async () => {
+      const currentUserId = user?.id || profile?.id || currentUser?.id;
+      const currentUserEmail = user?.email || profile?.email || currentUser?.email;
+      const currentUserName = profile?.full_name || user?.user_metadata?.full_name || currentUser?.name;
+      const companyName = profile?.company_name || user?.user_metadata?.company_name;
+
+      if (!currentUserId && !currentUserEmail) return;
+
+      try {
+        const params = new URLSearchParams();
+        if (currentUserId) params.set('userId', currentUserId);
+        if (currentUserEmail) params.set('email', currentUserEmail);
+        if (role) params.set('role', role);
+        if (currentUserName) params.set('name', currentUserName);
+        if (companyName) params.set('companyName', companyName);
+
+        const res = await fetch(`http://localhost:5000/api/chat/messages?${params.toString()}`);
+        if (!res.ok) return;
+        const json = await res.json();
+        if (json && json.success && Array.isArray(json.data)) {
+          let hasNewThemMsg = false;
+          let newMsgSender = '';
+          let newMsgPreview = '';
+
+          setConversations((prev) => {
+            let changed = false;
+            const updated = [...prev];
+
+            json.data.forEach((serverConv) => {
+              const localConvIndex = updated.findIndex((c) => {
+                if (c.id === serverConv.id) return true;
+                if (serverConv.partnerId && (c.partnerId === serverConv.partnerId || c.id?.includes(serverConv.partnerId))) return true;
+                if (c.name && serverConv.name && c.name.toLowerCase() === serverConv.name.toLowerCase()) return true;
+                return false;
+              });
+
+              const isCurrentlyActive = isChatBoxOpen && !isChatMinimized && activeChatEmployerName?.toLowerCase() === serverConv.name?.toLowerCase();
+
+              if (localConvIndex >= 0) {
+                const localConv = updated[localConvIndex];
+                const localMsgIds = new Set(localConv.messages.map((m) => m.id));
+                const newServerMsgs = (serverConv.messages || []).filter((m) => !localMsgIds.has(m.id));
+
+                if (newServerMsgs.length > 0) {
+                  changed = true;
+                  const hasThemMsg = newServerMsgs.some(
+                    (m) => m.sender === 'them' || (currentUserId && m.senderId && m.senderId.toLowerCase() !== currentUserId.toLowerCase())
+                  );
+                  if (hasThemMsg && !isCurrentlyActive) {
+                    hasNewThemMsg = true;
+                    newMsgSender = serverConv.name;
+                    newMsgPreview = newServerMsgs[newServerMsgs.length - 1]?.text || '';
+                  }
+
+                  updated[localConvIndex] = {
+                    ...localConv,
+                    ...serverConv,
+                    id: serverConv.id,
+                    unread: (hasThemMsg && !isCurrentlyActive) ? true : (isCurrentlyActive ? false : Boolean(localConv.unread)),
+                    messages: [...localConv.messages, ...newServerMsgs]
+                  };
+                } else if (localConv.id !== serverConv.id) {
+                  changed = true;
+                  updated[localConvIndex] = {
+                    ...localConv,
+                    ...serverConv,
+                    id: serverConv.id
+                  };
+                }
+              } else {
+                changed = true;
+                const hasThemMsg = (serverConv.messages || []).some(
+                  (m) => m.sender === 'them' || (currentUserId && m.senderId && m.senderId.toLowerCase() !== currentUserId.toLowerCase())
+                );
+                if (hasThemMsg && !isCurrentlyActive) {
+                  hasNewThemMsg = true;
+                  newMsgSender = serverConv.name;
+                  newMsgPreview = serverConv.messages[serverConv.messages.length - 1]?.text || '';
+                }
+
+                updated.unshift({
+                  ...serverConv,
+                  unread: hasThemMsg && !isCurrentlyActive
+                });
+              }
+            });
+
+            if (changed) {
+              try {
+                const key = getChatStorageKey(user, role);
+                if (key) localStorage.setItem(key, JSON.stringify(updated));
+              } catch (e) {}
+              return updated;
+            }
+            return prev;
+          });
+
+          if (hasNewThemMsg) {
+            showToastMsg(`💬 Tin nhắn mới từ ${newMsgSender}: ${newMsgPreview}`, 'info');
+            playMessageSound();
+          }
+        }
+      } catch (err) {}
+    };
+
+    fetchServerMessages();
+    const chatPollTimer = setInterval(fetchServerMessages, 2000);
+    return () => clearInterval(chatPollTimer);
+  }, [user?.id, user?.email, profile?.id, profile?.full_name, profile?.company_name, role, currentUser?.name, isChatBoxOpen, isChatMinimized, activeChatEmployerName]);
+
   // Sync profile when auth state updates
   useEffect(() => {
     if (profile) {
@@ -667,7 +933,7 @@ export default function App() {
     async function loadMarketplaceJobsFromDB() {
       try {
         const res = await getMarketplaceJobs({ page: 1, pageSize: 20 });
-        if (res && res.jobs && res.jobs.length > 0) {
+        if (res && Array.isArray(res.jobs)) {
           setJobs(res.jobs);
         }
       } catch (err) {
@@ -794,14 +1060,11 @@ export default function App() {
 
   // Submit Job Application (Lưu thật vào Supabase PostgreSQL + Storage & Gửi email tự động)
   const handleSubmitApplication = async (appData) => {
-    const rawEmail = appData.studentEmail || user?.email || profile?.email || currentUser.email;
-    const studentEmail = (rawEmail && !rawEmail.includes('@test.vn') && !rawEmail.includes('@example.com'))
-      ? rawEmail
-      : 'phu47008@gmail.com';
-    const studentName = appData.studentName || profile?.full_name || currentUser.name || 'Nguyễn Minh Anh';
+    const studentEmail = appData.studentEmail || user?.email || profile?.email || currentUser?.email || '';
+    const studentName = appData.studentName || profile?.full_name || user?.user_metadata?.full_name || currentUser?.name || 'Sinh viên';
 
     const activeUser = user || {
-      id: 'demo_student_01',
+      id: profile?.id || currentUser?.id || 'demo_student_01',
       role: 'student',
       full_name: studentName,
       email: studentEmail
@@ -813,17 +1076,20 @@ export default function App() {
 
     setAppliedJobs((prev) => [savedApp, ...prev.filter((a) => a.id !== savedApp.id)]);
 
-    // 📧 Tự động gửi email xác nhận nộp hồ sơ thành công (chống spam & lưu trữ hệ thống)
-    await notifyApplicationSubmitted({
-      to: studentEmail,
-      studentName,
-      jobTitle: appData.jobTitle || savedApp.jobTitle || 'Vị trí ứng tuyển',
-      companyName: appData.company || savedApp.company || 'Doanh nghiệp tuyển dụng',
-      applicationId: savedApp.id,
-      cvUrl: savedApp.cvUrl
-    });
-
-    showToastMsg(`🎉 Ứng tuyển thành công! Đã gửi email xác nhận lưu trữ hồ sơ đến ${studentEmail}.`);
+    // 📧 Tự động gửi email xác nhận nộp hồ sơ thành công nếu là email thật
+    if (studentEmail && !studentEmail.includes('@test.vn') && !studentEmail.includes('@example.com')) {
+      await notifyApplicationSubmitted({
+        to: studentEmail,
+        studentName,
+        jobTitle: appData.jobTitle || savedApp.jobTitle || 'Vị trí ứng tuyển',
+        companyName: appData.company || savedApp.company || 'Doanh nghiệp tuyển dụng',
+        applicationId: savedApp.id,
+        cvUrl: savedApp.cvUrl
+      });
+      showToastMsg(`🎉 Ứng tuyển thành công! Đã gửi email xác nhận lưu trữ hồ sơ đến ${studentEmail}.`);
+    } else {
+      showToastMsg(`🎉 Ứng tuyển thành công! Hồ sơ đã được chuyển tới ${appData.company || 'nhà tuyển dụng'}.`);
+    }
   };
 
   // Cancel an Application
@@ -882,7 +1148,7 @@ export default function App() {
         employerAvatar,
         budget: service.startingPrice,
         deliveryDays: service.deliveryDays || 2
-      });
+      }, user, session?.access_token);
 
       setProjects((prev) => [createdProject, ...prev.filter((p) => p.id !== createdProject.id)]);
       setSelectedService(null);
@@ -914,7 +1180,7 @@ export default function App() {
 
     // Đồng bộ cập nhật lên Backend Server API
     try {
-      await updateProjectProgress(updatedProject.id, updatedProject);
+      await updateProjectProgress(updatedProject.id, updatedProject, user, session?.access_token);
     } catch (e) {
       console.warn('Lỗi đồng bộ update project:', e);
     }
@@ -950,9 +1216,10 @@ export default function App() {
 
   // Send message in chat (Hỗ trợ đồng bộ Real-time đa Tab và lưu vĩnh viễn theo từng tài khoản)
   const handleSendMessage = (conversationId, text) => {
-    const myName = currentUser?.name || profile?.full_name || (role === 'employer' ? 'Nhà tuyển dụng' : 'Nguyễn Minh Anh');
+    const myName = currentUser?.name || profile?.full_name || (role === 'employer' ? (profile?.company_name || 'Nhà tuyển dụng') : 'Sinh viên');
     const myAvatar = profile?.avatar_url || currentUser?.avatar || (role === 'employer' ? 'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=150' : 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150');
-    const myId = user?.id || (role === 'employer' ? 'role_employer' : 'role_student');
+    const myId = user?.id || profile?.id || currentUser?.id || (role === 'employer' ? 'role_employer' : 'role_student');
+    const myEmail = user?.email || profile?.email || currentUser?.email || '';
 
     const newMsg = {
       id: `msg_${Date.now()}`,
@@ -961,6 +1228,7 @@ export default function App() {
       senderName: myName,
       senderAvatar: myAvatar,
       senderRole: role || 'student',
+      senderEmail: myEmail,
       text,
       time: 'Vừa xong'
     };
@@ -979,7 +1247,7 @@ export default function App() {
 
       try {
         const key = getChatStorageKey(user, role);
-        localStorage.setItem(key, JSON.stringify(updated));
+        if (key) localStorage.setItem(key, JSON.stringify(updated));
 
         // Phát tín hiệu chat qua BroadcastChannel để Tab cùng trình duyệt nhận được tin nhắn tức thì
         if (typeof window !== 'undefined' && 'BroadcastChannel' in window) {
@@ -990,6 +1258,7 @@ export default function App() {
             senderName: myName,
             senderAvatar: myAvatar,
             senderRole: role || 'student',
+            senderEmail: myEmail,
             targetName: currentConv?.name,
             conversationId,
             message: newMsg
@@ -997,7 +1266,11 @@ export default function App() {
         }
 
         const otherMsg = currentConv?.messages?.find((m) => m.senderId && m.senderId !== myId);
-        const recipientId = currentConv?.employerId || currentConv?.studentId || otherMsg?.senderId || '';
+        const recipientId = currentConv?.partnerId ||
+          (currentConv?.employerId && currentConv.employerId !== myId ? currentConv.employerId : null) ||
+          (currentConv?.studentId && currentConv.studentId !== myId ? currentConv.studentId : null) ||
+          otherMsg?.senderId ||
+          (role === 'employer' ? 'role_student' : 'role_employer');
 
         // Đồng thời gửi lên Backend Express Server (http://localhost:5000/api/chat/messages)
         // để Edge <-> Cốc Cốc <-> Chrome nhắn tin xuyên trình duyệt không bị rào cản!
@@ -1009,8 +1282,12 @@ export default function App() {
             senderName: myName,
             senderAvatar: myAvatar,
             senderRole: role || 'student',
+            senderEmail: myEmail,
             receiverId: recipientId,
+            receiverEmail: currentConv?.partnerEmail || '',
             targetName: currentConv?.name,
+            targetAvatar: currentConv?.avatar,
+            targetRole: currentConv?.partnerRole || (role === 'employer' ? 'student' : 'employer'),
             conversationId,
             message: newMsg
           })
@@ -1113,20 +1390,27 @@ export default function App() {
   };
 
   // Jump to chat with a specific employer or student
-  const handleOpenChatWithEmployer = (targetName) => {
+  const handleOpenChatWithEmployer = (targetName, partnerMeta = {}) => {
     if (targetName) {
+      const partnerId = partnerMeta?.partnerId || null;
+      const partnerRole = partnerMeta?.partnerRole || (role === 'employer' ? 'student' : 'employer');
+      const partnerAvatar = partnerMeta?.partnerAvatar || (partnerRole === 'employer'
+        ? 'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=150'
+        : 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150');
+      const partnerJobTitle = partnerRole === 'employer' ? 'Nhà tuyển dụng / Doanh nghiệp' : 'Ứng viên sinh viên';
+
       setConversations((prev) => {
-        const match = prev.find(
-          (c) =>
-            c.name.toLowerCase().includes(targetName.toLowerCase()) ||
-            targetName.toLowerCase().includes(c.name.toLowerCase())
-        );
+        const match = prev.find((c) => {
+          if (partnerId && (c.partnerId === partnerId || c.employerId === partnerId || c.studentId === partnerId)) return true;
+          if (c.name && targetName && c.name.toLowerCase().includes(targetName.toLowerCase())) return true;
+          if (targetName && c.name && targetName.toLowerCase().includes(c.name.toLowerCase())) return true;
+          return false;
+        });
+
         if (!match) {
-          const partnerRole = role === 'employer' ? 'student' : 'employer';
-          const partnerJobTitle = role === 'employer' ? 'Sinh viên Freelancer' : 'Nhà tuyển dụng / Doanh nghiệp';
-          const partnerAvatar = role === 'employer'
-            ? 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150'
-            : 'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=150';
+          const myId = user?.id || profile?.id || currentUser?.id || (role === 'employer' ? 'role_employer' : 'role_student');
+          const myName = currentUser?.name || profile?.full_name || (role === 'employer' ? (profile?.company_name || 'Nhà tuyển dụng') : 'Sinh viên');
+          const myAvatar = profile?.avatar_url || currentUser?.avatar || (role === 'employer' ? 'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=150' : 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150');
 
           const newConv = {
             id: `conv_${Date.now()}`,
@@ -1134,32 +1418,35 @@ export default function App() {
             jobTitle: partnerJobTitle,
             avatar: partnerAvatar,
             online: true,
-            participantIds: [user?.id, partnerRole === 'employer' ? 'role_employer' : 'role_student'].filter(Boolean),
-            studentId: role === 'student' ? user?.id : null,
-            employerId: role === 'employer' ? user?.id : null,
-            messages: [
-              {
-                id: `msg_init_${Date.now()}`,
-                senderId: partnerRole === 'employer' ? 'role_employer' : 'role_student',
-                senderName: targetName,
-                senderAvatar: partnerAvatar,
-                senderRole: partnerRole,
-                sender: 'them',
-                text: `Chào bạn, mình liên hệ để trao đổi thêm về dịch vụ / công việc nhé!`,
-                time: 'Vừa xong'
-              }
-            ]
+            unread: false,
+            partnerId,
+            partnerRole,
+            participantIds: [myId, partnerId].filter(Boolean),
+            studentId: role === 'student' ? myId : (partnerRole === 'student' ? partnerId : null),
+            studentName: role === 'student' ? myName : targetName,
+            studentAvatar: role === 'student' ? myAvatar : partnerAvatar,
+            employerId: role === 'employer' ? myId : (partnerRole === 'employer' ? partnerId : null),
+            employerName: role === 'employer' ? myName : targetName,
+            employerAvatar: role === 'employer' ? myAvatar : partnerAvatar,
+            messages: []
           };
           setActiveChatEmployerName(targetName);
           const updated = [newConv, ...prev];
           try {
             const key = getChatStorageKey(user, role);
-            localStorage.setItem(key, JSON.stringify(updated));
+            if (key) localStorage.setItem(key, JSON.stringify(updated));
           } catch (e) {}
           return updated;
         } else {
           setActiveChatEmployerName(match.name);
-          return prev;
+          if (partnerId && !match.partnerId) {
+            match.partnerId = partnerId;
+            if (!match.participantIds) match.participantIds = [];
+            if (!match.participantIds.includes(partnerId)) match.participantIds.push(partnerId);
+            if (partnerRole === 'employer') match.employerId = partnerId;
+            if (partnerRole === 'student') match.studentId = partnerId;
+          }
+          return [...prev];
         }
       });
     }
@@ -1168,13 +1455,37 @@ export default function App() {
     setIsChatMinimized(false);
   };
 
+  // Chọn cuộc trò chuyện và đánh dấu đã đọc
+  const handleSelectChatConversation = (targetName) => {
+    setActiveChatEmployerName(targetName);
+    setConversations((prev) => {
+      const updated = prev.map((c) =>
+        c.name.toLowerCase().includes((targetName || '').toLowerCase()) ||
+        (targetName && targetName.toLowerCase().includes(c.name.toLowerCase()))
+          ? { ...c, unread: false }
+          : c
+      );
+      try {
+        const key = getChatStorageKey(user, role);
+        if (key) localStorage.setItem(key, JSON.stringify(updated));
+      } catch (e) {}
+      return updated;
+    });
+  };
+
   // Bật / tắt hoặc thu nhỏ thành bong bóng chat giống Facebook
   const handleToggleChatBox = () => {
     if (!isChatBoxOpen) {
       setIsChatBoxOpen(true);
       setIsChatMinimized(false);
+      if (activeChatEmployerName) {
+        handleSelectChatConversation(activeChatEmployerName);
+      }
     } else if (isChatMinimized) {
       setIsChatMinimized(false);
+      if (activeChatEmployerName) {
+        handleSelectChatConversation(activeChatEmployerName);
+      }
     } else {
       setIsChatMinimized(true);
     }
@@ -1309,7 +1620,7 @@ export default function App() {
 
   // Dynamic Real Counts for Navigation Badges (khớp chính xác số lượng bài/tin ở trong)
   const unreadMessagesCount = conversations.filter((c) => c.unread).length;
-  const activeProjectsCount = projects.filter((p) => p.status === 'in_progress').length;
+  const activeProjectsCount = projects.filter((p) => ['in_progress', 'pending_review'].includes(p.status)).length;
   const appliedCount = appliedJobs.length;
   const jobsCount = jobs.length;
   const freelanceCount = services.length;
@@ -1536,8 +1847,18 @@ export default function App() {
           {currentView === 'wallet' && (
             <WalletPage
               currentUser={currentUser}
+              currentRole={role}
               transactions={transactions}
-              monthlyEarningsChart={monthlyEarningsChart}
+              monthlyEarningsChart={(() => {
+                const targetProjects = role === 'employer' ? projects : projects.filter((p) => p.status === 'completed');
+                const totalAmount = targetProjects.reduce((sum, p) => sum + (parseInt((p.budget || '0').replace(/[^0-9]/g, ''), 10) || 0), 0);
+                if (totalAmount > 0) {
+                  return [
+                    { month: 'T11', amount: totalAmount }
+                  ];
+                }
+                return [];
+              })()}
               onWithdrawFunds={handleWithdrawFunds}
               onShowToast={showToastMsg}
             />
@@ -1574,6 +1895,9 @@ export default function App() {
               onShowToast={showToastMsg}
               onSelectJob={handleSelectJob}
               onOpenChatWithEmployer={handleOpenChatWithEmployer}
+              projects={projects}
+              onUpdateProjectProgress={handleUpdateProjectProgress}
+              onNavigate={setCurrentView}
             />
           )}
 
@@ -1648,6 +1972,9 @@ export default function App() {
           job={selectedJob}
           onSubmit={handleSubmitApplication}
           currentUser={currentUser}
+          user={user}
+          profile={profile}
+          studentProfile={studentProfile}
         />
       )}
 
@@ -1683,6 +2010,16 @@ export default function App() {
         />
       )}
 
+      {/* Reset Password Modal (khi người dùng mở liên kết khôi phục từ email) */}
+      {showResetPasswordModal && (
+        <ResetPasswordModal
+          isOpen={showResetPasswordModal}
+          onClose={() => setShowResetPasswordModal(false)}
+          onShowToast={showToastMsg}
+          onOpenLogin={() => setAuthModalState({ isOpen: true, mode: 'login' })}
+        />
+      )}
+
       {/* Admin Dashboard Modal */}
       {showAdminModal && (
         <AdminDashboardModal
@@ -1712,17 +2049,17 @@ export default function App() {
         setIsMinimized={setIsChatMinimized}
         conversations={conversations}
         activeTargetName={activeChatEmployerName}
-        onSelectConversation={setActiveChatEmployerName}
+        onSelectConversation={handleSelectChatConversation}
         onSendMessage={handleSendMessage}
         onDeleteConversation={handleDeleteConversation}
         onClearMockConversations={handleClearMockConversations}
-        currentUser={user}
+        currentUser={currentUser}
         currentRole={role}
       />
 
       {/* Ô Chat Box AI tự động của nền tảng sử dụng Google Gemini (Luôn luôn hiện trên toàn sàn) */}
       <GeminiAIChatWidget
-        currentUser={user}
+        currentUser={currentUser}
         currentRole={role}
       />
     </div>

@@ -1,5 +1,5 @@
-import { supabase, isSupabaseConfigured } from './supabase';
-import { initialJobs } from '../data/mockData';
+import { supabase, isSupabaseConfigured } from './supabase.js';
+import { initialJobs } from '../data/mockData.js';
 
 // Helper: Format tiền tệ VNĐ hiển thị
 export function formatSalary(min, max) {
@@ -110,8 +110,13 @@ export async function getMarketplaceJobs({
   // Các tin nhà tuyển dụng vừa đăng sẽ luôn được ưu tiên hiển thị ở vị trí đầu tiên
   const localSaved = getLocalSavedJobs().filter((j) => !j.status || j.status === 'published' || j.status === 'active');
 
-  // 3. Hợp nhất: Tin từ Backend Server (mới nhất từ mọi trình duyệt) -> Tin lưu cục bộ -> Tin từ Supabase -> Tin mẫu ban đầu
-  let combinedJobs = [...serverJobs, ...localSaved, ...dbJobs, ...initialJobs];
+  // 3. Hợp nhất: Khi Supabase đã cấu hình, chỉ hiển thị dữ liệu thực tế (Server + Local + DB), không tự động chèn initialJobs mẫu
+  let combinedJobs = [];
+  if (isSupabaseConfigured) {
+    combinedJobs = [...serverJobs, ...localSaved, ...dbJobs];
+  } else {
+    combinedJobs = [...serverJobs, ...localSaved, ...dbJobs, ...initialJobs];
+  }
 
   // Khử trùng lặp theo ID (ưu tiên bản ghi mới nhất)
   let filtered = Array.from(new Map(combinedJobs.map((item) => [String(item.id), item])).values());

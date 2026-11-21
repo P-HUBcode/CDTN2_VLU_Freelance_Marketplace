@@ -1,29 +1,8 @@
 const { getPool, isMySQLConnected, memoryStore } = require('../config/db');
 
-// In-memory fallback reviews
+// In-memory reviews (mặc định rỗng để kiểm thử từ đầu)
 if (!memoryStore.reviews) {
-  memoryStore.reviews = [
-    {
-      id: 1,
-      job_id: 1,
-      reviewer_id: 3, // Employer
-      reviewer_name: 'The Book Cafe VLU',
-      reviewee_id: 2, // Student
-      rating_score: 5,
-      comment: 'Sinh viên làm việc rất có trách nhiệm, chủ động và đúng giờ!',
-      created_at: '2026-10-22 10:00:00'
-    },
-    {
-      id: 2,
-      job_id: 1,
-      reviewer_id: 2, // Student
-      reviewer_name: 'Nguyễn Minh Phú',
-      reviewee_id: 3, // Employer
-      rating_score: 5,
-      comment: 'Môi trường làm việc thoải mái, thanh toán thù lao đúng hạn và rất hỗ trợ sinh viên.',
-      created_at: '2026-10-23 15:30:00'
-    }
-  ];
+  memoryStore.reviews = [];
 }
 
 // 1. Tạo đánh giá và cập nhật điểm uy tín trung bình

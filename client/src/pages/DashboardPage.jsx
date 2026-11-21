@@ -66,6 +66,21 @@ export default function DashboardPage({
     return () => { isMounted = false; };
   }, [currentUser?.id]);
 
+  const statusDistribution = studentStats?.statusDistribution || {
+    applied: appliedJobs.filter((a) => (a.status || 'applied') === 'applied').length,
+    reviewing: appliedJobs.filter((a) => a.status === 'reviewing').length,
+    interview: appliedJobs.filter((a) => a.status === 'interview').length,
+    accepted: appliedJobs.filter((a) => a.status === 'accepted').length,
+    rejected: appliedJobs.filter((a) => a.status === 'rejected').length
+  };
+
+  const appliedTotal = studentStats?.totalApplications ?? appliedJobs.length;
+  const reviewingCount = statusDistribution.reviewing || 0;
+  const interviewCount = statusDistribution.interview || 0;
+  const acceptedCount = statusDistribution.accepted || 0;
+  const rejectedCount = statusDistribution.rejected || 0;
+  const appliedCount = statusDistribution.applied || 0;
+
   // Đồng bộ bài viết CMS khi Admin đăng bài mới
   useEffect(() => {
     const syncArticles = () => {
@@ -86,17 +101,27 @@ export default function DashboardPage({
         <div className="relative z-10 max-w-2xl">
           <div className="inline-flex items-center gap-2 px-3 py-1 bg-white/15 backdrop-blur-md rounded-full text-xs font-semibold mb-3">
             <Sparkles className="w-3.5 h-3.5 text-amber-300" />
-            <span>Sinh viên Đại học Kinh tế TP.HCM (UEH) - K48</span>
+            <span>
+              {currentUser?.university || 'Cổng thông tin việc làm Sinh viên'}
+              {currentUser?.year ? ` - ${currentUser.year}` : ''}
+            </span>
           </div>
           <h1 className="text-2xl sm:text-3xl font-extrabold tracking-tight">
             Xin chào, {currentUser?.name ? currentUser.name.replace(/\(.*?\)/g, '').trim().split(/\s+/).pop() : 'bạn'} 👋
           </h1>
           <p className="mt-2 text-xs sm:text-sm text-blue-100 leading-relaxed font-normal">
-            Khám phá những công việc phù hợp với kỹ năng và thời gian của bạn. Hôm nay có{' '}
-            <span className="font-semibold text-white underline decoration-amber-400 decoration-2">
-              24 cơ hội mới
-            </span>{' '}
-            phù hợp lịch học!
+            Khám phá những công việc phù hợp với kỹ năng và thời gian của bạn.
+            {jobs.length > 0 ? (
+              <>
+                {' '}Hôm nay có{' '}
+                <span className="font-semibold text-white underline decoration-amber-400 decoration-2">
+                  {jobs.length} cơ hội việc làm
+                </span>{' '}
+                phù hợp!
+              </>
+            ) : (
+              ' Nhiều cơ hội làm thêm và dự án hấp dẫn đang chờ bạn.'
+            )}
           </p>
 
           <div className="mt-5 flex flex-wrap items-center gap-3">
@@ -126,24 +151,23 @@ export default function DashboardPage({
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-5">
         <StatCard
           title="Công việc đã ứng tuyển"
-          value={studentStats ? studentStats.appliedCount : appliedJobs.length}
+          value={appliedTotal}
           subtitle={
-            studentStats?.reviewingCount > 0
-              ? `${studentStats.reviewingCount} hồ sơ đang được duyệt`
-              : '2 hồ sơ đang được duyệt'
+            reviewingCount > 0
+              ? `${reviewingCount} hồ sơ đang được duyệt`
+              : (appliedTotal > 0 ? '0 hồ sơ đang chờ duyệt' : 'Chưa ứng tuyển công việc nào')
           }
           icon={FileCheck2}
           color="blue"
-          badge="+2 tuần này"
           onClick={() => onNavigate('my-applications')}
         />
         <StatCard
           title="Dự án đang làm"
-          value={studentStats ? studentStats.activeProjectsCount : activeProjects.length}
+          value={activeProjects.length}
           subtitle={
-            studentStats?.completedProjectsCount > 0
-              ? `Đã hoàn thành ${studentStats.completedProjectsCount} dự án`
-              : '1 dự án sắp đến deadline'
+            activeProjects.length > 0
+              ? `${activeProjects.length} dự án đang thực hiện`
+              : 'Chưa có dự án đang làm'
           }
           icon={Clock}
           color="amber"
@@ -151,24 +175,22 @@ export default function DashboardPage({
         />
         <StatCard
           title="Thu nhập tháng này"
-          value={
-            studentStats
-              ? `${(studentStats.earningsMonth || 0).toLocaleString()}đ`
-              : currentUser.earningsMonth
-          }
-          subtitle="Số dư khả dụng: 12.500.000đ"
+          value={currentUser?.earningsMonth || '0đ'}
+          subtitle={`Số dư khả dụng: ${new Intl.NumberFormat('vi-VN').format(currentUser?.availableBalance || 0)}đ`}
           icon={Wallet}
           color="emerald"
-          badge="+18% so với T9"
           onClick={() => onNavigate('wallet')}
         />
         <StatCard
           title="Đánh giá trung bình"
-          value={currentUser.rating}
-          subtitle={`Dựa trên ${currentUser.reviewsCount} đánh giá 5★`}
+          value={currentUser?.rating > 0 ? currentUser.rating : 'Chưa có'}
+          subtitle={
+            currentUser?.reviewsCount > 0
+              ? `Dựa trên ${currentUser.reviewsCount} đánh giá 5★`
+              : 'Chưa có đánh giá nào'
+          }
           icon={Star}
           color="purple"
-          badge="Top 5% sinh viên"
           onClick={() => onNavigate('profile')}
         />
       </div>
@@ -184,25 +206,25 @@ export default function DashboardPage({
                   <p className="text-xs text-slate-500">Thống kê hồ sơ sinh viên qua các vòng phỏng vấn thực tế</p>
                 </div>
                 <span className="text-xs font-semibold px-2.5 py-1 bg-blue-50 text-blue-700 rounded-lg">
-                  Tỉ lệ phản hồi 96%
+                  Tỉ lệ phản hồi {currentUser?.responseRate || '100%'}
                 </span>
               </div>
               <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
                 <div className="p-3 bg-slate-50 rounded-2xl border border-slate-100">
                   <div className="text-[10px] text-slate-400 uppercase font-semibold">Đã nộp</div>
-                  <div className="text-lg font-extrabold text-slate-900 mt-0.5">{studentStats.appliedCount}</div>
+                  <div className="text-lg font-extrabold text-slate-900 mt-0.5">{appliedCount}</div>
                 </div>
                 <div className="p-3 bg-amber-50/70 rounded-2xl border border-amber-100">
                   <div className="text-[10px] text-amber-700 uppercase font-semibold">Hẹn phỏng vấn</div>
-                  <div className="text-lg font-extrabold text-amber-900 mt-0.5">{studentStats.interviewCount}</div>
+                  <div className="text-lg font-extrabold text-amber-900 mt-0.5">{interviewCount}</div>
                 </div>
                 <div className="p-3 bg-emerald-50/70 rounded-2xl border border-emerald-100">
                   <div className="text-[10px] text-emerald-700 uppercase font-semibold">Được nhận việc</div>
-                  <div className="text-lg font-extrabold text-emerald-900 mt-0.5">{studentStats.acceptedCount}</div>
+                  <div className="text-lg font-extrabold text-emerald-900 mt-0.5">{acceptedCount}</div>
                 </div>
                 <div className="p-3 bg-rose-50/70 rounded-2xl border border-rose-100">
                   <div className="text-[10px] text-rose-700 uppercase font-semibold">Từ chối</div>
-                  <div className="text-lg font-extrabold text-rose-900 mt-0.5">{studentStats.rejectedCount}</div>
+                  <div className="text-lg font-extrabold text-rose-900 mt-0.5">{rejectedCount}</div>
                 </div>
               </div>
             </div>
@@ -230,7 +252,11 @@ export default function DashboardPage({
           <div className="flex items-center justify-between">
             <div>
               <h2 className="text-lg font-bold text-slate-900">Việc làm đề xuất cho bạn</h2>
-              <p className="text-xs text-slate-500">Dựa trên chuyên ngành Marketing UEH & kỹ năng Canva, Content</p>
+              <p className="text-xs text-slate-500">
+                {currentUser?.major
+                  ? `Dựa trên chuyên ngành ${currentUser.major}${currentUser.skills?.length > 0 ? ` & kỹ năng ${currentUser.skills.slice(0, 3).join(', ')}` : ''}`
+                  : 'Các cơ hội việc làm mới nhất phù hợp cho sinh viên'}
+              </p>
             </div>
             <button
               onClick={() => onNavigate('marketplace')}
@@ -242,7 +268,13 @@ export default function DashboardPage({
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            {recommendedJobs.map((job) => {
+            {recommendedJobs.length === 0 ? (
+              <div className="col-span-full py-10 text-center bg-white rounded-2xl border border-slate-200/90 p-6 text-slate-400">
+                <p className="font-semibold text-slate-600 text-sm">Chưa có việc làm nào phù hợp</p>
+                <p className="text-xs text-slate-400 mt-1">Các cơ hội việc làm mới sẽ xuất hiện ở đây khi nhà tuyển dụng đăng tin.</p>
+              </div>
+            ) : (
+              recommendedJobs.map((job) => {
               const isBookmarked = bookmarkedIds.has(job.id);
               return (
                 <div
@@ -319,7 +351,7 @@ export default function DashboardPage({
                   </div>
                 </div>
               );
-            })}
+            }))}
           </div>
 
           {/* Nút Xem thêm việc làm đề xuất nếu có nhiều việc (> 4 việc) */}
@@ -359,40 +391,48 @@ export default function DashboardPage({
           </div>
 
           <div className="space-y-3">
-            {activeProjects.map((project) => (
-              <div
-                key={project.id}
-                onClick={() => onNavigate('my-projects')}
-                className="bg-white rounded-2xl border border-slate-200 p-4 hover:border-slate-300 hover:shadow-subtle transition cursor-pointer"
-              >
-                <div className="flex items-center justify-between">
-                  <span className="text-xs font-semibold text-blue-600 truncate">{project.client}</span>
-                  <Badge variant="primary" size="sm">Đang thực hiện</Badge>
-                </div>
-
-                <h4 className="text-xs font-bold text-slate-900 mt-1 line-clamp-1">
-                  {project.title}
-                </h4>
-
-                <div className="mt-3">
-                  <div className="flex items-center justify-between text-xs text-slate-500 mb-1">
-                    <span>Tiến độ</span>
-                    <span className="font-bold text-slate-900">{project.progress}%</span>
-                  </div>
-                  <div className="w-full bg-slate-100 rounded-full h-2 overflow-hidden">
-                    <div
-                      className="bg-blue-600 h-2 rounded-full transition-all duration-300"
-                      style={{ width: `${project.progress}%` }}
-                    />
-                  </div>
-                </div>
-
-                <div className="mt-3 pt-2.5 border-t border-slate-100 flex items-center justify-between text-xs text-slate-500">
-                  <span className="text-[11px]">Hạn nộp: <strong>{project.deadline}</strong></span>
-                  <span className="font-bold text-slate-800">{project.budget && !String(project.budget).includes('NaN') ? project.budget : '650.000đ'}</span>
-                </div>
+            {activeProjects.length === 0 ? (
+              <div className="bg-white rounded-2xl border border-slate-200 p-6 text-center text-slate-400">
+                <Clock className="w-8 h-8 text-slate-300 mx-auto stroke-1 mb-2" />
+                <p className="font-semibold text-slate-600 text-xs">Chưa có dự án nào đang làm</p>
+                <p className="text-[11px] text-slate-400 mt-0.5">Ứng tuyển công việc hoặc nhận đơn freelance để bắt đầu dự án.</p>
               </div>
-            ))}
+            ) : (
+              activeProjects.map((project) => (
+                <div
+                  key={project.id}
+                  onClick={() => onNavigate('my-projects')}
+                  className="bg-white rounded-2xl border border-slate-200 p-4 hover:border-slate-300 hover:shadow-subtle transition cursor-pointer"
+                >
+                  <div className="flex items-center justify-between">
+                    <span className="text-xs font-semibold text-blue-600 truncate">{project.client}</span>
+                    <Badge variant="primary" size="sm">Đang thực hiện</Badge>
+                  </div>
+
+                  <h4 className="text-xs font-bold text-slate-900 mt-1 line-clamp-1">
+                    {project.title}
+                  </h4>
+
+                  <div className="mt-3">
+                    <div className="flex items-center justify-between text-xs text-slate-500 mb-1">
+                      <span>Tiến độ</span>
+                      <span className="font-bold text-slate-900">{project.progress}%</span>
+                    </div>
+                    <div className="w-full bg-slate-100 rounded-full h-2 overflow-hidden">
+                      <div
+                        className="bg-blue-600 h-2 rounded-full transition-all duration-300"
+                        style={{ width: `${project.progress}%` }}
+                      />
+                    </div>
+                  </div>
+
+                  <div className="mt-3 pt-2.5 border-t border-slate-100 flex items-center justify-between text-xs text-slate-500">
+                    <span className="text-[11px]">Hạn nộp: <strong>{project.deadline}</strong></span>
+                    <span className="font-bold text-slate-800">{project.budget && !String(project.budget).includes('NaN') ? project.budget : '0đ'}</span>
+                  </div>
+                </div>
+              ))
+            )}
 
             {/* Student Tips */}
             <div className="bg-slate-50 rounded-2xl border border-slate-200/80 p-4 space-y-2">
